@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 
 import Loading from "@/app/Loading";
 import StructuredData from "@/components/StructuredData";
@@ -13,9 +13,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Natnael Alemseged – Portfolio",
-    description: "Full-stack developer and AI enthusiast based in Ethiopia.",
+    description: "Full-stack Developer & AI Automation Engineer specializing in React, Flutter, FastAPI, and Node.js.",
     keywords: [
         "Full-stack developer",
+        "AI Automation Engineer",
         "React",
         "Flutter",
         "FastAPI",
@@ -26,24 +27,27 @@ export const metadata: Metadata = {
         "Software Engineer",
         "Portfolio",
     ],
+    alternates: {
+        canonical: "https://natnael-alemseged.vercel.app",
+    },
     authors: [
         {
             name: "Natnael Alemseged",
             url: "https://www.linkedin.com/in/natnael-alemseged",
         },
     ],
-    metadataBase: new URL("https://natnael-alemseged.vercel.app/"),
+    metadataBase: new URL("https://natnael-alemseged.vercel.app"),
     openGraph: {
         title: "Natnael Alemseged – Portfolio",
-        description: "Explore my work, skills, and experience.",
-        url: "https://natnael-alemseged.vercel.app/",
-        siteName: "Natnael Alemseged Portfolio",
+        description: "Full-stack Developer & AI Automation Engineer specializing in React, Flutter, FastAPI, and Node.js.",
+        url: "https://natnael-alemseged.vercel.app",
+        siteName: "Natnael Alemseged",
         images: [
             {
-                url: "/og-image.jpg",
+                url: "https://natnael-alemseged.vercel.app/og-image.jpg",
                 width: 1200,
                 height: 630,
-                alt: "Natnael Alemseged Portfolio",
+                alt: "Natnael Alemseged – Full-Stack Developer and AI Automation Engineer",
             },
         ],
         type: "website",
@@ -51,9 +55,20 @@ export const metadata: Metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Natnael Alemseged – Portfolio",
-        description: "Explore my work, skills, and experience.",
-        creator: "@yourhandle", // Optional: Replace with your real Twitter handle
-        images: ["/og-image.jpg"],
+        description: "Full-stack Developer & AI Automation Engineer specializing in React, Flutter, FastAPI, and Node.js.",
+        creator: "@yourhandle",
+        images: ["https://natnael-alemseged.vercel.app/og-image.jpg"],
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
     },
     icons: {
         icon: "/favicon.ico",
@@ -62,6 +77,7 @@ export const metadata: Metadata = {
     manifest: "/manifest.json",
 };
 
+
 export default function RootLayout({
                                        children,
                                    }: {
@@ -69,6 +85,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
+
         <body className={`${inter.className} flex flex-col min-h-screen`}>
         <StructuredData />
         <Suspense fallback={<Loading />}>
