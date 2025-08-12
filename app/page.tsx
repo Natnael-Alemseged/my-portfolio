@@ -5,6 +5,8 @@ import {Metadata} from "next";
 import Projects from "@/components/Projects";
 import Testimonials from "@/components/Testimonials";
 import WorkExperience from "@/components/WorkExperience";
+import Technologies from "@/components/Technologies";
+import AvailabilityGlobe from "@/components/AvailabilityGlobe";
 
 export const generateMetadata = (): Metadata => ({
     title: 'Home – Natnael Alemseged',
@@ -22,6 +24,10 @@ export default function Home() {
             <Hero />
             {/* About Me  Section */}
             <About />
+            {/*<AvailabilityGlobe /> /!* Here it goes *!/*/}
+
+            <Technologies />
+
             {/* Projects Section */}
             <Projects />
 

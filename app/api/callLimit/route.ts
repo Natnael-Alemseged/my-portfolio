@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
+import { connectDB } from '@/lib/db/mongoose';
 import { checkAndUpdateCallLimit } from '@/lib/call-limit';
 
 export async function GET() {

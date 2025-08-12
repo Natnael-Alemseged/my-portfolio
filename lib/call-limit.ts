@@ -1,4 +1,4 @@
-import { connectDB } from "@/lib/db";
+import { connectDB } from "@/lib/db/mongoose";
 
 interface LimitDoc {
     identifier: string;

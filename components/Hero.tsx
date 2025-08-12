@@ -118,15 +118,17 @@ export default function Hero() {
 
                         {/* Fixed image inside circle */}
                         <image
-                            href="Illustration.png"
-                            x="50"
-                            y="50"
-                            width="400"
-                            height="400"
+                            href="Illustration.png"  // use your new image file name
+                            x="56"
+                            y="58"
+                            width="388"
+                            height="388"
                             clipPath="url(#fullCircleClip)"
-                            preserveAspectRatio="xMidYMid slice"
+                            preserveAspectRatio="xMidYMid meet"
                             style={{ pointerEvents: "none" }}
                         />
+
+
                     </svg>
 
                     <style jsx>{`
