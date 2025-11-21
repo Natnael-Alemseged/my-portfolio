@@ -48,14 +48,12 @@ const projects = [
 
 export default function Projects() {
     return (
-        <section
-            id="projects"
-            className="bg-[#0d0d0d] py-20 px-6 md:px-12 text-white max-w-7xl mx-auto"
-        >
-            <h2 className="text-4xl font-bold mb-12 text-center text-[#00ff99]">
-                Projects
-            </h2>
-            <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <section id="projects" className="bg-[#0d0d0d] py-20 px-6 md:px-12 text-white">
+            <div className="max-w-7xl mx-auto">
+                <h2 className="text-4xl font-bold mb-12 text-center text-[#00ff99]">
+                    Projects
+                </h2>
+                <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {projects.map(({ id, name, description, image, techStack, demoUrl, codeUrl }) => (
                     <motion.article
                         key={id}
@@ -63,7 +61,7 @@ export default function Projects() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: id * 0.15 }}
-                        className="bg-gray-900 rounded-xl shadow-lg overflow-hidden hover:shadow-cyan-500 hover:scale-[1.03] transition-transform duration-300 flex flex-col"
+                        className="bg-gray-900 rounded-xl shadow-lg overflow-hidden hover:shadow-[0_0_35px_rgba(0,255,153,0.45)] hover:scale-[1.03] transition-transform duration-300 flex flex-col"
                     >
                         <div className="relative h-48 sm:h-56 md:h-48 lg:h-56">
                             <img
@@ -82,7 +80,7 @@ export default function Projects() {
                                 {techStack.map((tech) => (
                                     <span
                                         key={tech}
-                                        className="bg-cyan-600 text-cyan-100 text-xs font-semibold px-3 py-1 rounded-full"
+                                        className="bg-emerald-600 text-emerald-100 text-xs font-semibold px-3 py-1 rounded-full"
                                     >
                     {tech}
                   </span>
@@ -94,7 +92,7 @@ export default function Projects() {
                                     href={demoUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-block px-4 py-2 bg-[#00ff99] text-black font-semibold rounded-lg hover:bg-cyan-400 transition"
+                                    className="inline-block px-4 py-2 bg-[#00ff99] text-black font-semibold rounded-lg hover:bg-[#00e68a] transition"
                                     aria-label={`View demo of ${name}`}
                                 >
                                     Demo
@@ -103,7 +101,7 @@ export default function Projects() {
                                     href={codeUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-block px-4 py-2 border border-cyan-500 text-cyan-500 font-semibold rounded-lg hover:bg-cyan-500 hover:text-black transition"
+                                    className="inline-block px-4 py-2 border border-[#00ff99] text-[#00ff99] font-semibold rounded-lg hover:bg-[#00ff99] hover:text-black transition"
                                     aria-label={`View code of ${name}`}
                                 >
                                     Code
@@ -112,6 +110,7 @@ export default function Projects() {
                         </div>
                     </motion.article>
                 ))}
+            </div>
             </div>
         </section>
     );

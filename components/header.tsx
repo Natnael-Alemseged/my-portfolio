@@ -13,18 +13,70 @@ export default function Header() {
 
             {/* Nav Links */}
             <nav className="hidden md:flex items-center space-x-8">
-                <Link href="/about" className="text-gray-300 hover:text-white">
+                <a
+                    href="#about"
+                    className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('about');
+                        if (element) {
+                            const offset = 80; // Height of fixed header
+                            const elementPosition = element.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - offset;
+                            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                        }
+                    }}
+                >
                     About
-                </Link>
-                <Link href="/projects" className="text-gray-300 hover:text-white">
+                </a>
+                <a
+                    href="#projects"
+                    className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('projects');
+                        if (element) {
+                            const offset = 80;
+                            const elementPosition = element.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - offset;
+                            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                        }
+                    }}
+                >
                     Projects
-                </Link>
-                <Link href="/testimonials" className="text-gray-300 hover:text-white">
+                </a>
+                <a
+                    href="#testimonials"
+                    className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('testimonials');
+                        if (element) {
+                            const offset = 80;
+                            const elementPosition = element.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - offset;
+                            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                        }
+                    }}
+                >
                     Testimonials
-                </Link>
-                <Link href="/workExperience" className="text-gray-300 hover:text-white">
-                    Work-Experience
-                </Link>
+                </a>
+                <a
+                    href="#workExperience"
+                    className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById('workExperience');
+                        if (element) {
+                            const offset = 80;
+                            const elementPosition = element.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - offset;
+                            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                        }
+                    }}
+                >
+                    Work Experience
+                </a>
             </nav>
 
             {/* Social Icons */}

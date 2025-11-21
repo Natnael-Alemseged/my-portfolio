@@ -1,11 +1,13 @@
 "use client";
-import {useState} from "react";
-import {motion, AnimatePresence} from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     FaReact,
     FaNodeJs,
     FaDocker,
     FaGitAlt,
+    FaPython,
+    FaAws,
 } from "react-icons/fa";
 import {
     SiNextdotjs,
@@ -22,6 +24,21 @@ import {
     SiAnsible,
     SiIonic,
     SiJetbrains,
+    SiTypescript,
+    SiJavascript,
+    SiPrisma,
+    SiReact,
+    SiKubernetes,
+    SiRedis,
+    SiGraphql,
+    SiSocketdotio,
+    SiGithubactions,
+    SiPrometheus,
+    SiGrafana,
+    SiPostman,
+    SiSupabase,
+    SiVercel,
+    SiNetlify,
 } from "react-icons/si";
 
 interface Tech {
@@ -30,61 +47,99 @@ interface Tech {
 }
 
 const categories: { [key: string]: Tech[] } = {
+    "Languages": [
+        { name: "TypeScript", icon: <SiTypescript className="text-blue-500" /> },
+        { name: "JavaScript", icon: <SiJavascript className="text-yellow-400" /> },
+        { name: "Python", icon: <FaPython className="text-blue-400" /> },
+        { name: "Dart", icon: <SiFlutter className="text-sky-400" /> },
+        { name: "Kotlin", icon: <SiJetbrains className="text-purple-500" /> },
+    ],
     "Frontend & Mobile": [
-        {name: "Flutter", icon: <SiFlutter className="text-sky-400"/>},
-        {name: "React", icon: <FaReact className="text-sky-400"/>},
-        {name: "Next.js", icon: <SiNextdotjs className="text-white"/>},
-        {name: "Tailwind", icon: <SiTailwindcss className="text-sky-300"/>},
-        {name: "Ionic", icon: <SiIonic className="text-blue-500"/>},
-        {name: "Kotlin", icon: <SiJetbrains className="text-purple-500"/>},
+        { name: "React", icon: <FaReact className="text-sky-400" /> },
+        { name: "Next.js", icon: <SiNextdotjs className="text-white" /> },
+        { name: "Flutter", icon: <SiFlutter className="text-sky-400" /> },
+        { name: "React Native", icon: <SiReact className="text-sky-500" /> },
+        { name: "Tailwind CSS", icon: <SiTailwindcss className="text-sky-300" /> },
+        { name: "Ionic", icon: <SiIonic className="text-blue-500" /> },
     ],
-    Backend: [
-        {name: "Node.js", icon: <FaNodeJs className="text-green-500"/>},
-        {name: "Express", icon: <SiExpress className="text-gray-300"/>},
-        {name: "FastAPI", icon: <SiFastapi className="text-green-400"/>},
-        {name: "Laravel", icon: <SiLaravel className="text-red-600"/>},
+    "Backend & APIs": [
+        { name: "Node.js", icon: <FaNodeJs className="text-green-500" /> },
+        { name: "Express", icon: <SiExpress className="text-gray-300" /> },
+        { name: "FastAPI", icon: <SiFastapi className="text-green-400" /> },
+        { name: "Prisma", icon: <SiPrisma className="text-white" /> },
+        { name: "GraphQL", icon: <SiGraphql className="text-pink-500" /> },
+        { name: "Socket.io", icon: <SiSocketdotio className="text-white" /> },
     ],
-    Tools: [
-        {name: "Docker", icon: <FaDocker className="text-blue-400"/>},
-        {name: "AWS", icon: <SiAmazon className="text-orange-400"/>},
-        {name: "Git", icon: <FaGitAlt className="text-orange-500"/>},
-        {name: "MongoDB", icon: <SiMongodb className="text-green-500"/>},
-        {name: "PostgreSQL", icon: <SiPostgresql className="text-sky-500"/>},
-        {name: "Firebase", icon: <SiFirebase className="text-yellow-400"/>},
-        {name: "Terraform", icon: <SiTerraform className="text-green-600"/>},
-        {name: "Ansible", icon: <SiAnsible className="text-red-500"/>},
+    "Databases": [
+        { name: "PostgreSQL", icon: <SiPostgresql className="text-sky-500" /> },
+        { name: "MongoDB", icon: <SiMongodb className="text-green-500" /> },
+        { name: "Redis", icon: <SiRedis className="text-red-500" /> },
+        { name: "Firebase", icon: <SiFirebase className="text-yellow-400" /> },
+        { name: "Supabase", icon: <SiSupabase className="text-green-400" /> },
+    ],
+    "Cloud & DevOps": [
+        { name: "AWS", icon: <FaAws className="text-orange-400" /> },
+        { name: "Docker", icon: <FaDocker className="text-blue-400" /> },
+        { name: "Kubernetes", icon: <SiKubernetes className="text-blue-500" /> },
+        { name: "Terraform", icon: <SiTerraform className="text-purple-500" /> },
+        { name: "GitHub Actions", icon: <SiGithubactions className="text-gray-300" /> },
+        { name: "Vercel", icon: <SiVercel className="text-white" /> },
+        { name: "Netlify", icon: <SiNetlify className="text-teal-400" /> },
+    ],
+    "Monitoring & Tools": [
+        { name: "Git", icon: <FaGitAlt className="text-orange-500" /> },
+        { name: "Prometheus", icon: <SiPrometheus className="text-orange-500" /> },
+        { name: "Grafana", icon: <SiGrafana className="text-orange-400" /> },
+        { name: "Postman", icon: <SiPostman className="text-orange-500" /> },
     ],
 };
 
 export default function Technologies() {
-    const [activeTab, setActiveTab] = useState("Frontend & Mobile");
+    const [activeTab, setActiveTab] = useState("Languages");
 
     const techs = categories[activeTab];
-    const gridCols =
-        techs.length <= 3
-            ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
-            : "grid-cols-2 sm:grid-cols-3 md:grid-cols-4";
 
     return (
-        <section id="technologies" className="py-16 bg-[#0d0d0d] text-white">
-            <div className="container mx-auto px-4 text-center">
-                <h2 className="text-3xl font-bold mb-8">Technologies</h2>
+        <section id="technologies" className="relative py-20 px-6 md:px-12 bg-gradient-to-b from-[#0a0a0a] via-[#0d0d0d] to-[#050505] text-white overflow-hidden">
+            <div className="pointer-events-none absolute top-20 left-10 h-80 w-80 bg-[#00ff99]/10 blur-[120px]" />
+            <div className="pointer-events-none absolute bottom-10 right-10 h-72 w-72 bg-[#1f8eff]/10 blur-[100px]" />
+
+            <div className="relative max-w-7xl mx-auto">
+                {/* Section Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-16"
+                >
+                    <p className="text-xs uppercase tracking-[0.5em] text-[#00ff99] mb-4">
+                        Full-Stack Arsenal
+                    </p>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                        Technologies & Tools
+                    </h2>
+                    <p className="text-gray-400 max-w-3xl mx-auto">
+                        Comprehensive toolkit spanning languages, frameworks, databases, cloud infrastructure, and DevOps—powering enterprise-grade mobile, web, and AI solutions
+                    </p>
+                </motion.div>
 
                 {/* Tabs */}
-                <div className="flex justify-center gap-4 mb-8 flex-wrap">
+                <div className="flex justify-center gap-2 mb-14 flex-wrap px-4">
                     {Object.keys(categories).map((category) => (
-                        <button
+                        <motion.button
                             key={category}
                             onClick={() => setActiveTab(category)}
-                            className={`px-4 py-2 rounded-full border transition-all duration-300 
-                ${
-                                activeTab === category
-                                    ? "bg-white text-black"
-                                    : "border-gray-500 hover:bg-gray-800"
-                            }`}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`px-5 py-2.5 rounded-full border-2 transition-all duration-300 font-semibold text-xs uppercase tracking-wider justify-center items-center
+                ${activeTab === category
+                                    ? "bg-[#00ff99] text-black border-[#00ff99] shadow-lg shadow-[#00ff99]/30"
+                                    : "border-gray-700 hover:border-[#00ff99] hover:bg-[#00ff99]/10"
+                                }`}
                         >
                             {category}
-                        </button>
+                        </motion.button>
                     ))}
                 </div>
 
@@ -92,20 +147,47 @@ export default function Technologies() {
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}
-                        initial={{opacity: 0, y: 10}}
-                        animate={{opacity: 1, y: 0}}
-                        exit={{opacity: 0, y: -10}}
-                        transition={{duration: 0.3}}
-                        className={`grid ${gridCols} gap-6 place-items-center`}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.4 }}
+                        className="grid gap-10 justify-center grid-cols-[repeat(auto-fit,minmax(200px,200px))]"
+
+
                     >
-                        {techs.map((tech) => (
-                            <div key={tech.name} className="flex flex-col items-center space-y-2">
-                                <div className="text-5xl">{tech.icon}</div>
-                                <span className="text-sm">{tech.name}</span>
-                            </div>
+                        {techs.map((tech, index) => (
+                            <motion.div
+                                key={tech.name}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.3, delay: index * 0.04 }}
+                                whileHover={{ scale: 1.08, y: -8 }}
+                                className="group relative flex flex-col items-center justify-center p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[#00ff99]/50 hover:bg-white/10 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+                            >
+                                <div className="text-5xl mb-3 transition-transform duration-300 group-hover:scale-110">
+                                    {tech.icon}
+                                </div>
+                                <span className="text-xs font-semibold text-gray-300 group-hover:text-white transition-colors text-center">
+                                    {tech.name}
+                                </span>
+                                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00ff99]/0 to-[#00ff99]/0 group-hover:from-[#00ff99]/5 group-hover:to-transparent transition-all duration-300" />
+                            </motion.div>
                         ))}
                     </motion.div>
                 </AnimatePresence>
+
+                {/* Tech Count Badge */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    className="text-center mt-12"
+                >
+                    <p className="text-sm text-gray-500 uppercase tracking-[0.3em]">
+                        {Object.values(categories).flat().length}+ Technologies Mastered
+                    </p>
+                </motion.div>
             </div>
         </section>
     );

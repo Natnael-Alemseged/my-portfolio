@@ -8,6 +8,7 @@ import Loading from "@/app/Loading";
 import StructuredData from "@/components/StructuredData";
 import Header from "@/components/header";
 import Footer from "@/components/Footer";
+import ChatWidget from "@/components/ChatWidget";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -79,23 +80,24 @@ export const metadata: Metadata = {
 
 
 export default function RootLayout({
-                                       children,
-                                   }: {
+    children,
+}: {
     children: React.ReactNode;
 }) {
     return (
         <html lang="en">
 
-        <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <StructuredData />
-        <Suspense fallback={<Loading />}>
-            {/*<MixpanelTracker>*/}
-                <Header />
-                <main className="flex-grow">{children}</main>
-                <Footer />
-            {/*</MixpanelTracker>*/}
-        </Suspense>
-        </body>
+            <body className={`${inter.className} flex flex-col min-h-screen`}>
+                <StructuredData />
+                <Suspense fallback={<Loading />}>
+                    {/*<MixpanelTracker>*/}
+                    <Header />
+                    <main className="flex-grow">{children}</main>
+                    <Footer />
+                    {/*</MixpanelTracker>*/}
+                </Suspense>
+                <ChatWidget />
+            </body>
         </html>
     );
 }

@@ -1,12 +1,13 @@
 // app/page.tsx
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import {Metadata} from "next";
+import { Metadata } from "next";
 import Projects from "@/components/Projects";
 import Testimonials from "@/components/Testimonials";
 import WorkExperience from "@/components/WorkExperience";
 import Technologies from "@/components/Technologies";
 import AvailabilityGlobe from "@/components/AvailabilityGlobe";
+import Contact from "@/components/Contact";
 
 export const generateMetadata = (): Metadata => ({
     title: 'Home – Natnael Alemseged',
@@ -36,6 +37,9 @@ export default function Home() {
 
             {/* Work Experience Section */}
             <WorkExperience />
+
+            {/* Contact Section */}
+            <Contact />
 
 
         </div>
