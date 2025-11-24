@@ -1,4 +1,3 @@
-// app/page.tsx
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import { Metadata } from "next";
@@ -8,6 +7,8 @@ import WorkExperience from "@/components/WorkExperience";
 import Technologies from "@/components/Technologies";
 import AvailabilityGlobe from "@/components/AvailabilityGlobe";
 import Contact from "@/components/Contact";
+import connectToDatabase from "@/lib/db/mongoose";
+import Project from "@/lib/db/project.model";
 
 export const generateMetadata = (): Metadata => ({
     title: 'Home – Natnael Alemseged',
@@ -15,8 +16,20 @@ export const generateMetadata = (): Metadata => ({
 
 });
 
+async function getProjects() {
+    try {
+        await connectToDatabase();
+        const projects = await Project.find({}).sort({ createdAt: -1 }).lean();
+        return JSON.parse(JSON.stringify(projects));
+    } catch (error) {
+        console.error("Failed to fetch projects", error);
+        return [];
+    }
+}
 
-export default function Home() {
+export default async function Home() {
+    const projects = await getProjects();
+
     return (
         <div className="min-h-screen bg-[#f9fafb]">
 
@@ -30,7 +43,7 @@ export default function Home() {
             <Technologies />
 
             {/* Projects Section */}
-            <Projects />
+            <Projects initialProjects={projects} />
 
             {/* Testimonials */}
             <Testimonials />

@@ -1,6 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Briefcase, Calendar, ChevronDown, Terminal } from "lucide-react";
+import { Briefcase, Calendar, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 interface Experience {
@@ -80,35 +80,29 @@ export default function WorkExperience() {
     };
 
     return (
-        <section id="workExperience" className="relative py-20 px-6 md:px-12 bg-[#0d0d0d]">
-            {/* CRT Scanlines Overlay */}
-            <div className="terminal-scanlines absolute inset-0 opacity-20 pointer-events-none"></div>
-
-            <div className="max-w-6xl mx-auto relative z-10">
-                {/* Section Header - Terminal Style */}
+        <section id="workExperience" className="py-20 px-6 md:px-12 bg-[#0d0d0d]">
+            <div className="max-w-6xl mx-auto">
+                {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="mb-16"
+                    className="text-center mb-16"
                 >
-                    <div className="flex items-center gap-3 mb-4">
-                        <Terminal className="text-[#00ff99]" size={32} />
-                        <h2 className="text-3xl md:text-4xl font-mono font-bold text-[#00ff99] terminal-glow uppercase tracking-wider">
-                            &gt;&gt; WORK_EXPERIENCE.LOG
-                        </h2>
-                    </div>
-                    <div className="h-0.5 bg-[#00ff99] mb-4 terminal-glow"></div>
-                    <p className="text-gray-400 font-mono text-sm uppercase tracking-wide">
-                        [SYSTEM] Loading professional timeline...
+                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                        Work Experience
+                    </h2>
+                    <div className="w-20 h-1 bg-[#00ff99] mx-auto rounded-full"></div>
+                    <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
+                        My professional journey building innovative solutions and delivering exceptional results
                     </p>
                 </motion.div>
 
                 {/* Timeline */}
                 <div className="relative">
                     {/* Vertical Line */}
-                    <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-[#00ff99] via-[#00ff99]/50 to-transparent terminal-glow"></div>
+                    <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-[#00ff99] via-gray-700 to-transparent"></div>
 
                     {/* Experience Cards */}
                     <div className="space-y-8">
@@ -119,48 +113,44 @@ export default function WorkExperience() {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className={`relative flex flex-col md:flex-row gap-8 items-stretch ${index % 2 === 0 ? "md:flex-row-reverse" : ""
-                                    }`}
+                                className={`relative flex flex-col md:flex-row gap-8 items-stretch ${
+                                    index % 2 === 0 ? "md:flex-row-reverse" : ""
+                                }`}
                             >
-                                {/* Timeline Dot - Terminal Style */}
-                                <motion.div
-                                    className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#00ff99] rounded-full border-2 border-[#0d0d0d] shadow-[0_0_10px_#00ff99] z-10"
-                                    whileHover={{ scale: 1.5, boxShadow: "0 0 20px #00ff99" }}
+                                {/* Timeline Dot */}
+                                <motion.div 
+                                    className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#00ff99] rounded-full border-4 border-[#0d0d0d] shadow-lg z-10"
+                                    whileHover={{ scale: 1.5 }}
                                     transition={{ duration: 0.3 }}
                                 ></motion.div>
 
                                 {/* Spacer for alternating layout */}
                                 <div className="hidden md:block w-1/2"></div>
 
-                                {/* Card - Terminal Style */}
+                                {/* Card */}
                                 <motion.div
                                     className="w-full md:w-1/2"
                                 >
                                     <button
                                         onClick={() => toggleExperience(exp.id)}
-                                        className={`w-full text-left bg-black/90 rounded-none shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border-2 relative overflow-hidden ${activeId === exp.id
-                                                ? "border-[#00ff99] shadow-[0_0_15px_rgba(0,255,153,0.3)]"
-                                                : "border-[#00ff99]/30 hover:border-[#00ff99]"
-                                            }`}
+                                        className={`w-full text-left bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border-l-4 ${
+                                            activeId === exp.id 
+                                                ? "border-[#00ff99]" 
+                                                : "border-gray-700 hover:border-[#00ff99]"
+                                        }`}
                                     >
-                                        {/* Scanlines on hover */}
-                                        <div className={`terminal-scanlines absolute inset-0 opacity-0 hover:opacity-20 transition-opacity pointer-events-none`}></div>
-
-                                        <div className="flex items-start justify-between gap-4 relative z-10">
+                                        <div className="flex items-start justify-between gap-4">
                                             <div className="flex-1">
-                                                <div className="text-[10px] font-mono text-[#00ff99]/60 uppercase tracking-widest mb-2">
-                                                    [ROLE]
-                                                </div>
-                                                <h3 className="text-xl md:text-2xl font-mono font-bold text-[#00ff99] mb-2">
+                                                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">
                                                     {exp.title}
                                                 </h3>
-                                                <div className="flex items-center gap-2 text-[#00ff99]/80 font-mono font-semibold mb-2">
-                                                    <Briefcase size={14} />
-                                                    <span className="text-xs md:text-sm">[COMPANY] {exp.company}</span>
+                                                <div className="flex items-center gap-2 text-[#00ff99] font-semibold mb-2">
+                                                    <Briefcase size={16} />
+                                                    <span className="text-sm md:text-base">{exp.company}</span>
                                                 </div>
-                                                <div className="flex items-center gap-2 text-gray-400 text-xs font-mono">
-                                                    <Calendar size={12} />
-                                                    <span>[PERIOD] {exp.period}</span>
+                                                <div className="flex items-center gap-2 text-gray-400 text-sm">
+                                                    <Calendar size={14} />
+                                                    <span>{exp.period}</span>
                                                 </div>
                                             </div>
                                             <motion.div
@@ -183,12 +173,8 @@ export default function WorkExperience() {
                                                 transition={{ duration: 0.3 }}
                                                 className="overflow-hidden"
                                             >
-                                                <div className="mt-4 p-6 bg-black/90 border-2 border-[#00ff99]/30 relative">
-                                                    <div className="terminal-scanlines absolute inset-0 opacity-10 pointer-events-none"></div>
-                                                    <div className="text-xs font-mono text-[#00ff99]/60 uppercase tracking-widest mb-3">
-                                                        [ACHIEVEMENTS]
-                                                    </div>
-                                                    <div className="text-gray-300 font-mono text-sm whitespace-pre-line leading-relaxed relative z-10">
+                                                <div className="mt-4 p-6 bg-[#1a1a1a] rounded-2xl border border-gray-800">
+                                                    <div className="text-gray-300 whitespace-pre-line leading-relaxed">
                                                         {exp.description}
                                                     </div>
                                                 </div>
@@ -201,7 +187,7 @@ export default function WorkExperience() {
                     </div>
                 </div>
 
-                {/* Call to Action - Terminal Style */}
+                {/* Call to Action */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -209,14 +195,14 @@ export default function WorkExperience() {
                     transition={{ duration: 0.6, delay: 0.4 }}
                     className="text-center mt-16"
                 >
-                    <p className="text-gray-400 font-mono text-sm mb-6 uppercase tracking-wide">
-                        [SYSTEM] Ready to collaborate on ambitious projects
+                    <p className="text-gray-400 mb-6">
+                        Let’s collaborate on the next ambitious mobile, AI, or web product.
                     </p>
                     <a
                         href="#contact"
-                        className="inline-flex items-center gap-2 px-8 py-3 bg-[#00ff99] text-black font-mono font-bold uppercase tracking-wider hover:bg-white transition-all duration-300 shadow-lg hover:shadow-[0_0_20px_rgba(0,255,153,0.5)] border-2 border-[#00ff99]"
+                        className="inline-flex items-center gap-2 px-8 py-3 bg-[#00ff99] text-[#0d0d0d] rounded-full hover:bg-white transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
                     >
-                        &gt; INITIATE_CONTACT
+                        Book a call
                     </a>
                 </motion.div>
             </div>

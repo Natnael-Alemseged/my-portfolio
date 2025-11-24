@@ -55,7 +55,9 @@ export const withFallbackTool = (tool: Tool): {
   status: "pending" | "approved" | "rejected";
   isFeatured: boolean;
   savedByUser: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pricingPlans: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reviews: any;
   relatedTools: RelatedTool[]
 } => {
@@ -74,7 +76,7 @@ export const withFallbackTool = (tool: Tool): {
       "Commercial License"
     ],
     keywords: tool.keywords || ["image generation", "AI art", "text to image", "image editor"], // More specific keywords
-    pricing:  tool.pricing == "0" || "free" ? "free" : "Premium" || "free",
+    pricing: tool.pricing == "0" || "free" ? "free" : "Premium" || "free",
     hasFreeVersion: tool.hasFreeVersion ?? true, // Default to true based on screenshot
     logoUrl: tool.logoUrl || "/robot.png", // Consider a more specific placeholder
     screenshotUrls: tool.image_url || [ // Add a placeholder screenshot URL
@@ -89,6 +91,7 @@ export const withFallbackTool = (tool: Tool): {
     savedByUser: tool.savedByUser ?? false,
 
     // Add fallback data for pricing plans, reviews, and related tools
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pricingPlans: (tool as any).pricingPlans || [
       {
         name: "Free",
@@ -119,6 +122,7 @@ export const withFallbackTool = (tool: Tool): {
       },
     ] as PricingPlan[], // Cast to the defined type
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reviews: (tool as any).reviews || [
       {
         id: "review-1",
@@ -143,6 +147,7 @@ export const withFallbackTool = (tool: Tool): {
       },
     ] as Review[], // Cast to the defined type
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     relatedTools: (tool as any).relatedTools || [
       {
         id: "related-tool-1",
@@ -195,7 +200,7 @@ export function slugify(text: string): string {
 
 
 
-export const processToolLink = (tool:Tool) => {
+export const processToolLink = (tool: Tool) => {
   if (!tool || typeof tool.link !== 'string') {
     // Handle cases where tool or tool.link is undefined/null/not a string
     // You might want to return the original tool, throw an error, or return a default.
@@ -206,21 +211,20 @@ export const processToolLink = (tool:Tool) => {
 
   const originalToolLink = tool.link;
   let processedLink;
-
   try {
     const url = new URL(originalToolLink);
     processedLink = url.origin + url.pathname;
 
     // 2. Check for "taaft" in the original URL and append your referral if needed
     if (originalToolLink.includes('taaft')) {
-      const myReferralParam = "our_referral_source=your_app_name";
+      // const myReferralParam = "our_referral_source=your_app_name";
       // You had `processedLink = `${processedLink}`` which does nothing.
       // Assuming you intended to append the referral param here.
       //todo make sure to replace this with AI BY HOUR referral Url
       processedLink = `${processedLink}`
 
-      // ?${myReferralParam}`
-      ;
+        // ?${myReferralParam}`
+        ;
     }
   } catch (error) {
     console.error("Error processing tool link:", originalToolLink, error);
@@ -238,7 +242,7 @@ export const processToolLink = (tool:Tool) => {
 
 
 
-export const ScaledSvg = ({svg, width = 24, height = 24}) => {
-  return React.cloneElement(svg, {width, height});
+export const ScaledSvg = ({ svg, width = 24, height = 24 }) => {
+  return React.cloneElement(svg, { width, height });
 };
 

@@ -1,0 +1,83 @@
+
+> my-portfolio@0.1.0 build
+> next build
+
+   Γû▓ Next.js 15.4.5
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ΓÜá Compiled with warnings in 3.0s
+
+./lib/call-limit.ts
+Attempted import error: 'connectDB' is not exported from '@/lib/db/mongoose' (imported as 'connectDB').
+
+Import trace for requested module:
+./lib/call-limit.ts
+./app/api/callLimit/route.ts
+
+./lib/call-limit.ts
+Attempted import error: 'connectDB' is not exported from '@/lib/db/mongoose' (imported as 'connectDB').
+
+Import trace for requested module:
+./lib/call-limit.ts
+./app/api/callLimit/route.ts
+
+ Γ£ô Compiled successfully in 4.0s
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./app/api/og/route.tsx
+30:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+49:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+49:25  Warning: img elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+50:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+50:25  Warning: img elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+51:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+51:25  Warning: img elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+52:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+52:25  Warning: img elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+
+./app/api/projects/[id]/route.ts
+27:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+74:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./app/page.tsx
+8:8  Warning: 'AvailabilityGlobe' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./app/project/[id]/page.tsx
+56:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/CalendlyWidget.tsx
+7:15  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/ChatWidget.tsx
+78:34  Warning: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
+152:74  Error: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
+
+./components/Footer.tsx
+1:7  Warning: 'navLinks' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+10:7  Warning: 'socials' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./components/Projects.tsx
+39:33  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/Technologies.tsx
+21:5  Warning: 'SiAmazon' is defined but never used.  @typescript-eslint/no-unused-vars
+22:5  Warning: 'SiLaravel' is defined but never used.  @typescript-eslint/no-unused-vars
+24:5  Warning: 'SiAnsible' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./lib/algolia.ts
+42:24  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/api-client.ts
+1:10  Warning: 'showLoginModal' is defined but never used.  @typescript-eslint/no-unused-vars
+4:7  Warning: 'isBrowser' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./lib/reusable-methods.ts
+1:10  Warning: 'useAuth' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./lib/reusable_assets.tsx
+54:1  Warning: Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any').
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

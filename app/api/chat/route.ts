@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
         // Extract relevant context from memory results
         const context = memoryResults.results
-            ?.map((result: any) => result.content || result.text)
+            ?.map((result: { content?: string | null; text?: string | null }) => result.content || result.text)
             .join('\n\n') || '';
 
         // Construct messages for Groq with enhanced system prompt
@@ -64,8 +64,8 @@ Remember: You represent Natnael professionally. Be helpful, accurate, and encour
 
         const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
             { role: 'system', content: systemPrompt },
-            ...conversationHistory.map((msg: any) => ({
-                role: msg.role,
+            ...conversationHistory.map((msg: { role: string; content: string }) => ({
+                role: msg.role as 'system' | 'user' | 'assistant',
                 content: msg.content,
             })),
             { role: 'user', content: message },

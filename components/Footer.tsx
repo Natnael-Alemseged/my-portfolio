@@ -8,10 +8,9 @@ const navLinks = [
 ];
 
 const socials = [
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/natnaelalemseged" },
-    { label: "GitHub", href: "https://github.com/yourusername" },
-    { label: "X", href: "https://x.com/yourusername" },
-    { label: "Email", href: "mailto:hello@natnael.dev" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/natnael-alemseged" },
+    { label: "GitHub", href: "https://github.com/natnael-alemseged" },
+    { label: "Email", href: "mailto:natnaelalemseged@gmail.com" },
 ];
 
 export default function Footer() {

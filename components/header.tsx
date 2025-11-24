@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 export default function Header() {
     return (
@@ -81,14 +81,11 @@ export default function Header() {
 
             {/* Social Icons */}
             <div className="flex items-center space-x-4 text-gray-300">
-                <Link href="https://github.com" target="_blank">
+                <Link href="https://github.com/natnael-alemseged" target="_blank">
                     <FaGithub className="w-5 h-5 hover:text-white" />
                 </Link>
-                <Link href="https://linkedin.com" target="_blank">
+                <Link href="https://www.linkedin.com/in/natnael-alemseged" target="_blank">
                     <FaLinkedin className="w-5 h-5 hover:text-white" />
-                </Link>
-                <Link href="https://twitter.com" target="_blank">
-                    <FaTwitter className="w-5 h-5 hover:text-white" />
                 </Link>
             </div>
         </header>

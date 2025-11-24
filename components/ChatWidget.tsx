@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Terminal, X, Cpu } from 'lucide-react';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -14,7 +13,7 @@ export default function ChatWidget() {
     const [messages, setMessages] = useState<Message[]>([
         {
             role: 'assistant',
-            content: "Hi! I'm Natnael's AI assistant. Ask me anything about his skills, projects, or experience!",
+            content: "ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL\nINITIALIZING BIOMETRIC SCAN...\nIDENTITY CONFIRMED: VISITOR.\n\nGreetings. I am Natnael's Automated Persona. How may I assist you?",
         },
     ]);
     const [input, setInput] = useState('');
@@ -27,7 +26,7 @@ export default function ChatWidget() {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+    }, [messages, isOpen]);
 
     const handleSend = async () => {
         if (!input.trim() || isLoading) return;
@@ -75,7 +74,7 @@ export default function ChatWidget() {
                                 newMessages[newMessages.length - 1].content = assistantMessage;
                                 return newMessages;
                             });
-                        } catch (e) {
+                        } catch {
                             // Skip invalid JSON
                         }
                     }
@@ -87,7 +86,7 @@ export default function ChatWidget() {
                 ...prev,
                 {
                     role: 'assistant',
-                    content: "Sorry, I'm having trouble connecting. Please try again later.",
+                    content: "ERROR: CONNECTION LOST\nPlease try again later.",
                 },
             ]);
         } finally {
@@ -104,115 +103,101 @@ export default function ChatWidget() {
 
     return (
         <>
-            {/* Chat Toggle Button */}
-            <motion.button
-                onClick={() => setIsOpen(!isOpen)}
-                className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-gradient-to-br from-[#00ff99] to-[#00cc77] text-black shadow-2xl hover:shadow-[#00ff99]/50 transition-all duration-300"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Toggle chat"
+            {/* Floating Toggle Button - Terminal Style */}
+            <button
+                onClick={() => setIsOpen(true)}
+                className={`fixed bottom-6 right-6 z-40 group p-4 bg-black border-2 border-[#00ff99] text-[#00ff99] rounded-full shadow-[0_0_20px_rgba(0,255,153,0.4)] transition-all duration-300 hover:scale-110 hover:bg-[#00ff99] hover:text-black ${isOpen ? 'hidden' : 'flex'}`}
+                aria-label="Open Terminal Chat"
             >
-                <AnimatePresence mode="wait">
-                    {isOpen ? (
-                        <motion.div
-                            key="close"
-                            initial={{ rotate: -90, opacity: 0 }}
-                            animate={{ rotate: 0, opacity: 1 }}
-                            exit={{ rotate: 90, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <X size={28} />
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="open"
-                            initial={{ rotate: 90, opacity: 0 }}
-                            animate={{ rotate: 0, opacity: 1 }}
-                            exit={{ rotate: -90, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <MessageCircle size={28} />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </motion.button>
+                <Terminal size={24} className="animate-pulse" />
+            </button>
 
-            {/* Chat Window */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        transition={{ duration: 0.3, ease: 'easeOut' }}
-                        className="fixed bottom-24 right-6 z-40 w-[400px] h-[600px] bg-black/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-[#00ff99]/30 flex flex-col overflow-hidden"
-                    >
-                        {/* Header */}
-                        <div className="bg-gradient-to-r from-[#00ff99] to-[#00cc77] p-4 text-black">
-                            <h3 className="font-semibold text-lg">Natnael's AI Assistant</h3>
-                            <p className="text-sm text-black/80">Ask me anything about Natnael!</p>
+            {/* Chat Window - RobCo Terminal Style */}
+            <div
+                className={`fixed bottom-6 right-6 z-50 w-[95vw] md:w-[450px] h-[600px] max-h-[80vh] bg-black border-2 border-[#00ff99] flex flex-col transition-all duration-300 transform origin-bottom-right ${isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-10 pointer-events-none'}`}
+            >
+                {/* CRT Overlay Effect */}
+                <div className="absolute inset-0 pointer-events-none opacity-20 z-10" style={{
+                    backgroundImage: 'repeating-linear-gradient(0deg, rgba(0,255,153,0.03) 0px, rgba(0,255,153,0.03) 1px, transparent 1px, transparent 2px)',
+                }}></div>
+                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle,rgba(0,255,153,0)_60%,rgba(0,0,0,0.6)_100%)] z-20"></div>
+
+                {/* Header */}
+                <div className="p-3 border-b-2 border-[#00ff99] flex justify-between items-center bg-[#00ff99] text-black z-30">
+                    <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 border border-black flex items-center justify-center bg-black text-[#00ff99]">
+                            <Cpu size={14} />
                         </div>
-
-                        {/* Messages */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                            {messages.map((msg, idx) => (
-                                <motion.div
-                                    key={idx}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                                >
-                                    <div
-                                        className={`max-w-[80%] p-3 rounded-2xl ${msg.role === 'user'
-                                                ? 'bg-gradient-to-br from-[#00ff99] to-[#00cc77] text-black'
-                                                : 'bg-gray-900 text-gray-100 border border-[#00ff99]/20'
-                                            }`}
-                                    >
-                                        <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
-                            {isLoading && (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    className="flex justify-start"
-                                >
-                                    <div className="bg-gray-900 border border-[#00ff99]/20 p-3 rounded-2xl">
-                                        <Loader2 className="animate-spin text-[#00ff99]" size={20} />
-                                    </div>
-                                </motion.div>
-                            )}
-                            <div ref={messagesEndRef} />
+                        <div>
+                            <h3 className="font-bold text-sm tracking-widest font-mono">ROBCO TERMINAL</h3>
                         </div>
+                    </div>
+                    <button onClick={() => setIsOpen(false)} className="text-black hover:bg-black hover:text-[#00ff99] border border-transparent hover:border-black p-1 transition-colors">
+                        <X size={20} />
+                    </button>
+                </div>
 
-                        {/* Input */}
-                        <div className="p-4 border-t border-[#00ff99]/20 bg-black/50 backdrop-blur-sm">
-                            <div className="flex gap-2">
-                                <input
-                                    type="text"
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    onKeyPress={handleKeyPress}
-                                    placeholder="Type your message..."
-                                    disabled={isLoading}
-                                    className="flex-1 px-4 py-2 rounded-full border border-[#00ff99]/30 bg-gray-900 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00ff99] disabled:opacity-50"
-                                />
-                                <motion.button
-                                    onClick={handleSend}
-                                    disabled={!input.trim() || isLoading}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="p-2 rounded-full bg-gradient-to-br from-[#00ff99] to-[#00cc77] text-black disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <Send size={20} />
-                                </motion.button>
+                {/* Messages Area */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-black z-30 font-mono text-[#00ff99]">
+                    {messages.map((msg, idx) => (
+                        <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                            <div className={`uppercase text-[10px] mb-1 text-[#00ff99]/70`}>
+                                {msg.role === 'user' ? '> USER_INPUT' : '> SYSTEM_RESPONSE'}
+                            </div>
+                            <div className={`max-w-[90%] p-2 ${msg.role === 'user'
+                                ? 'border border-[#00ff99]/50 bg-[#00ff99]/10'
+                                : ''
+                                }`}>
+                                <span className="whitespace-pre-wrap leading-relaxed text-sm md:text-base" style={{
+                                    textShadow: '0 0 2px #00ff99'
+                                }}>
+                                    {msg.content}
+                                </span>
                             </div>
                         </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    ))}
+                    {isLoading && (
+                        <div className="flex justify-start">
+                            <div className="flex items-center gap-2 text-[#00ff99] animate-pulse">
+                                <span className="w-3 h-5 bg-[#00ff99] block"></span>
+                                <span className="text-xs font-mono tracking-widest">PROCESSING DATA...</span>
+                            </div>
+                        </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                </div>
+
+                {/* Input Area */}
+                <div className="p-4 border-t-2 border-[#00ff99] bg-black z-30">
+                    <div className="relative flex items-center group">
+                        <span className="absolute left-3 text-[#00ff99] font-mono font-bold">{'>'}</span>
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                            placeholder="ENTER COMMAND..."
+                            disabled={isLoading}
+                            className="w-full bg-black border border-[#00ff99]/50 text-[#00ff99] pl-8 pr-12 py-3 text-sm font-mono focus:outline-none focus:border-[#00ff99] focus:shadow-[0_0_15px_rgba(0,255,153,0.3)] transition-all placeholder:text-[#00ff99]/30 uppercase disabled:opacity-50"
+                        />
+                        <button
+                            onClick={handleSend}
+                            disabled={isLoading || !input.trim()}
+                            className="absolute right-2 p-2 text-[#00ff99] hover:bg-[#00ff99] hover:text-black transition-colors disabled:opacity-30"
+                        >
+                            <div className="font-bold text-xs px-1">SEND</div>
+                        </button>
+                    </div>
+                    <div className="mt-2 flex justify-between items-center px-1">
+                        <p className="text-[10px] text-[#00ff99]/60 font-mono uppercase">V.2.5.0 // NATNAEL AI</p>
+                        <div className="flex gap-1">
+                            <div className="w-2 h-2 bg-[#00ff99]/20"></div>
+                            <div className="w-2 h-2 bg-[#00ff99]/60"></div>
+                            <div className="w-2 h-2 bg-[#00ff99]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 }

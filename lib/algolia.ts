@@ -1,6 +1,6 @@
 // import { algoliasearch } from 'algoliasearch';
 import { algoliasearch } from 'algoliasearch';
-import {Tool} from "@/types/tool"; // Use named import
+import { Tool } from "@/types/tool"; // Use named import
 
 
 
@@ -39,6 +39,7 @@ export const searchCarrierAlgolia = async (searchInput: string): Promise<string[
         // *** CRITICAL CHANGE HERE ***
         // Map over all hits and extract the job_title
         const jobTitles = hits
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .map((hit: any) => hit.job_title)
             .filter(Boolean); // Filter out any undefined/null job_titles
 
@@ -57,7 +58,7 @@ export const searchCarrierAlgolia = async (searchInput: string): Promise<string[
 };
 
 
-export const searchToolsAlgolia = async (searchInput: string,limit:number): Promise<Tool[]> => {
+export const searchToolsAlgolia = async (searchInput: string, limit: number): Promise<Tool[]> => {
     if (!searchInput) {
         // It's fine to return an empty array if no input, or throw a more specific error
         return [];
@@ -78,7 +79,7 @@ export const searchToolsAlgolia = async (searchInput: string,limit:number): Prom
         ]);
 
         console.log(`results for toolSearchAlgolia are: ${results}`); // This will print the entire results object
-// Or, if you want to see the hits (the actual search results):
+        // Or, if you want to see the hits (the actual search results):
         console.log(results[0].hits);
 
 

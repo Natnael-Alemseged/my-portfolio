@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Terminal } from "lucide-react";
 import {
     FaReact,
     FaNodeJs,
@@ -19,7 +18,10 @@ import {
     SiFirebase,
     SiMongodb,
     SiPostgresql,
+    SiAmazon,
+    SiLaravel,
     SiTerraform,
+    SiAnsible,
     SiIonic,
     SiJetbrains,
     SiTypescript,
@@ -99,34 +101,30 @@ export default function Technologies() {
 
     return (
         <section id="technologies" className="relative py-20 px-6 md:px-12 bg-gradient-to-b from-[#0a0a0a] via-[#0d0d0d] to-[#050505] text-white overflow-hidden">
-            {/* CRT Scanlines Overlay */}
-            <div className="terminal-scanlines absolute inset-0 opacity-20 pointer-events-none"></div>
-
             <div className="pointer-events-none absolute top-20 left-10 h-80 w-80 bg-[#00ff99]/10 blur-[120px]" />
             <div className="pointer-events-none absolute bottom-10 right-10 h-72 w-72 bg-[#1f8eff]/10 blur-[100px]" />
 
-            <div className="relative max-w-7xl mx-auto z-10">
-                {/* Section Header - Terminal Style */}
+            <div className="relative max-w-7xl mx-auto">
+                {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="mb-16"
+                    className="text-center mb-16"
                 >
-                    <div className="flex items-center gap-3 mb-4">
-                        <Terminal className="text-[#00ff99]" size={32} />
-                        <h2 className="text-3xl md:text-4xl font-mono font-bold text-[#00ff99] terminal-glow uppercase tracking-wider">
-                            &gt;&gt; TECH_STACK.SYS
-                        </h2>
-                    </div>
-                    <div className="h-0.5 bg-[#00ff99] mb-4 terminal-glow"></div>
-                    <p className="text-gray-400 font-mono text-sm uppercase tracking-wide">
-                        [SYSTEM] Comprehensive toolkit spanning languages, frameworks, databases, cloud infrastructure, and DevOps
+                    <p className="text-xs uppercase tracking-[0.5em] text-[#00ff99] mb-4">
+                        Full-Stack Arsenal
+                    </p>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                        Technologies & Tools
+                    </h2>
+                    <p className="text-gray-400 max-w-3xl mx-auto">
+                        Comprehensive toolkit spanning languages, frameworks, databases, cloud infrastructure, and DevOps—powering enterprise-grade mobile, web, and AI solutions
                     </p>
                 </motion.div>
 
-                {/* Tabs - Terminal Command Style */}
+                {/* Tabs */}
                 <div className="flex justify-center gap-2 mb-14 flex-wrap px-4">
                     {Object.keys(categories).map((category) => (
                         <motion.button
@@ -134,21 +132,18 @@ export default function Technologies() {
                             onClick={() => setActiveTab(category)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`px-5 py-2.5 border-2 transition-all duration-300 font-mono font-bold text-xs uppercase tracking-wider relative overflow-hidden
+                            className={`px-5 py-2.5 rounded-full border-2 transition-all duration-300 font-semibold text-xs uppercase tracking-wider justify-center items-center
                 ${activeTab === category
-                                    ? "bg-[#00ff99] text-black border-[#00ff99] shadow-[0_0_15px_rgba(0,255,153,0.5)]"
-                                    : "bg-black border-[#00ff99]/30 text-[#00ff99] hover:border-[#00ff99] hover:bg-[#00ff99]/10"
+                                    ? "bg-[#00ff99] text-black border-[#00ff99] shadow-lg shadow-[#00ff99]/30"
+                                    : "border-gray-700 hover:border-[#00ff99] hover:bg-[#00ff99]/10"
                                 }`}
                         >
-                            {activeTab === category && (
-                                <div className="terminal-scanlines absolute inset-0 opacity-20 pointer-events-none"></div>
-                            )}
-                            <span className="relative z-10">&gt; {category}</span>
+                            {category}
                         </motion.button>
                     ))}
                 </div>
 
-                {/* Icons Grid - Terminal Style */}
+                {/* Icons Grid */}
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}
@@ -157,6 +152,8 @@ export default function Technologies() {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.4 }}
                         className="grid gap-10 justify-center grid-cols-[repeat(auto-fit,minmax(200px,200px))]"
+
+
                     >
                         {techs.map((tech, index) => (
                             <motion.div
@@ -165,23 +162,21 @@ export default function Technologies() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.3, delay: index * 0.04 }}
                                 whileHover={{ scale: 1.08, y: -8 }}
-                                className="group relative flex flex-col items-center justify-center p-6 bg-black border-2 border-[#00ff99]/30 hover:border-[#00ff99] hover:shadow-[0_0_15px_rgba(0,255,153,0.3)] transition-all duration-300 cursor-pointer"
+                                className="group relative flex flex-col items-center justify-center p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[#00ff99]/50 hover:bg-white/10 transition-all duration-300 cursor-pointer backdrop-blur-sm"
                             >
-                                {/* Scanlines on hover */}
-                                <div className="terminal-scanlines absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity pointer-events-none"></div>
-
-                                <div className="text-5xl mb-3 transition-transform duration-300 group-hover:scale-110 relative z-10">
+                                <div className="text-5xl mb-3 transition-transform duration-300 group-hover:scale-110">
                                     {tech.icon}
                                 </div>
-                                <span className="text-xs font-mono font-semibold text-[#00ff99]/70 group-hover:text-[#00ff99] transition-colors text-center uppercase tracking-wide relative z-10">
+                                <span className="text-xs font-semibold text-gray-300 group-hover:text-white transition-colors text-center">
                                     {tech.name}
                                 </span>
+                                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00ff99]/0 to-[#00ff99]/0 group-hover:from-[#00ff99]/5 group-hover:to-transparent transition-all duration-300" />
                             </motion.div>
                         ))}
                     </motion.div>
                 </AnimatePresence>
 
-                {/* Tech Count Badge - Terminal Style */}
+                {/* Tech Count Badge */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
@@ -189,8 +184,8 @@ export default function Technologies() {
                     transition={{ duration: 0.6, delay: 0.4 }}
                     className="text-center mt-12"
                 >
-                    <p className="text-sm font-mono text-[#00ff99]/60 uppercase tracking-[0.3em]">
-                        [TOTAL] {Object.values(categories).flat().length}+ Technologies Mastered
+                    <p className="text-sm text-gray-500 uppercase tracking-[0.3em]">
+                        {Object.values(categories).flat().length}+ Technologies Mastered
                     </p>
                 </motion.div>
             </div>
