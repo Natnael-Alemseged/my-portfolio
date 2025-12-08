@@ -8,7 +8,7 @@ interface Experience {
     title: string;
     company: string;
     period: string;
-    description: string;
+    highlights: string[];
 }
 
 const experiences: Experience[] = [
@@ -17,58 +17,70 @@ const experiences: Experience[] = [
         title: 'Senior Software Engineer',
         company: 'HireArmada – Remote',
         period: 'Aug 2025 – Present',
-        description: `- Shipped AI-driven backends and full-stack features using Node.js, FastAPI, Flutter, Next.js, Prisma, Composio, MCP, and Langflow.
-- Built social discovery backend supporting 10K+ DAU with 99.9% uptime, real-time matching, and messaging.
-- Created affirmation mobile app with Gemini AI chat, widgets, personalized feeds; boosted retention 35%.
-- Automated PM bonus system (goal tracking, approvals, payouts) reducing processing time 50%.
-- Built agentic workspace w/ Socket.io, Composio email AI, Supermemory + Langflow search ending data silos.
-- Prototyped "Steve Jobs" AI persona using MCP, vector DB, and prompt flows for inspirational coaching.`,
+        highlights: [
+            "Shipped AI-driven backends and full-stack features using Node.js, FastAPI, Flutter, Next.js, Prisma, Composio, MCP, and Langflow.",
+            "Built social discovery backend supporting 10K+ DAU with 99.9% uptime, real-time matching, and messaging.",
+            "Created affirmation mobile app with Gemini AI chat, widgets, personalized feeds; boosted retention 35%.",
+            "Automated PM bonus system (goal tracking, approvals, payouts) reducing processing time 50%.",
+            "Built agentic workspace w/ Socket.io, Composio email AI, Supermemory + Langflow search ending data silos.",
+            "Prototyped \"Steve Jobs\" AI persona using MCP, vector DB, and prompt flows for inspirational coaching."
+        ],
     },
     {
         id: 2,
         title: 'Senior Full-Stack Developer',
         company: 'Startup Agile – Atlanta, GA',
         period: 'Jan 2025 – Present',
-        description: `- Led React/Next.js web + React Native (Expo) mobile delivery; hit milestones 15% ahead of schedule.
-- Built OTA-enabled RN apps w/ deep linking, Firebase push, Google Maps, analytics, and AI assistants; cut load 35%.
-- Optimized Next.js SSR/SEO (App Router) and mobile bundles; +50% web traffic and +30% Core Web Vitals.
-- Standardized TypeScript, tRPC, Prisma, Playwright + Detox testing; reduced production bugs 65%.`,
+        highlights: [
+            "Led React/Next.js web + React Native (Expo) mobile delivery; hit milestones 15% ahead of schedule.",
+            "Built OTA-enabled RN apps w/ deep linking, Firebase push, Google Maps, analytics, and AI assistants; cut load 35%.",
+            "Optimized Next.js SSR/SEO (App Router) and mobile bundles; +50% web traffic and +30% Core Web Vitals.",
+            "Standardized TypeScript, tRPC, Prisma, Playwright + Detox testing; reduced production bugs 65%."
+        ],
     },
     {
         id: 3,
         title: 'Software Engineer',
         company: 'DataCore Softwares – Fort Lauderdale, FL',
         period: 'Jan 2025 – Jul 2025',
-        description: `- Built AI-powered storage services w/ Python, FastAPI, Docker, self-hosted LLMs for detection, transcription, translation.
-- Delivered <200ms inference and 99.9% uptime via AWS EKS, TensorRT optimizations, and containerized deployments.
-- Fine-tuned LLaMA 3, Mistral 7B, etc., cutting GPU costs 12%; shipped end-to-end ML pipelines with similarity search.
-- Automated CI/CD using GitHub Actions, Terraform, Prometheus/Grafana; rollout failures down 60%.`,
+        highlights: [
+            "Built AI-powered storage services w/ Python, FastAPI, Docker, self-hosted LLMs for detection, transcription, translation.",
+            "Delivered <200ms inference and 99.9% uptime via AWS EKS, TensorRT optimizations, and containerized deployments.",
+            "Fine-tuned LLaMA 3, Mistral 7B, etc., cutting GPU costs 12%; shipped end-to-end ML pipelines with similarity search.",
+            "Automated CI/CD using GitHub Actions, Terraform, Prometheus/Grafana; rollout failures down 60%."
+        ],
     },
     {
         id: 4,
         title: 'Senior Mobile Developer',
         company: 'Qemer Software Technologies – Addis Ababa',
         period: 'Jan 2024 – Jun 2025',
-        description: `- Led delivery of 10+ cross-platform Flutter/Ionic apps; execution velocity improved 40%.
-- Optimized app performance (load times -50%) and instituted mentoring program reducing onboarding 30%.
-- Oversaw UI/UX, QA, and release flows for high-availability mobile deployments.`,
+        highlights: [
+            "Led delivery of 10+ cross-platform Flutter/Ionic apps; execution velocity improved 40%.",
+            "Optimized app performance (load times -50%) and instituted mentoring program reducing onboarding 30%.",
+            "Oversaw UI/UX, QA, and release flows for high-availability mobile deployments."
+        ],
     },
     {
         id: 5,
         title: 'Senior Full-Stack Developer & Founder',
         company: 'Metshafe – Addis Ababa',
         period: 'Jun 2022 – Present',
-        description: `- Co-founded Metshafe eBook platform, leading product strategy, architecture, and launch.
-- Built Flutter apps, Firebase backend, Node.js services, and Kotlin plugins powering payments + DRM.
-- Drove roadmap, analytics, and engagement initiatives for growing reader community.`,
+        highlights: [
+            "Co-founded Metshafe eBook platform, leading product strategy, architecture, and launch.",
+            "Built Flutter apps, Firebase backend, Node.js services, and Kotlin plugins powering payments + DRM.",
+            "Drove roadmap, analytics, and engagement initiatives for growing reader community."
+        ],
     },
     {
         id: 6,
         title: 'Software Engineer',
         company: 'Freelance & Consulting',
         period: 'Jul 2022 – Mar 2023',
-        description: `- Delivered bespoke full-stack solutions with React, Next.js, FastAPI, and PostgreSQL for startups.
-- Focused on performant UX, API integration, and project ownership from scoping to release.`,
+        highlights: [
+            "Delivered bespoke full-stack solutions with React, Next.js, FastAPI, and PostgreSQL for startups.",
+            "Focused on performant UX, API integration, and project ownership from scoping to release."
+        ],
     },
 ];
 
@@ -174,9 +186,25 @@ export default function WorkExperience() {
                                                 className="overflow-hidden"
                                             >
                                                 <div className="mt-4 p-6 bg-[#1a1a1a] rounded-2xl border border-gray-800">
-                                                    <div className="text-gray-300 whitespace-pre-line leading-relaxed">
-                                                        {exp.description}
+                                                    <div className="flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.2em] text-[#00ff99]/70 mb-4">
+                                                        <span className="px-2 py-1 border border-[#00ff99]/40 rounded-full bg-[#00ff99]/5">
+                                                            Highlights
+                                                        </span>
+                                                        <span className="px-2 py-1 border border-[#00ff99]/20 rounded-full text-gray-300">
+                                                            {exp.period}
+                                                        </span>
                                                     </div>
+                                                    <ul className="space-y-3 text-gray-300 text-sm leading-relaxed">
+                                                        {exp.highlights.map((point, idx) => (
+                                                            <li key={idx} className="flex gap-3">
+                                                                <span
+                                                                    aria-hidden="true"
+                                                                    className="mt-2 h-1.5 w-1.5 rounded-full bg-[#00ff99]"
+                                                                ></span>
+                                                                <span>{point}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
                                                 </div>
                                             </motion.div>
                                         )}

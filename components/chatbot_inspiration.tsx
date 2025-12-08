@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader2, Sparkles, Terminal, Cpu } from 'lucide-react';
-import { generateChatResponse } from '../services/geminiService';
-import { ChatMessage } from '../types';
-import { PROFILE } from '../constants';
+
+
+
 
 const ChatBot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);

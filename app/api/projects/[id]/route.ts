@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
+import ProjectIntegration from '@/lib/db/project-integration.model';
 import Supermemory from 'supermemory';
 
 const supermemory = new Supermemory({
@@ -45,26 +46,47 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         }
 
         // Update Supermemory (Delete old, Add new)
-        if (project.supermemoryId) {
+        const integration = await ProjectIntegration.findOne({ projectId: id, service: 'supermemory' });
+        if (integration) {
             try {
-                await supermemory.memories.delete(project.supermemoryId);
+                await supermemory.memories.delete(integration.externalId);
             } catch (e) {
                 console.error('Failed to delete old memory:', e);
             }
         }
 
         try {
+            const contentParts = [
+                `Project: ${project.title}`,
+                `Summary: ${project.summary}`,
+                project.role ? `Role: ${project.role}` : '',
+                project.keyTakeaway ? `Key Takeaway: ${project.keyTakeaway}` : '',
+                project.problem ? `Problem: ${project.problem}` : '',
+                project.solution ? `Solution: ${project.solution}` : '',
+                project.architecture ? `Architecture: ${project.architecture}` : '',
+                project.features?.length ? `Features: ${project.features.join(', ')}` : '',
+                `Tech Stack: ${project.techStack?.join(', ') || 'N/A'}`,
+                project.tags?.length ? `Tags: ${project.tags.join(', ')}` : '',
+                `Type: ${project.schemaType || 'SoftwareApplication'}`,
+                `Links: ${JSON.stringify(project.links)}`,
+            ].filter(Boolean);
+
             const addedMemory = await supermemory.memories.add({
-                content: `Project: ${project.title}\nDescription: ${project.description}\nTech Stack: ${project.techStack.join(', ')}\nLinks: ${JSON.stringify(project.links)}`,
+                content: contentParts.join('\n'),
                 containerTag: 'natnael-portfolio-chatbot',
                 metadata: {
                     type: 'project',
                     projectId: project._id.toString(),
+                    slug: project.slug,
                 },
             });
             if (addedMemory && addedMemory.id) {
-                project.supermemoryId = addedMemory.id;
-                await project.save();
+                // Update or create integration
+                await ProjectIntegration.findOneAndUpdate(
+                    { projectId: id, service: 'supermemory' },
+                    { externalId: addedMemory.id, syncedAt: new Date() },
+                    { upsert: true }
+                );
             }
         } catch (e) {
             console.error('Failed to add new memory:', e);
@@ -91,9 +113,11 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         }
 
         // Remove from Supermemory
-        if (project.supermemoryId) {
+        const integration = await ProjectIntegration.findOne({ projectId: id, service: 'supermemory' });
+        if (integration) {
             try {
-                await supermemory.memories.delete(project.supermemoryId);
+                await supermemory.memories.delete(integration.externalId);
+                await ProjectIntegration.deleteOne({ _id: integration._id });
             } catch (e) {
                 console.error('Failed to delete memory:', e);
             }

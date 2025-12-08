@@ -8,17 +8,22 @@ interface Message {
     content: string;
 }
 
+const INITIAL_GREETING = `ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL
+INITIALIZING BIOMETRIC SCAN...
+IDENTITY CONFIRMED: VISITOR.
+
+Greetings. I am Natnael's Automated Persona. How may I assist you?`;
+
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([
-        {
-            role: 'assistant',
-            content: "ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL\nINITIALIZING BIOMETRIC SCAN...\nIDENTITY CONFIRMED: VISITOR.\n\nGreetings. I am Natnael's Automated Persona. How may I assist you?",
-        },
-    ]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [hasPlayedIntro, setHasPlayedIntro] = useState(false);
+    const [introText, setIntroText] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const introIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const isIntroAnimating = isOpen && !hasPlayedIntro;
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -26,10 +31,45 @@ export default function ChatWidget() {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages, isOpen]);
+    }, [messages, isOpen, introText]);
+
+    useEffect(() => {
+        if (!isOpen || hasPlayedIntro) return;
+
+        if (introIntervalRef.current) {
+            clearInterval(introIntervalRef.current);
+        }
+
+        let index = 0;
+        setIntroText('');
+
+        introIntervalRef.current = setInterval(() => {
+            index += 1;
+            setIntroText(INITIAL_GREETING.slice(0, index));
+
+            if (index >= INITIAL_GREETING.length) {
+                if (introIntervalRef.current) {
+                    clearInterval(introIntervalRef.current);
+                    introIntervalRef.current = null;
+                }
+                setHasPlayedIntro(true);
+                setIntroText('');
+                setMessages((prev) =>
+                    prev.length ? prev : [{ role: 'assistant', content: INITIAL_GREETING }]
+                );
+            }
+        }, 30);
+
+        return () => {
+            if (introIntervalRef.current) {
+                clearInterval(introIntervalRef.current);
+                introIntervalRef.current = null;
+            }
+        };
+    }, [isOpen, hasPlayedIntro]);
 
     const handleSend = async () => {
-        if (!input.trim() || isLoading) return;
+        if (!input.trim() || isLoading || !hasPlayedIntro) return;
 
         const userMessage: Message = { role: 'user', content: input };
         setMessages((prev) => [...prev, userMessage]);
@@ -139,6 +179,22 @@ export default function ChatWidget() {
 
                 {/* Messages Area */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-black z-30 font-mono text-[#00ff99]">
+                    {isIntroAnimating && (
+                        <div className="flex flex-col items-start">
+                            <div className="uppercase text-[10px] mb-1 text-[#00ff99]/70">
+                                &gt; SYSTEM_RESPONSE
+                            </div>
+                            <div className="max-w-[90%] p-2">
+                                <span
+                                    className="whitespace-pre-wrap leading-relaxed text-sm md:text-base"
+                                    style={{ textShadow: '0 0 2px #00ff99' }}
+                                >
+                                    {introText || '\u00A0'}
+                                </span>
+                                <span className="inline-block w-2 h-4 bg-[#00ff99] ml-1 animate-pulse align-middle"></span>
+                            </div>
+                        </div>
+                    )}
                     {messages.map((msg, idx) => (
                         <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                             <div className={`uppercase text-[10px] mb-1 text-[#00ff99]/70`}>
@@ -176,13 +232,13 @@ export default function ChatWidget() {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={handleKeyPress}
-                            placeholder="ENTER COMMAND..."
-                            disabled={isLoading}
+                            placeholder={isIntroAnimating ? 'BOOTING TERMINAL...' : 'ENTER COMMAND...'}
+                            disabled={isLoading || isIntroAnimating}
                             className="w-full bg-black border border-[#00ff99]/50 text-[#00ff99] pl-8 pr-12 py-3 text-sm font-mono focus:outline-none focus:border-[#00ff99] focus:shadow-[0_0_15px_rgba(0,255,153,0.3)] transition-all placeholder:text-[#00ff99]/30 uppercase disabled:opacity-50"
                         />
                         <button
                             onClick={handleSend}
-                            disabled={isLoading || !input.trim()}
+                            disabled={isLoading || !input.trim() || isIntroAnimating}
                             className="absolute right-2 p-2 text-[#00ff99] hover:bg-[#00ff99] hover:text-black transition-colors disabled:opacity-30"
                         >
                             <div className="font-bold text-xs px-1">SEND</div>

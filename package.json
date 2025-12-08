@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@calcom/embed-react": "^1.5.3",
+    "@supabase/supabase-js": "^2.86.2",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.539.0",
     "mongoose": "^8.17.1",
-    "next": "15.4.5",
+    "next": "16.0.7",
     "next-sitemap": "^4.2.3",
     "openai": "^6.9.1",
     "react": "19.1.0",
@@ -23,6 +25,9 @@
     "react-globe.gl": "^2.35.0",
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
+    "react-syntax-highlighter": "^16.1.0",
+    "remark-gfm": "^4.0.1",
     "supermemory": "^3.4.0"
   },
   "devDependencies": {

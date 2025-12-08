@@ -73,16 +73,16 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                             <FaGithub className="mr-2" /> View Code
                         </a>
                     )}
-                    {project.links.playstore && (
-                        <a href={project.links.playstore} target="_blank" rel="noopener noreferrer" className="flex items-center bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-700 transition border border-gray-700">
-                            <FaGooglePlay className="mr-2 text-green-500" /> Play Store
+                    {project.links.playstore && project.links.playstore.map((link, index) => (
+                        <a key={index} href={link} target="_blank" rel="noopener noreferrer" className="flex items-center bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-700 transition border border-gray-700">
+                            <FaGooglePlay className="mr-2 text-green-500" /> Play Store {project.links.playstore!.length > 1 ? (index + 1) : ''}
                         </a>
-                    )}
-                    {project.links.appstore && (
-                        <a href={project.links.appstore} target="_blank" rel="noopener noreferrer" className="flex items-center bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-700 transition border border-gray-700">
-                            <FaAppStoreIos className="mr-2 text-blue-500" /> App Store
+                    ))}
+                    {project.links.appstore && project.links.appstore.map((link, index) => (
+                        <a key={index} href={link} target="_blank" rel="noopener noreferrer" className="flex items-center bg-gray-800 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-700 transition border border-gray-700">
+                            <FaAppStoreIos className="mr-2 text-blue-500" /> App Store {project.links.appstore!.length > 1 ? (index + 1) : ''}
                         </a>
-                    )}
+                    ))}
                 </div>
 
                 <div className="prose prose-invert max-w-none">

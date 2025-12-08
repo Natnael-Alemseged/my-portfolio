@@ -11,8 +11,8 @@ export default async function AddProjectPage() {
     }
 
     return (
-        <div className="min-h-screen bg-black text-white p-8">
-            <h1 className="text-3xl font-bold text-[#00ff99] mb-8 text-center">Add New Project</h1>
+        <div className="min-h-screen bg-black text-white p-8 pt-28 md:pt-32">
+            <h1 className="text-3xl font-bold text-[#00ff99]  text-center">Add New Project</h1>
             <ProjectForm />
         </div>
     );

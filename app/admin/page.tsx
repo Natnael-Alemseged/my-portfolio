@@ -32,11 +32,13 @@ export default async function AdminDashboard() {
                 </div>
 
                 <div className="grid gap-6">
-                    {projects.map((project: { _id: string; title: string; description: string }) => (
+                    {projects.map((project: { _id: string; title: string; summary?: string }) => (
                         <div key={project._id} className="bg-gray-900 p-6 rounded-lg flex justify-between items-center">
                             <div>
                                 <h2 className="text-xl font-bold">{project.title}</h2>
-                                <p className="text-gray-400 text-sm">{project.description.substring(0, 100)}...</p>
+                                <p className="text-gray-400 text-sm">
+                                    {(project.summary || '').substring(0, 100) || 'No summary yet'}...
+                                </p>
                             </div>
                             <div className="flex gap-4">
                                 <Link href={`/admin/edit/${project._id}`} className="text-blue-400 hover:text-blue-300">

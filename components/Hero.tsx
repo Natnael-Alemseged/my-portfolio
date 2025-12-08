@@ -1,6 +1,6 @@
 "use client";
 
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
+import {FaGithub, FaLinkedin, FaTwitter} from "react-icons/fa";
 
 export default function Hero() {
     return (
@@ -17,13 +17,13 @@ export default function Hero() {
                 >
                     <defs>
                         <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stopColor="#00ff99" />
-                            <stop offset="100%" stopColor="#006644" />
+                            <stop offset="0%" stopColor="#00ff99"/>
+                            <stop offset="100%" stopColor="#006644"/>
                         </linearGradient>
                     </defs>
                     <g stroke="url(#grad)" strokeWidth="1.5" fill="none">
-                        {Array.from({ length: 15 }).map((_, row) =>
-                            Array.from({ length: 20 }).map((_, col) => (
+                        {Array.from({length: 15}).map((_, row) =>
+                            Array.from({length: 20}).map((_, col) => (
                                 <rect
                                     key={`${row}-${col}`}
                                     x={col * 80}
@@ -44,17 +44,20 @@ export default function Hero() {
                     {/* LEFT CONTENT */}
                     <div className="text-left space-y-6 relative z-10">
                         <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-                            Natnael Alemseged <br />
+                            Natnael Alemseged <br/>
                             <span className="text-[#00ff99]">
-                                Full-Stack Developer, Flutter Specialist & AI Enthusiast
+                                    AI Engineer & Full-Stack Developer
                             </span>
                         </h1>
+
                         <p className="text-gray-400 max-w-lg">
-                            I’m Natnael Alemseged, a results-driven full-stack developer with hands-on experience
-                            building scalable apps using Flutter, React Native, Next.js, and Node.js/Express.
-                            I focus on delivering high-performance mobile and web solutions,
-                            and I’m passionate about clean architecture, developer experience, open source, and AI-powered innovations.
+                            I’m Natnael Alemseged, an AI Engineer and Full-Stack Developer specializing in
+                            LLM-powered systems and agent-based architectures. I build production-ready
+                            AI applications using FastAPI, LangGraph, vector databases, and modern frontend
+                            stacks like Next.js and Flutter. My work focuses on scalable backend design,
+                            clean architecture, and integrating AI capabilities that solve real product problems.
                         </p>
+
                         <div className="flex gap-6 text-gray-400">
                             <a
                                 href="https://github.com/yourusername"
@@ -62,7 +65,7 @@ export default function Hero() {
                                 rel="noopener noreferrer"
                                 className="flex items-center space-x-2 hover:text-white transition"
                             >
-                                <FaGithub /> <span>GitHub</span>
+                                <FaGithub/> <span>GitHub</span>
                             </a>
                             <a
                                 href="https://linkedin.com/in/yourusername"
@@ -70,7 +73,7 @@ export default function Hero() {
                                 rel="noopener noreferrer"
                                 className="flex items-center space-x-2 hover:text-white transition"
                             >
-                                <FaLinkedin /> <span>LinkedIn</span>
+                                <FaLinkedin/> <span>LinkedIn</span>
                             </a>
                             <a
                                 href="https://twitter.com/yourusername"
@@ -78,7 +81,7 @@ export default function Hero() {
                                 rel="noopener noreferrer"
                                 className="flex items-center space-x-2 hover:text-white transition"
                             >
-                                <FaTwitter /> <span>Twitter</span>
+                                <FaTwitter/> <span>Twitter</span>
                             </a>
                         </div>
                     </div>
@@ -92,12 +95,12 @@ export default function Hero() {
                         >
                             <defs>
                                 <clipPath id="fullCircleClip" clipPathUnits="userSpaceOnUse">
-                                    <circle cx="250" cy="250" r="195" />
+                                    <circle cx="250" cy="250" r="195"/>
                                 </clipPath>
                             </defs>
 
                             {/* Rotating group: circle and dots */}
-                            <g className="animate-spin-slow" style={{ transformOrigin: "250px 250px" }}>
+                            <g className="animate-spin-slow" style={{transformOrigin: "250px 250px"}}>
                                 <circle
                                     cx="250"
                                     cy="250"
@@ -106,7 +109,7 @@ export default function Hero() {
                                     strokeWidth="2"
                                     fill="none"
                                 />
-                                {Array.from({ length: 30 }).map((_, i) => (
+                                {Array.from({length: 30}).map((_, i) => (
                                     <circle
                                         key={i}
                                         cx={250 + 200 * Math.cos((i * 12 * Math.PI) / 180)}
@@ -127,7 +130,7 @@ export default function Hero() {
                                 height="388"
                                 clipPath="url(#fullCircleClip)"
                                 preserveAspectRatio="xMidYMid meet"
-                                style={{ pointerEvents: "none" }}
+                                style={{pointerEvents: "none"}}
                             />
 
 
@@ -137,6 +140,7 @@ export default function Hero() {
                             .animate-spin-slow {
                                 animation: spin 20s linear infinite;
                             }
+
                             @keyframes spin {
                                 from {
                                     transform: rotate(0deg);
