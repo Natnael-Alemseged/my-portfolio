@@ -38,6 +38,7 @@ export interface Project {
     tags?: string[];
     
     images?: ProjectImage[];
+    logo_image?: ProjectImage;
     links?: ProjectLink[];
     
     metrics?: ProjectMetrics;
@@ -67,6 +68,7 @@ export interface ProjectFormData {
     techStack: string;
     tags: string;
     images: string; // JSON string of ProjectImage[]
+    logo_image: string; // JSON string of single ProjectImage
     links: string; // JSON string of ProjectLink[]
     duration: string;
     teamSize: string;

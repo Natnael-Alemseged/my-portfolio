@@ -41,6 +41,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         const body = await req.json();
         const project = await Project.findByIdAndUpdate(id, body, { new: true });
 
+        console.log(`project body is:${JSON.stringify(body,null,2)}`);
+
         if (!project) {
             return NextResponse.json({ error: 'Project not found' }, { status: 404 });
         }

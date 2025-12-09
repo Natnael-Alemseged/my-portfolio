@@ -20,7 +20,10 @@ export async function GET(req: NextRequest) {
         // Filter by visibility for non-admin users
         const query = isAdmin ? {} : { visibility: { $in: ['public', 'unlisted'] } };
         const projects = await Project.find(query).sort({ createdAt: -1 });
-        
+
+        console.log(`projects are: ${JSON.stringify(projects,null,2)}`);
+
+
         return NextResponse.json(projects);
     } catch (error) {
         console.error('Error fetching projects:', error);
@@ -39,6 +42,7 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
             }
         }
+        console.log(`project body is:${JSON.stringify(req.body,null,2)}`);
 
         await connectToDatabase();
         const body = await req.json();

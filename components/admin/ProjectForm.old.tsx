@@ -159,6 +159,7 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
         const payload = {
             ...formData,
             images: formData.images.split('\n').filter((s: string) => s.trim()),
+            logo_image: formData.logo_image.split('\n').filter((s: string) => s.trim()),
             techStack: formData.techStack.split(',').map((s: string) => s.trim()).filter((s: string) => s),
             links: {
                 ...formData.links,

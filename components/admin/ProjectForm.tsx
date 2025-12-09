@@ -6,6 +6,17 @@ import { uploadImageToSupabase } from '@/lib/supabase';
 import { Upload, Link as LinkIcon, X, Code, FileText, Plus, Trash2 } from 'lucide-react';
 import { Project, ProjectImage, ProjectLink } from '@/types/project';
 
+const safeParseJson = <T,>(value: string | undefined, fallback: T): T => {
+    if (!value || !value.trim()) {
+        return fallback;
+    }
+    try {
+        return JSON.parse(value) as T;
+    } catch {
+        return fallback;
+    }
+};
+
 interface ProjectFormProps {
     initialData?: Project;
     isEdit?: boolean;
@@ -28,6 +39,7 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
         techStack: initialData?.techStack?.join(', ') || '',
         tags: initialData?.tags?.join(', ') || '',
         images: JSON.stringify(initialData?.images || [], null, 2),
+        logo_image: initialData?.logo_image ? JSON.stringify(initialData.logo_image, null, 2) : '',
         links: JSON.stringify(initialData?.links || [], null, 2),
         duration: initialData?.metrics?.duration || '',
         teamSize: initialData?.metrics?.teamSize?.toString() || '',
@@ -40,6 +52,7 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
 
     const [loading, setLoading] = useState(false);
     const [uploadingImages, setUploadingImages] = useState(false);
+    const [uploadingLogo, setUploadingLogo] = useState(false);
     const [viewMode, setViewMode] = useState<'form' | 'json'>('form');
     const [jsonInput, setJsonInput] = useState('');
     const [jsonError, setJsonError] = useState('');
@@ -77,33 +90,58 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
         setUploadingImages(false);
     };
 
+    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+
+        const file = files[0];
+        setUploadingLogo(true);
+
+        const url = await uploadImageToSupabase(file);
+        if (url) {
+            const logoPayload: ProjectImage = {
+                url,
+                alt: file.name.replace(/\.[^/.]+$/, ''),
+                order: 0,
+            };
+            setFormData(prev => ({ ...prev, logo_image: JSON.stringify(logoPayload, null, 2) }));
+        }
+
+        setUploadingLogo(false);
+    };
+
+    const buildPayload = () => {
+        return {
+            title: formData.title,
+            summary: formData.summary,
+            role: formData.role,
+            problem: formData.problem,
+            solution: formData.solution,
+            keyTakeaway: formData.keyTakeaway || undefined,
+            content: formData.content,
+            contentFormat: formData.contentFormat,
+            architecture: formData.architecture,
+            features: formData.features.split('\n').filter(s => s.trim()),
+            techStack: formData.techStack.split(',').map(s => s.trim()).filter(s => s),
+            tags: formData.tags.split(',').map(s => s.trim()).filter(s => s),
+            images: safeParseJson<ProjectImage[]>(formData.images, []),
+            logo_image: safeParseJson<ProjectImage | undefined>(formData.logo_image, undefined),
+            links: safeParseJson<ProjectLink[]>(formData.links, []),
+            metrics: {
+                duration: formData.duration || undefined,
+                teamSize: formData.teamSize ? parseInt(formData.teamSize) : undefined,
+                impact: formData.impact || undefined,
+            },
+            featured: formData.featured,
+            status: formData.status,
+            visibility: formData.visibility,
+            schemaType: formData.schemaType,
+        };
+    };
+
     const convertFormToJson = () => {
         try {
-            const payload = {
-                title: formData.title,
-                summary: formData.summary,
-                role: formData.role,
-                problem: formData.problem,
-                solution: formData.solution,
-                keyTakeaway: formData.keyTakeaway,
-                content: formData.content,
-                contentFormat: formData.contentFormat,
-                architecture: formData.architecture,
-                features: formData.features.split('\n').filter(s => s.trim()),
-                techStack: formData.techStack.split(',').map(s => s.trim()).filter(s => s),
-                tags: formData.tags.split(',').map(s => s.trim()).filter(s => s),
-                images: JSON.parse(formData.images || '[]'),
-                links: JSON.parse(formData.links || '[]'),
-                metrics: {
-                    duration: formData.duration || undefined,
-                    teamSize: formData.teamSize ? parseInt(formData.teamSize) : undefined,
-                    impact: formData.impact || undefined,
-                },
-                featured: formData.featured,
-                status: formData.status,
-                visibility: formData.visibility,
-                schemaType: formData.schemaType,
-            };
+            const payload = buildPayload();
             return JSON.stringify(payload, null, 2);
         } catch {
             return '{}';
@@ -135,6 +173,7 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                 techStack: Array.isArray(parsed.techStack) ? parsed.techStack.join(', ') : '',
                 tags: Array.isArray(parsed.tags) ? parsed.tags.join(', ') : '',
                 images: JSON.stringify(parsed.images || [], null, 2),
+                logo_image: parsed.logo_image ? JSON.stringify(parsed.logo_image, null, 2) : '',
                 links: JSON.stringify(parsed.links || [], null, 2),
                 duration: parsed.metrics?.duration || '',
                 teamSize: parsed.metrics?.teamSize?.toString() || '',
@@ -163,31 +202,7 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
         setLoading(true);
 
         try {
-            const payload = {
-                title: formData.title,
-                summary: formData.summary,
-                role: formData.role,
-                problem: formData.problem,
-                solution: formData.solution,
-                keyTakeaway: formData.keyTakeaway || undefined,
-                content: formData.content,
-                contentFormat: formData.contentFormat,
-                architecture: formData.architecture,
-                features: formData.features.split('\n').filter(s => s.trim()),
-                techStack: formData.techStack.split(',').map(s => s.trim()).filter(s => s),
-                tags: formData.tags.split(',').map(s => s.trim()).filter(s => s),
-                images: JSON.parse(formData.images || '[]'),
-                links: JSON.parse(formData.links || '[]'),
-                metrics: {
-                    duration: formData.duration || undefined,
-                    teamSize: formData.teamSize ? parseInt(formData.teamSize) : undefined,
-                    impact: formData.impact || undefined,
-                },
-                featured: formData.featured,
-                status: formData.status,
-                visibility: formData.visibility,
-                schemaType: formData.schemaType,
-            };
+            const payload = buildPayload();
 
             const url = isEdit ? `/api/projects/${initialData?._id}` : '/api/projects';
             const method = isEdit ? 'PUT' : 'POST';
@@ -539,6 +554,29 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                                 />
                                 {uploadingImages && (
                                     <p className="text-[#00ff99] text-sm mt-2">Uploading images...</p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <label className="block mb-2 font-bold">Logo Image (JSON)</label>
+                            <textarea
+                                name="logo_image"
+                                value={formData.logo_image}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-32 font-mono text-sm"
+                                placeholder='{"url": "https://...", "alt": "Logo", "order": 0}'
+                            />
+                            <div className="mt-2">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleLogoUpload}
+                                    disabled={uploadingLogo}
+                                    className="w-full p-2 bg-gray-800 rounded border border-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#00ff99] file:text-black file:cursor-pointer hover:file:bg-[#00e68a] disabled:opacity-50"
+                                />
+                                {uploadingLogo && (
+                                    <p className="text-[#00ff99] text-sm mt-2">Uploading logo image...</p>
                                 )}
                             </div>
                         </div>

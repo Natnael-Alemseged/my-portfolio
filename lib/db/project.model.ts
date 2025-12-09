@@ -39,6 +39,7 @@ const ProjectSchema = new mongoose.Schema({
     tags: [{ type: String }],
     
     images: [ImageSchema],
+    logo_image:ImageSchema,
     links: [LinkSchema],
     
     metrics: MetricsSchema,
