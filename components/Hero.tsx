@@ -1,6 +1,7 @@
 "use client";
 
-import {FaGithub, FaLinkedin, FaTwitter} from "react-icons/fa";
+import {FaGithub, FaLinkedin } from "react-icons/fa";
+import { BsTwitterX } from "react-icons/bs";
 
 export default function Hero() {
     return (
@@ -76,12 +77,12 @@ export default function Hero() {
                                 <FaLinkedin/> <span>LinkedIn</span>
                             </a>
                             <a
-                                href="https://twitter.com/yourusername"
+                                href="https://x.com/NotaZnation"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center space-x-2 hover:text-white transition"
                             >
-                                <FaTwitter/> <span>Twitter</span>
+                                <BsTwitterX /> <span>X.com</span>
                             </a>
                         </div>
                     </div>

@@ -12,6 +12,7 @@ interface ProjectFormProps {
         description?: string;
         content?: string;
         images?: string[];
+        logo_image?: string[];
         techStack?: string[];
         links?: {
             web?: string;
@@ -30,6 +31,7 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
         description: initialData?.description || '',
         content: initialData?.content || '',
         images: initialData?.images?.join('\n') || '',
+        logo_image: initialData?.logo_image?.join('\n') || '',
         techStack: initialData?.techStack?.join(', ') || '',
         links: {
             web: initialData?.links?.web || '',
@@ -103,6 +105,7 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
             description: formData.description,
             content: formData.content,
             images: formData.images.split('\n').filter((s: string) => s.trim()),
+            logo_image: formData.logo_image.split('\n').filter((s: string) => s.trim()),
             techStack: formData.techStack.split(',').map((s: string) => s.trim()).filter((s: string) => s),
             links: {
                 web: formData.links.web,
@@ -130,6 +133,7 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                 description: parsed.description || '',
                 content: parsed.content || '',
                 images: Array.isArray(parsed.images) ? parsed.images.join('\n') : '',
+                logo_image: Array.isArray(parsed.logo_image) ? parsed.logo_image.join('\n') : '',
                 techStack: Array.isArray(parsed.techStack) ? parsed.techStack.join(', ') : '',
                 links: {
                     web: parsed.links?.web || '',
@@ -287,6 +291,16 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                     value={formData.content}
                     onChange={handleChange}
                     className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-48"
+                />
+            </div>
+            <div>
+                <label className="block mb-2 font-bold">Logo Image URLs</label>
+                <textarea
+                    name="logo_image"
+                    value={formData.logo_image}
+                    onChange={handleChange}
+                    className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-24"
+                    placeholder="Paste logo image URLs (one per line)"
                 />
             </div>
             <div>

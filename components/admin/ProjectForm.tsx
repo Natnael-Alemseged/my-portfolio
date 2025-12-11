@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { uploadImageToSupabase } from '@/lib/supabase';
+import { uploadImageToSupabase, listImagesFromSupabase } from '@/lib/supabase';
 import { Upload, Link as LinkIcon, X, Code, FileText, Plus, Trash2 } from 'lucide-react';
 import { Project, ProjectImage, ProjectLink } from '@/types/project';
 
@@ -57,6 +57,11 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
     const [jsonInput, setJsonInput] = useState('');
     const [jsonError, setJsonError] = useState('');
     const jsonEditingRef = useRef(false);
+    const [existingImages, setExistingImages] = useState<{ name: string; url: string }[]>([]);
+    const [showStorageSelector, setShowStorageSelector] = useState(false);
+    const [showLogoStorageSelector, setShowLogoStorageSelector] = useState(false);
+    const [loadingExistingImages, setLoadingExistingImages] = useState(false);
+    const [storageError, setStorageError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -72,22 +77,27 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
         if (!files || files.length === 0) return;
 
         setUploadingImages(true);
+        setStorageError(null);
         const currentImages: ProjectImage[] = JSON.parse(formData.images || '[]');
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const url = await uploadImageToSupabase(file);
-            if (url) {
-                currentImages.push({
-                    url,
-                    alt: file.name.replace(/\.[^/.]+$/, ''),
-                    order: currentImages.length
-                });
+        try {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const url = await uploadImageToSupabase(file);
+                if (url) {
+                    currentImages.push({
+                        url,
+                        alt: file.name.replace(/\.[^/.]+$/, ''),
+                        order: currentImages.length
+                    });
+                }
             }
+            setFormData(prev => ({ ...prev, images: JSON.stringify(currentImages, null, 2) }));
+        } catch (error) {
+            setStorageError(error instanceof Error ? error.message : 'Failed to upload images');
+        } finally {
+            setUploadingImages(false);
         }
-
-        setFormData(prev => ({ ...prev, images: JSON.stringify(currentImages, null, 2) }));
-        setUploadingImages(false);
     };
 
     const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,18 +106,44 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
 
         const file = files[0];
         setUploadingLogo(true);
+        setStorageError(null);
 
-        const url = await uploadImageToSupabase(file);
-        if (url) {
-            const logoPayload: ProjectImage = {
-                url,
-                alt: file.name.replace(/\.[^/.]+$/, ''),
-                order: 0,
-            };
-            setFormData(prev => ({ ...prev, logo_image: JSON.stringify(logoPayload, null, 2) }));
+        try {
+            const url = await uploadImageToSupabase(file);
+            if (url) {
+                const logoPayload: ProjectImage = {
+                    url,
+                    alt: file.name.replace(/\.[^/.]+$/, ''),
+                    order: 0,
+                };
+                setFormData(prev => ({ ...prev, logo_image: JSON.stringify(logoPayload, null, 2) }));
+            }
+        } catch (error) {
+            setStorageError(error instanceof Error ? error.message : 'Failed to upload logo');
+        } finally {
+            setUploadingLogo(false);
         }
+    };
 
-        setUploadingLogo(false);
+    const handleSelectFromStorage = (image: { name: string; url: string }) => {
+        const currentImages: ProjectImage[] = JSON.parse(formData.images || '[]');
+        currentImages.push({
+            url: image.url,
+            alt: image.name.replace(/\.[^/.]+$/, ''),
+            order: currentImages.length
+        });
+        setFormData(prev => ({ ...prev, images: JSON.stringify(currentImages, null, 2) }));
+        setShowStorageSelector(false);
+    };
+
+    const handleSelectLogoFromStorage = (image: { name: string; url: string }) => {
+        const logoPayload: ProjectImage = {
+            url: image.url,
+            alt: image.name.replace(/\.[^/.]+$/, ''),
+            order: 0,
+        };
+        setFormData(prev => ({ ...prev, logo_image: JSON.stringify(logoPayload, null, 2) }));
+        setShowLogoStorageSelector(false);
     };
 
     const buildPayload = () => {
@@ -125,7 +161,7 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
             techStack: formData.techStack.split(',').map(s => s.trim()).filter(s => s),
             tags: formData.tags.split(',').map(s => s.trim()).filter(s => s),
             images: safeParseJson<ProjectImage[]>(formData.images, []),
-            logo_image: safeParseJson<ProjectImage | undefined>(formData.logo_image, undefined),
+            logo_image: safeParseJson<ProjectImage | null>(formData.logo_image, null),
             links: safeParseJson<ProjectLink[]>(formData.links, []),
             metrics: {
                 duration: formData.duration || undefined,
@@ -196,6 +232,22 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
             setJsonInput(convertFormToJson());
         }
     }, [formData, viewMode]);
+
+    useEffect(() => {
+        if ((showStorageSelector || showLogoStorageSelector) && existingImages.length === 0) {
+            setLoadingExistingImages(true);
+            setStorageError(null);
+            listImagesFromSupabase()
+                .then(images => {
+                    setExistingImages(images);
+                    setLoadingExistingImages(false);
+                })
+                .catch(error => {
+                    setStorageError(error instanceof Error ? error.message : 'Failed to load images from storage');
+                    setLoadingExistingImages(false);
+                });
+        }
+    }, [showStorageSelector, showLogoStorageSelector, existingImages.length]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -543,19 +595,68 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                                 className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-48 font-mono text-sm"
                                 placeholder='[{"url": "https://...", "alt": "Description", "caption": "Optional", "order": 0}]'
                             />
-                            <div className="mt-2">
+                            <div className="mt-2 flex gap-2">
                                 <input
                                     type="file"
                                     accept="image/*"
                                     multiple
                                     onChange={handleFileUpload}
                                     disabled={uploadingImages}
-                                    className="w-full p-2 bg-gray-800 rounded border border-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#00ff99] file:text-black file:cursor-pointer hover:file:bg-[#00e68a] disabled:opacity-50"
+                                    className="flex-1 p-2 bg-gray-800 rounded border border-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#00ff99] file:text-black file:cursor-pointer hover:file:bg-[#00e68a] disabled:opacity-50"
                                 />
-                                {uploadingImages && (
-                                    <p className="text-[#00ff99] text-sm mt-2">Uploading images...</p>
-                                )}
+                                <button
+                                    type="button"
+                                    onClick={() => setShowStorageSelector(!showStorageSelector)}
+                                    className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition flex items-center gap-2"
+                                >
+                                    <Upload size={16} />
+                                    {showStorageSelector ? 'Hide' : 'Select from Storage'}
+                                </button>
                             </div>
+                            {uploadingImages && (
+                                <p className="text-[#00ff99] text-sm mt-2">Uploading images...</p>
+                            )}
+                            {storageError && (
+                                <div className="mt-2 p-3 bg-red-900/20 border border-red-500 rounded">
+                                    <p className="text-red-400 text-sm">{storageError}</p>
+                                    <p className="text-xs text-gray-400 mt-1">Check your Supabase configuration in .env file</p>
+                                </div>
+                            )}
+                            {showStorageSelector && (
+                                <div className="mt-4 p-4 bg-gray-900 rounded border border-gray-700">
+                                    <h4 className="font-bold mb-2">Select Images from Storage</h4>
+                                    {storageError ? (
+                                        <div className="p-3 bg-red-900/20 border border-red-500 rounded">
+                                            <p className="text-red-400 text-sm">{storageError}</p>
+                                            <p className="text-xs text-gray-400 mt-1">Configure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env</p>
+                                        </div>
+                                    ) : loadingExistingImages ? (
+                                        <p className="text-[#00ff99]">Loading images...</p>
+                                    ) : existingImages.length === 0 ? (
+                                        <p className="text-gray-400">No images found in storage.</p>
+                                    ) : (
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-64 overflow-y-auto">
+                                            {existingImages.map((image, index) => (
+                                                <div key={index} className="flex flex-col items-center">
+                                                    <img
+                                                        src={image.url}
+                                                        alt={image.name}
+                                                        className="w-20 h-20 object-cover rounded border border-gray-600"
+                                                    />
+                                                    <p className="text-xs text-gray-400 mt-1 truncate w-full">{image.name}</p>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleSelectFromStorage(image)}
+                                                        className="mt-1 px-2 py-1 bg-[#00ff99] text-black text-xs rounded hover:bg-[#00e68a]"
+                                                    >
+                                                        Select
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         <div className="md:col-span-2">
@@ -567,18 +668,61 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                                 className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-32 font-mono text-sm"
                                 placeholder='{"url": "https://...", "alt": "Logo", "order": 0}'
                             />
-                            <div className="mt-2">
+                            <div className="mt-2 flex gap-2">
                                 <input
                                     type="file"
                                     accept="image/*"
                                     onChange={handleLogoUpload}
                                     disabled={uploadingLogo}
-                                    className="w-full p-2 bg-gray-800 rounded border border-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#00ff99] file:text-black file:cursor-pointer hover:file:bg-[#00e68a] disabled:opacity-50"
+                                    className="flex-1 p-2 bg-gray-800 rounded border border-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#00ff99] file:text-black file:cursor-pointer hover:file:bg-[#00e68a] disabled:opacity-50"
                                 />
-                                {uploadingLogo && (
-                                    <p className="text-[#00ff99] text-sm mt-2">Uploading logo image...</p>
-                                )}
+                                <button
+                                    type="button"
+                                    onClick={() => setShowLogoStorageSelector(!showLogoStorageSelector)}
+                                    className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition flex items-center gap-2"
+                                >
+                                    <Upload size={16} />
+                                    {showLogoStorageSelector ? 'Hide' : 'Select from Storage'}
+                                </button>
                             </div>
+                            {uploadingLogo && (
+                                <p className="text-[#00ff99] text-sm mt-2">Uploading logo image...</p>
+                            )}
+                            {showLogoStorageSelector && (
+                                <div className="mt-4 p-4 bg-gray-900 rounded border border-gray-700">
+                                    <h4 className="font-bold mb-2">Select Logo from Storage</h4>
+                                    {storageError ? (
+                                        <div className="p-3 bg-red-900/20 border border-red-500 rounded">
+                                            <p className="text-red-400 text-sm">{storageError}</p>
+                                            <p className="text-xs text-gray-400 mt-1">Configure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env</p>
+                                        </div>
+                                    ) : loadingExistingImages ? (
+                                        <p className="text-[#00ff99]">Loading images...</p>
+                                    ) : existingImages.length === 0 ? (
+                                        <p className="text-gray-400">No images found in storage.</p>
+                                    ) : (
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-64 overflow-y-auto">
+                                            {existingImages.map((image, index) => (
+                                                <div key={index} className="flex flex-col items-center">
+                                                    <img
+                                                        src={image.url}
+                                                        alt={image.name}
+                                                        className="w-20 h-20 object-cover rounded border border-gray-600"
+                                                    />
+                                                    <p className="text-xs text-gray-400 mt-1 truncate w-full">{image.name}</p>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleSelectLogoFromStorage(image)}
+                                                        className="mt-1 px-2 py-1 bg-[#00ff99] text-black text-xs rounded hover:bg-[#00e68a]"
+                                                    >
+                                                        Select
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         {/* Links */}
