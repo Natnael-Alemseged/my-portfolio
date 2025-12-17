@@ -27,7 +27,7 @@ interface ProjectLink {
 interface ProjectData {
     _id: string;
     slug: string;
-    title: string;git
+    title: string;
     summary: string;
     role?: string;
     problem?: string;
