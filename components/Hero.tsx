@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import {FaGithub, FaLinkedin } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";

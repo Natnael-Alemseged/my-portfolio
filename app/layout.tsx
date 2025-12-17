@@ -13,14 +13,16 @@ import ChatWidget from "@/components/ChatWidget";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Natnael Alemseged – Portfolio",
-    description: "Full-stack Developer & AI Automation Engineer specializing in React, Flutter, FastAPI, and Node.js.",
+    title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
+    description:
+        "AI Engineer and Full-Stack Developer specializing in LLM-powered systems, LangGraph agents, FastAPI backends, vector databases, Next.js, and Flutter.",
     keywords: [
         "Full-stack developer",
         "AI Automation Engineer",
         "React",
         "Flutter",
         "FastAPI",
+        "React Native",
         "Express.js",
         "Next.js",
         "TypeScript",
