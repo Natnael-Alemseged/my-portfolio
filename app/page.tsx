@@ -13,22 +13,24 @@ import connectToDatabase from "@/lib/db/mongoose";
 import Project from "@/lib/db/project.model";
 
 export const generateMetadata = (): Metadata => ({
-    title: 'Natnael Alemseged – Full-Stack Developer & AI Engineer',
-    description: "Full-stack developer and AI enthusiast based in Ethiopia, specializing in web, mobile, and AI-powered software solutions. Explore my projects featuring Flutter, React, Node.js, and machine learning.",
-    keywords: ['Full-Stack Developer', 'AI Engineer', 'Flutter Developer', 'React Developer', 'Node.js', 'Machine Learning', 'Ethiopia', 'Software Engineer'],
-    authors: [{ name: 'Natnael Alemseged' }],
+    title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
+    description:
+        "AI Engineer and Full-Stack Developer building LLM-powered systems, agent-based architectures, and scalable backends using FastAPI, LangGraph, vector databases, Next.js, and Flutter.",
+    authors: [{ name: "Natnael Alemseged" }],
     openGraph: {
-        title: 'Natnael Alemseged – Full-Stack Developer & AI Engineer',
-        description: "Full-stack developer and AI enthusiast specializing in web, mobile, and AI-powered solutions.",
-        type: 'website',
-        locale: 'en_US',
+        title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
+        description:
+            "AI Engineer and Full-Stack Developer specializing in LLM-powered systems, agent workflows, FastAPI backends, and modern web and mobile applications.",
+        type: "website",
     },
     twitter: {
-        card: 'summary_large_image',
-        title: 'Natnael Alemseged – Full-Stack Developer & AI Engineer',
-        description: "Full-stack developer and AI enthusiast specializing in web, mobile, and AI-powered solutions.",
+        card: "summary_large_image",
+        title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
+        description:
+            "AI Engineer and Full-Stack Developer building LLM-powered systems, LangGraph agents, and scalable applications.",
     },
 });
+
 
 async function getProjects() {
     try {

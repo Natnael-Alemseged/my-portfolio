@@ -1,8 +1,8 @@
 // app/layout.tsx
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type {Metadata} from "next";
+import {Inter} from "next/font/google";
 import "./globals.css";
-import React, { Suspense } from "react";
+import React, {Suspense} from "react";
 
 import Loading from "@/app/Loading";
 import StructuredData from "@/components/StructuredData";
@@ -17,7 +17,7 @@ const ChatWidget = dynamic(() => import("@/components/ChatWidget"), {
     ssr: false,
 });
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({subsets: ["latin"]});
 
 export const metadata: Metadata = {
     title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         "AI Engineer and Full-Stack Developer specializing in LLM-powered systems, LangGraph agents, FastAPI backends, vector databases, Next.js, and Flutter.",
     keywords: [
         "Full-stack developer",
-        "AI Automation Engineer",
+        "AI Engineer",
         "React",
         "Flutter",
         "FastAPI",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     metadataBase: new URL("https://natnaelalemseged.com"),
     openGraph: {
         title: "Natnael Alemseged – Portfolio",
-        description: "Full-stack Developer & AI Automation Engineer specializing in React, Flutter, FastAPI, and Node.js.",
+        description: "AI Engineer and Full-Stack Developer specializing in LLM-powered systems, LangGraph agents, FastAPI backends, vector databases, Next.js, and Flutter.",
         url: "https://natnaelalemseged.com",
         siteName: "Natnael Alemseged",
         images: [
@@ -96,19 +96,19 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <StructuredData />
+        <StructuredData/>
 
-        <Header />
+        <Header/>
 
         <main className="flex-grow">
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading/>}>
                 {children}
             </Suspense>
         </main>
 
-        <Footer />
+        <Footer/>
 
-        <ChatWidget />
+        <ChatWidget/>
         </body>
         </html>
     );
