@@ -1,6 +1,6 @@
-// "use client";
+"use client";
 
-import {FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";
 
 export default function Hero() {
@@ -18,13 +18,13 @@ export default function Hero() {
                 >
                     <defs>
                         <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stopColor="#00ff99"/>
-                            <stop offset="100%" stopColor="#006644"/>
+                            <stop offset="0%" stopColor="#00ff99" />
+                            <stop offset="100%" stopColor="#006644" />
                         </linearGradient>
                     </defs>
                     <g stroke="url(#grad)" strokeWidth="1.5" fill="none">
-                        {Array.from({length: 15}).map((_, row) =>
-                            Array.from({length: 20}).map((_, col) => (
+                        {Array.from({ length: 15 }).map((_, row) =>
+                            Array.from({ length: 20 }).map((_, col) => (
                                 <rect
                                     key={`${row}-${col}`}
                                     x={col * 80}
@@ -45,9 +45,9 @@ export default function Hero() {
                     {/* LEFT CONTENT */}
                     <div className="text-left space-y-6 relative z-10">
                         <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-                            Natnael Alemseged <br/>
+                            Natnael Alemseged <br />
                             <span className="text-[#00ff99]">
-                                    AI Engineer & Full-Stack Developer
+                                AI Engineer & Full-Stack Developer
                             </span>
                         </h1>
 
@@ -66,7 +66,7 @@ export default function Hero() {
                                 rel="noopener noreferrer"
                                 className="flex items-center space-x-2 hover:text-white transition"
                             >
-                                <FaGithub/> <span>GitHub</span>
+                                <FaGithub /> <span>GitHub</span>
                             </a>
                             <a
                                 href="https://linkedin.com/in/yourusername"
@@ -74,7 +74,7 @@ export default function Hero() {
                                 rel="noopener noreferrer"
                                 className="flex items-center space-x-2 hover:text-white transition"
                             >
-                                <FaLinkedin/> <span>LinkedIn</span>
+                                <FaLinkedin /> <span>LinkedIn</span>
                             </a>
                             <a
                                 href="https://x.com/NotaZnation"
@@ -96,12 +96,12 @@ export default function Hero() {
                         >
                             <defs>
                                 <clipPath id="fullCircleClip" clipPathUnits="userSpaceOnUse">
-                                    <circle cx="250" cy="250" r="195"/>
+                                    <circle cx="250" cy="250" r="195" />
                                 </clipPath>
                             </defs>
 
                             {/* Rotating group: circle and dots */}
-                            <g className="animate-spin-slow" style={{transformOrigin: "250px 250px"}}>
+                            <g className="animate-spin-slow" style={{ transformOrigin: "250px 250px" }}>
                                 <circle
                                     cx="250"
                                     cy="250"
@@ -110,7 +110,7 @@ export default function Hero() {
                                     strokeWidth="2"
                                     fill="none"
                                 />
-                                {Array.from({length: 30}).map((_, i) => (
+                                {Array.from({ length: 30 }).map((_, i) => (
                                     <circle
                                         key={i}
                                         cx={250 + 200 * Math.cos((i * 12 * Math.PI) / 180)}
@@ -131,7 +131,7 @@ export default function Hero() {
                                 height="388"
                                 clipPath="url(#fullCircleClip)"
                                 preserveAspectRatio="xMidYMid meet"
-                                style={{pointerEvents: "none"}}
+                                style={{ pointerEvents: "none" }}
                             />
 
 
