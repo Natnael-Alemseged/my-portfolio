@@ -19,15 +19,17 @@ export const generateMetadata = (): Metadata => ({
     authors: [{ name: "Natnael Alemseged" }],
     openGraph: {
         title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
-        description:
-            "AI Engineer and Full-Stack Developer specializing in LLM-powered systems, agent workflows, FastAPI backends, and modern web and mobile applications.",
+        description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
+        url: "https://natnaelalemseged.com",
+        siteName: "Natnael Alemseged",
+        images: [{ url: "/og-image.jpg" }],
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
         title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
-        description:
-            "AI Engineer and Full-Stack Developer building LLM-powered systems, LangGraph agents, and scalable applications.",
+        description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
+        images: ["/og-image.jpg"],
     },
 });
 

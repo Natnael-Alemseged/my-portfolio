@@ -48,26 +48,18 @@ export const metadata: Metadata = {
     ],
     metadataBase: new URL("https://natnaelalemseged.com"),
     openGraph: {
-        title: "Natnael Alemseged – Portfolio",
-        description: "AI Engineer and Full-Stack Developer specializing in LLM-powered systems, LangGraph agents, FastAPI backends, vector databases, Next.js, and Flutter.",
+        title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
+        description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
         url: "https://natnaelalemseged.com",
         siteName: "Natnael Alemseged",
-        images: [
-            {
-                url: "https://natnaelalemseged.com/og-image.jpg",
-                width: 1200,
-                height: 630,
-                alt: "Natnael Alemseged – Full-Stack Developer and AI Automation Engineer",
-            },
-        ],
+        images: [{ url: "/og-image.jpg" }],
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Natnael Alemseged – Portfolio",
-        description: "Full-stack Developer & AI Automation Engineer specializing in React, Flutter, FastAPI, and Node.js.",
-        creator: "@yourhandle",
-        images: ["https://natnaelalemseged.com/og-image.jpg"],
+        title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
+        description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
+        images: ["/og-image.jpg"],
     },
     robots: {
         index: true,

@@ -52,7 +52,7 @@ export default async function OG() {
                         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="48" />
                     </div>
                     <div style={{ marginTop: 40, fontSize: 20, color: '#94a3b8' }}>
-                        natnael-alemseged.vercel.app
+                        natnaelalemseged.com
                     </div>
                 </div>
             </div>
