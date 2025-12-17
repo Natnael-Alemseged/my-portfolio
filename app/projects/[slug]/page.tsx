@@ -27,7 +27,7 @@ interface ProjectLink {
 interface ProjectData {
     _id: string;
     slug: string;
-    title: string;
+    title: string;git
     summary: string;
     role?: string;
     problem?: string;
@@ -124,30 +124,30 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     };
 
     const markdownComponents = {
-        h2: ({ children }: { children: React.ReactNode }) => (
+        h2: ({ children }: any) => (
             <h2 className="text-2xl font-bold text-[#00ff99] mt-10 mb-4">{children}</h2>
         ),
-        h3: ({ children }: { children: React.ReactNode }) => (
+        h3: ({ children }: any) => (
             <h3 className="text-xl font-semibold text-white mt-8 mb-3">{children}</h3>
         ),
-        p: ({ children }: { children: React.ReactNode }) => (
+        p: ({ children }: any) => (
             <p className="text-gray-300 leading-relaxed mb-4">{children}</p>
         ),
-        ul: ({ children }: { children: React.ReactNode }) => (
+        ul: ({ children }: any) => (
             <ul className="space-y-3 mb-6">{children}</ul>
         ),
-        li: ({ children }: { children: React.ReactNode }) => (
+        li: ({ children }: any) => (
             <li className="flex items-start gap-3 bg-gray-900/70 border border-emerald-900/30 rounded-lg p-3">
                 <span className="text-[#00ff99] mt-1">•</span>
                 <span className="text-gray-200">{children}</span>
             </li>
         ),
-        blockquote: ({ children }: { children: React.ReactNode }) => (
+        blockquote: ({ children }: any) => (
             <blockquote className="border-l-4 border-[#00ff99] bg-gray-900/50 p-4 rounded-r-lg italic text-emerald-200 mb-6">
                 {children}
             </blockquote>
         ),
-        strong: ({ children }: { children: React.ReactNode }) => (
+        strong: ({ children }: any) => (
             <strong className="text-white font-semibold">{children}</strong>
         ),
         code: ({
@@ -155,11 +155,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             className,
             children,
             ...props
-        }: {
-            inline?: boolean;
-            className?: string;
-            children: React.ReactNode;
-        }) => {
+        }: any) => {
             const match = /language-(\w+)/.exec(className || '');
             if (!inline && match) {
                 return (

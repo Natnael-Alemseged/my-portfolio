@@ -1,4 +1,5 @@
-import { connectDB } from "@/lib/db/mongoose";
+import connectToDatabase from "@/lib/db/mongoose";
+
 
 interface LimitDoc {
     identifier: string;
@@ -13,8 +14,14 @@ interface CallLimitResponse {
 }
 
 export async function checkAndUpdateCallLimit(update = false): Promise<CallLimitResponse> {
-    const db = await connectDB();
-    const collection = db.collection<LimitDoc>('freeCallLimits');
+    const mongoose = await connectToDatabase();
+    const db = mongoose.connection.db;
+
+    if (!db) {
+        throw new Error('Database connection not established');
+    }
+
+    const collection = db.collection('freeCallLimits');
 
     const identifier = 'anonymous'; // Default to 'anonymous' for unauthenticated users
     const today = new Date().toISOString().split('T')[0];
@@ -45,8 +52,11 @@ export async function checkAndUpdateCallLimit(update = false): Promise<CallLimit
 }
 
 export async function setupTTLIndex() {
-    const db = await connectDB();
-    await db.collection<LimitDoc>('freeCallLimits').createIndex({ date: 1 }, { expireAfterSeconds: 86400 });
+    const mongoose = await connectToDatabase();
+    const db = mongoose.connection.db;
+    if (db) {
+        await db.collection('freeCallLimits').createIndex({ date: 1 }, { expireAfterSeconds: 86400 });
+    }
 }
 
 if (typeof window === 'undefined') {

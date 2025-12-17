@@ -113,10 +113,10 @@ export const setDisplayCarriersMultiple = (
 // lib/reusable_assets.ts or wherever you keep utility functions
 
 export const formatDescription = (
-    generatedDescription?: string | null | undefined,
-    description?: string | null | undefined,
     sliceLength: number, // The maximum number of characters to display
     ellipsisLength: number, // The original length threshold to add "..."
+    generatedDescription?: string | null | undefined,
+    description?: string | null | undefined,
 ): string => {
     // Prioritize generatedDescription if it exists, otherwise use description
     const sourceDescription = generatedDescription || description;
@@ -140,9 +140,12 @@ export const formatDescription = (
 
 
 export const useResponsiveLimit = () => {
-    const [limit, setLimit] = useState(window.innerWidth > 768 ? 20 : 10);
+    const [limit, setLimit] = useState(20); // Default value for SSR
 
     useEffect(() => {
+        // Set initial value based on window
+        setLimit(window.innerWidth > 768 ? 20 : 10);
+
         const handleResize = () => {
             setLimit(window.innerWidth > 768 ? 20 : 10);
         };

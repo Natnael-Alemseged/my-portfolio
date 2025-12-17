@@ -57,10 +57,10 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
             const index = parts[1] ? parseInt(parts[1]) : 0;
             setFormData(prev => {
                 const newLinks = { ...prev.links };
-                if (Array.isArray(newLinks[linkType as keyof typeof newLinks])) {
-                    (newLinks[linkType as keyof typeof newLinks] as string[])[index] = value;
+                if (Array.isArray((newLinks as any)[linkType])) {
+                    ((newLinks as any)[linkType] as string[])[index] = value;
                 } else {
-                    newLinks[linkType as keyof typeof newLinks] = value;
+                    (newLinks as any)[linkType] = value;
                 }
                 return { ...prev, links: newLinks };
             });
@@ -204,11 +204,10 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                     <button
                         type="button"
                         onClick={() => setViewMode('form')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${
-                            viewMode === 'form'
+                        className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${viewMode === 'form'
                                 ? 'bg-[#00ff99] text-black'
                                 : 'bg-gray-700 text-white hover:bg-gray-600'
-                        }`}
+                            }`}
                     >
                         <FileText size={16} />
                         Form View
@@ -216,11 +215,10 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                     <button
                         type="button"
                         onClick={switchToJsonMode}
-                        className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${
-                            viewMode === 'json'
+                        className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${viewMode === 'json'
                                 ? 'bg-[#00ff99] text-black'
                                 : 'bg-gray-700 text-white hover:bg-gray-600'
-                        }`}
+                            }`}
                     >
                         <Code size={16} />
                         JSON Editor
@@ -274,98 +272,137 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                             required
                         />
                     </div>
-            <div>
-                <label className="block mb-2 font-bold">Description (Short)</label>
-                <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-24"
-                    required
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-bold">Content (Detailed Markdown/HTML)</label>
-                <textarea
-                    name="content"
-                    value={formData.content}
-                    onChange={handleChange}
-                    className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-48"
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-bold">Logo Image URLs</label>
-                <textarea
-                    name="logo_image"
-                    value={formData.logo_image}
-                    onChange={handleChange}
-                    className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-24"
-                    placeholder="Paste logo image URLs (one per line)"
-                />
-            </div>
-            <div>
-                <label className="block mb-2 font-bold">Images</label>
-                
-                {/* Toggle between URL and Upload */}
-                <div className="flex gap-2 mb-3">
-                    <button
-                        type="button"
-                        onClick={() => setImageInputMode('url')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${
-                            imageInputMode === 'url'
-                                ? 'bg-[#00ff99] text-black'
-                                : 'bg-gray-700 text-white hover:bg-gray-600'
-                        }`}
-                    >
-                        <LinkIcon size={16} />
-                        Paste URL
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setImageInputMode('upload')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${
-                            imageInputMode === 'upload'
-                                ? 'bg-[#00ff99] text-black'
-                                : 'bg-gray-700 text-white hover:bg-gray-600'
-                        }`}
-                    >
-                        <Upload size={16} />
-                        Upload Files
-                    </button>
-                </div>
-
-                {imageInputMode === 'url' ? (
                     <div>
+                        <label className="block mb-2 font-bold">Description (Short)</label>
                         <textarea
-                            name="images"
-                            value={formData.images}
+                            name="description"
+                            value={formData.description}
                             onChange={handleChange}
-                            className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-32"
-                            placeholder="Paste image URLs (one per line)&#10;https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                            className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-24"
+                            required
                         />
-                        
-                        {/* Display pasted URLs as chips with preview */}
-                        {formData.images.split('\n').filter(url => url.trim()).length > 0 && (
+                    </div>
+                    <div>
+                        <label className="block mb-2 font-bold">Content (Detailed Markdown/HTML)</label>
+                        <textarea
+                            name="content"
+                            value={formData.content}
+                            onChange={handleChange}
+                            className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-48"
+                        />
+                    </div>
+                    <div>
+                        <label className="block mb-2 font-bold">Logo Image URLs</label>
+                        <textarea
+                            name="logo_image"
+                            value={formData.logo_image}
+                            onChange={handleChange}
+                            className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-24"
+                            placeholder="Paste logo image URLs (one per line)"
+                        />
+                    </div>
+                    <div>
+                        <label className="block mb-2 font-bold">Images</label>
+
+                        {/* Toggle between URL and Upload */}
+                        <div className="flex gap-2 mb-3">
+                            <button
+                                type="button"
+                                onClick={() => setImageInputMode('url')}
+                                className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${imageInputMode === 'url'
+                                        ? 'bg-[#00ff99] text-black'
+                                        : 'bg-gray-700 text-white hover:bg-gray-600'
+                                    }`}
+                            >
+                                <LinkIcon size={16} />
+                                Paste URL
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setImageInputMode('upload')}
+                                className={`flex items-center gap-2 px-4 py-2 rounded transition-colors ${imageInputMode === 'upload'
+                                        ? 'bg-[#00ff99] text-black'
+                                        : 'bg-gray-700 text-white hover:bg-gray-600'
+                                    }`}
+                            >
+                                <Upload size={16} />
+                                Upload Files
+                            </button>
+                        </div>
+
+                        {imageInputMode === 'url' ? (
+                            <div>
+                                <textarea
+                                    name="images"
+                                    value={formData.images}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-gray-800 rounded border border-gray-700 h-32"
+                                    placeholder="Paste image URLs (one per line)&#10;https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                                />
+
+                                {/* Display pasted URLs as chips with preview */}
+                                {formData.images.split('\n').filter(url => url.trim()).length > 0 && (
+                                    <div className="mt-4">
+                                        <p className="text-sm text-gray-400 mb-2">Image URLs ({formData.images.split('\n').filter(url => url.trim()).length}):</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {formData.images.split('\n').filter(url => url.trim()).map((url, idx) => (
+                                                <div key={idx} className="relative group">
+                                                    <img
+                                                        src={url}
+                                                        alt={`Image ${idx + 1}`}
+                                                        className="w-20 h-20 object-cover rounded border border-gray-700"
+                                                        onError={(e) => {
+                                                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80"%3E%3Crect fill="%23374151" width="80" height="80"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239CA3AF" font-size="10"%3EInvalid URL%3C/text%3E%3C/svg%3E';
+                                                        }}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const urls = formData.images.split('\n').filter(u => u.trim());
+                                                            urls.splice(idx, 1);
+                                                            setFormData(prev => ({ ...prev, images: urls.join('\n') }));
+                                                        }}
+                                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    >
+                                                        <X size={12} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    multiple
+                                    onChange={handleFileUpload}
+                                    disabled={uploadingImages}
+                                    className="w-full p-2 bg-gray-800 rounded border border-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#00ff99] file:text-black file:cursor-pointer hover:file:bg-[#00e68a] disabled:opacity-50"
+                                />
+                                {uploadingImages && (
+                                    <p className="text-[#00ff99] text-sm mt-2">Uploading images...</p>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Display uploaded images */}
+                        {uploadedUrls.length > 0 && (
                             <div className="mt-4">
-                                <p className="text-sm text-gray-400 mb-2">Image URLs ({formData.images.split('\n').filter(url => url.trim()).length}):</p>
+                                <p className="text-sm text-gray-400 mb-2">Uploaded Images:</p>
                                 <div className="flex flex-wrap gap-2">
-                                    {formData.images.split('\n').filter(url => url.trim()).map((url, idx) => (
+                                    {uploadedUrls.map((url, idx) => (
                                         <div key={idx} className="relative group">
                                             <img
                                                 src={url}
-                                                alt={`Image ${idx + 1}`}
+                                                alt={`Upload ${idx + 1}`}
                                                 className="w-20 h-20 object-cover rounded border border-gray-700"
-                                                onError={(e) => {
-                                                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80"%3E%3Crect fill="%23374151" width="80" height="80"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239CA3AF" font-size="10"%3EInvalid URL%3C/text%3E%3C/svg%3E';
-                                                }}
                                             />
                                             <button
                                                 type="button"
-                                                onClick={() => {
-                                                    const urls = formData.images.split('\n').filter(u => u.trim());
-                                                    urls.splice(idx, 1);
-                                                    setFormData(prev => ({ ...prev, images: urls.join('\n') }));
-                                                }}
+                                                onClick={() => removeUploadedImage(url)}
                                                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                                             >
                                                 <X size={12} />
@@ -376,127 +413,86 @@ export default function ProjectForm({ initialData, isEdit = false }: ProjectForm
                             </div>
                         )}
                     </div>
-                ) : (
                     <div>
+                        <label className="block mb-2 font-bold">Tech Stack (Comma separated)</label>
                         <input
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            onChange={handleFileUpload}
-                            disabled={uploadingImages}
-                            className="w-full p-2 bg-gray-800 rounded border border-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#00ff99] file:text-black file:cursor-pointer hover:file:bg-[#00e68a] disabled:opacity-50"
+                            type="text"
+                            name="techStack"
+                            value={formData.techStack}
+                            onChange={handleChange}
+                            className="w-full p-2 bg-gray-800 rounded border border-gray-700"
+                            placeholder="React, Node.js, MongoDB"
                         />
-                        {uploadingImages && (
-                            <p className="text-[#00ff99] text-sm mt-2">Uploading images...</p>
-                        )}
                     </div>
-                )}
-
-                {/* Display uploaded images */}
-                {uploadedUrls.length > 0 && (
-                    <div className="mt-4">
-                        <p className="text-sm text-gray-400 mb-2">Uploaded Images:</p>
-                        <div className="flex flex-wrap gap-2">
-                            {uploadedUrls.map((url, idx) => (
-                                <div key={idx} className="relative group">
-                                    <img
-                                        src={url}
-                                        alt={`Upload ${idx + 1}`}
-                                        className="w-20 h-20 object-cover rounded border border-gray-700"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => removeUploadedImage(url)}
-                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                        <X size={12} />
-                                    </button>
-                                </div>
-                            ))}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block mb-2 font-bold">Web Link</label>
+                            <input
+                                type="text"
+                                name="link_web"
+                                value={formData.links.web}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-gray-800 rounded border border-gray-700"
+                            />
+                        </div>
+                        <div>
+                            <label className="block mb-2 font-bold">GitHub Link</label>
+                            <input
+                                type="text"
+                                name="link_github"
+                                value={formData.links.github}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-gray-800 rounded border border-gray-700"
+                            />
+                        </div>
+                        <div>
+                            <label className="block mb-2 font-bold">Play Store Link 1</label>
+                            <input
+                                type="text"
+                                name="link_playstore_0"
+                                value={formData.links.playstore[0] || ''}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-gray-800 rounded border border-gray-700"
+                            />
+                        </div>
+                        <div>
+                            <label className="block mb-2 font-bold">Play Store Link 2</label>
+                            <input
+                                type="text"
+                                name="link_playstore_1"
+                                value={formData.links.playstore[1] || ''}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-gray-800 rounded border border-gray-700"
+                            />
+                        </div>
+                        <div>
+                            <label className="block mb-2 font-bold">App Store Link 1</label>
+                            <input
+                                type="text"
+                                name="link_appstore_0"
+                                value={formData.links.appstore[0] || ''}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-gray-800 rounded border border-gray-700"
+                            />
+                        </div>
+                        <div>
+                            <label className="block mb-2 font-bold">App Store Link 2</label>
+                            <input
+                                type="text"
+                                name="link_appstore_1"
+                                value={formData.links.appstore[1] || ''}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-gray-800 rounded border border-gray-700"
+                            />
                         </div>
                     </div>
-                )}
-            </div>
-            <div>
-                <label className="block mb-2 font-bold">Tech Stack (Comma separated)</label>
-                <input
-                    type="text"
-                    name="techStack"
-                    value={formData.techStack}
-                    onChange={handleChange}
-                    className="w-full p-2 bg-gray-800 rounded border border-gray-700"
-                    placeholder="React, Node.js, MongoDB"
-                />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label className="block mb-2 font-bold">Web Link</label>
-                    <input
-                        type="text"
-                        name="link_web"
-                        value={formData.links.web}
-                        onChange={handleChange}
-                        className="w-full p-2 bg-gray-800 rounded border border-gray-700"
-                    />
-                </div>
-                <div>
-                    <label className="block mb-2 font-bold">GitHub Link</label>
-                    <input
-                        type="text"
-                        name="link_github"
-                        value={formData.links.github}
-                        onChange={handleChange}
-                        className="w-full p-2 bg-gray-800 rounded border border-gray-700"
-                    />
-                </div>
-                <div>
-                    <label className="block mb-2 font-bold">Play Store Link 1</label>
-                    <input
-                        type="text"
-                        name="link_playstore_0"
-                        value={formData.links.playstore[0] || ''}
-                        onChange={handleChange}
-                        className="w-full p-2 bg-gray-800 rounded border border-gray-700"
-                    />
-                </div>
-                <div>
-                    <label className="block mb-2 font-bold">Play Store Link 2</label>
-                    <input
-                        type="text"
-                        name="link_playstore_1"
-                        value={formData.links.playstore[1] || ''}
-                        onChange={handleChange}
-                        className="w-full p-2 bg-gray-800 rounded border border-gray-700"
-                    />
-                </div>
-                <div>
-                    <label className="block mb-2 font-bold">App Store Link 1</label>
-                    <input
-                        type="text"
-                        name="link_appstore_0"
-                        value={formData.links.appstore[0] || ''}
-                        onChange={handleChange}
-                        className="w-full p-2 bg-gray-800 rounded border border-gray-700"
-                    />
-                </div>
-                <div>
-                    <label className="block mb-2 font-bold">App Store Link 2</label>
-                    <input
-                        type="text"
-                        name="link_appstore_1"
-                        value={formData.links.appstore[1] || ''}
-                        onChange={handleChange}
-                        className="w-full p-2 bg-gray-800 rounded border border-gray-700"
-                    />
-                </div>
-            </div>
-            <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-[#00ff99] text-black font-bold py-3 rounded hover:bg-[#00e68a] transition disabled:opacity-50"
-            >
-                {loading ? 'Saving...' : (isEdit ? 'Update Project' : 'Create Project')}
-            </button>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-[#00ff99] text-black font-bold py-3 rounded hover:bg-[#00e68a] transition disabled:opacity-50"
+                    >
+                        {loading ? 'Saving...' : (isEdit ? 'Update Project' : 'Create Project')}
+                    </button>
                 </>
             )}
         </form>

@@ -76,7 +76,7 @@ export const withFallbackTool = (tool: Tool): {
       "Commercial License"
     ],
     keywords: tool.keywords || ["image generation", "AI art", "text to image", "image editor"], // More specific keywords
-    pricing: tool.pricing == "0" || "free" ? "free" : "Premium" || "free",
+    pricing: (tool.pricing === "0" || tool.pricing === "free") ? "free" : "Premium",
     hasFreeVersion: tool.hasFreeVersion ?? true, // Default to true based on screenshot
     logoUrl: tool.logoUrl || "/robot.png", // Consider a more specific placeholder
     screenshotUrls: tool.image_url || [ // Add a placeholder screenshot URL
@@ -242,7 +242,7 @@ export const processToolLink = (tool: Tool) => {
 
 
 
-export const ScaledSvg = ({ svg, width = 24, height = 24 }) => {
-  return React.cloneElement(svg, { width, height });
+export const ScaledSvg = ({ svg, width = 24, height = 24 }: { svg: React.ReactElement, width?: number, height?: number }) => {
+  return React.cloneElement(svg as any, { width, height });
 };
 

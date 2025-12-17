@@ -152,7 +152,7 @@ export async function deleteProjectFromSupermemory(projectId: string) {
 
     if (integration?.externalId) {
         try {
-            await supermemory.memories.delete({ id: integration.externalId });
+            await supermemory.memories.delete(integration.externalId);
             await ProjectIntegration.deleteOne({ _id: integration._id });
             console.log(`🗑️ Deleted Supermemory entry for project ${projectId}`);
         } catch (error) {

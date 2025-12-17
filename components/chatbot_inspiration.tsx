@@ -1,6 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader2, Sparkles, Terminal, Cpu } from 'lucide-react';
 
+interface ChatMessage {
+    role: 'user' | 'model';
+    text: string;
+    timestamp: number;
+}
+
+const PROFILE = {
+    name: 'Natnael Alemseged',
+};
+
+const generateChatResponse = async (input: string, history: any[]): Promise<string> => {
+    return "Placeholder response.";
+};
+
 
 
 
@@ -91,8 +105,8 @@ const ChatBot: React.FC = () => {
                                 {msg.role === 'user' ? '> USER_INPUT' : '> SYSTEM_RESPONSE'}
                             </div>
                             <div className={`max-w-[90%] p-2 ${msg.role === 'user'
-                                    ? 'border border-pipboy/50 bg-pipboy/10'
-                                    : ''
+                                ? 'border border-pipboy/50 bg-pipboy/10'
+                                : ''
                                 }`}>
                                 <span className="animate-flicker whitespace-pre-wrap leading-relaxed text-sm md:text-base shadow-[0_0_2px_#14f195]">
                                     {msg.text}
