@@ -61,7 +61,7 @@ export default function Hero() {
 
                         <div className="flex gap-6 text-gray-400">
                             <a
-                                href="https://github.com/yourusername"
+                                href="https://github.com/Natnael-Alemseged"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center space-x-2 hover:text-white transition"
@@ -69,7 +69,7 @@ export default function Hero() {
                                 <FaGithub /> <span>GitHub</span>
                             </a>
                             <a
-                                href="https://linkedin.com/in/yourusername"
+                                href="https://www.linkedin.com/in/natnael-alemseged"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center space-x-2 hover:text-white transition"
