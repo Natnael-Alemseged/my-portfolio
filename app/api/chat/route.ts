@@ -23,17 +23,23 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Query SuperMemory for relevant context with unique container tag
-        const memoryResults = await supermemory.search.execute({
-            q: message,
-            limit: 5,
-            containerTags: ['natnael-portfolio-chatbot'], // Unique container for this portfolio
-        });
+        let context = '';
+        try {
+            // Query SuperMemory for relevant context with unique container tag
+            const memoryResults = await supermemory.search.execute({
+                q: message,
+                limit: 5,
+                containerTags: ['natnael-portfolio-chatbot'], // Unique container for this portfolio
+            });
 
-        // Extract relevant context from memory results
-        const context = memoryResults.results
-            ?.map((result: { content?: string | null; text?: string | null }) => result.content || result.text)
-            .join('\n\n') || '';
+            // Extract relevant context from memory results
+            context = memoryResults.results
+                ?.map((result: { content?: string | null; text?: string | null }) => result.content || result.text)
+                .join('\n\n') || '';
+        } catch (smError) {
+            console.error('Supermemory search error:', smError);
+            context = '';
+        }
 
         // Construct messages for Groq with enhanced system prompt
         const systemPrompt = `You are Natnael's AI Assistant, a knowledgeable and friendly chatbot embedded in Natnael Alemseged's portfolio website. Your role is to help visitors learn about Natnael's professional background, technical skills, projects, and experience.
