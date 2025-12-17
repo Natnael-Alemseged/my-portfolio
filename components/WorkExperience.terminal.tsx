@@ -36,7 +36,7 @@ const experiences: Experience[] = [
     },
     {
         id: 3,
-        title: 'Software Engineer',
+        title: 'AI Engineer',
         company: 'DataCore Softwares – Fort Lauderdale, FL',
         period: 'Jan 2025 – Jul 2025',
         description: `- Built AI-powered storage services w/ Python, FastAPI, Docker, self-hosted LLMs for detection, transcription, translation.

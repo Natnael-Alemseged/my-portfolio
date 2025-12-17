@@ -31,7 +31,7 @@ export default function About() {
                 </div>
 
                 <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
-                    <div className="space-y-6 bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xs">
+                    <div className="space-y-6 bg-black/50 border border-white/10 rounded-3xl p-8 backdrop-blur-lg">
                         <h3 className="text-2xl font-semibold text-[#00ff99]">Core Focus</h3>
                         <div className="space-y-6">
                             {["AI Systems & Automation", "Cross-Platform Mobile", "Cloud-Native Web", "Technical Leadership"].map((area) => (

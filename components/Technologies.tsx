@@ -35,8 +35,8 @@ import {
     SiGrafana,
     SiPostman,
     SiSupabase,
-    SiVercel,
-    SiNetlify,
+    // SiVercel,
+    // SiNetlify,
 } from "react-icons/si";
 
 interface Tech {
@@ -81,8 +81,8 @@ const categories: { [key: string]: Tech[] } = {
         { name: "Kubernetes", icon: <SiKubernetes className="text-blue-500" /> },
         { name: "Terraform", icon: <SiTerraform className="text-purple-500" /> },
         { name: "GitHub Actions", icon: <SiGithubactions className="text-gray-300" /> },
-        { name: "Vercel", icon: <SiVercel className="text-white" /> },
-        { name: "Netlify", icon: <SiNetlify className="text-teal-400" /> },
+        // { name: "Vercel", icon: <SiVercel className="text-white" /> },
+        // { name: "Netlify", icon: <SiNetlify className="text-teal-400" /> },
     ],
     "Monitoring & Tools": [
         { name: "Git", icon: <FaGitAlt className="text-orange-500" /> },
