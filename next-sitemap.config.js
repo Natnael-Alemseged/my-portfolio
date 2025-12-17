@@ -1,5 +1,5 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-    siteUrl: "https://natnael-alemseged.vercel.app",
+    siteUrl: "https://natnaelalemseged.com",
     generateRobotsTxt: true,
 };

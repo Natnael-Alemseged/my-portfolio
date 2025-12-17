@@ -29,7 +29,7 @@ export const metadata: Metadata = {
         "Portfolio",
     ],
     alternates: {
-        canonical: "https://natnael-alemseged.vercel.app",
+        canonical: "https://natnaelalemseged.com",
     },
     authors: [
         {
@@ -37,15 +37,15 @@ export const metadata: Metadata = {
             url: "https://www.linkedin.com/in/natnael-alemseged",
         },
     ],
-    metadataBase: new URL("https://natnael-alemseged.vercel.app"),
+    metadataBase: new URL("https://natnaelalemseged.com"),
     openGraph: {
         title: "Natnael Alemseged – Portfolio",
         description: "Full-stack Developer & AI Automation Engineer specializing in React, Flutter, FastAPI, and Node.js.",
-        url: "https://natnael-alemseged.vercel.app",
+        url: "https://natnaelalemseged.com",
         siteName: "Natnael Alemseged",
         images: [
             {
-                url: "https://natnael-alemseged.vercel.app/og-image.jpg",
+                url: "https://natnaelalemseged.com/og-image.jpg",
                 width: 1200,
                 height: 630,
                 alt: "Natnael Alemseged – Full-Stack Developer and AI Automation Engineer",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
         title: "Natnael Alemseged – Portfolio",
         description: "Full-stack Developer & AI Automation Engineer specializing in React, Flutter, FastAPI, and Node.js.",
         creator: "@yourhandle",
-        images: ["https://natnael-alemseged.vercel.app/og-image.jpg"],
+        images: ["https://natnaelalemseged.com/og-image.jpg"],
     },
     robots: {
         index: true,

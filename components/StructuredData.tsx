@@ -5,10 +5,10 @@ export default function StructuredData() {
         "@graph": [
             {
                 "@type": "Person",
-                "@id": "https://natnael-alemseged.vercel.app/#person",
+                "@id": "https://natnaelalemseged.com/#person",
                 "name": "Natnael Alemseged",
-                "url": "https://natnael-alemseged.vercel.app",
-                "image": "https://natnael-alemseged.vercel.app/images/profile.jpg", // Ensure this exists
+                "url": "https://natnaelalemseged.com",
+                "image": "https://natnaelalemseged.com/images/profile.jpg", // Ensure this exists
                 "jobTitle": "Full-Stack Software Engineer & AI Automation Engineer",
                 "sameAs": [
                     "https://www.linkedin.com/in/natnael-alemseged",
@@ -18,28 +18,28 @@ export default function StructuredData() {
             },
             {
                 "@type": "WebSite",
-                "@id": "https://natnael-alemseged.vercel.app/#website",
-                "url": "https://natnael-alemseged.vercel.app",
+                "@id": "https://natnaelalemseged.com/#website",
+                "url": "https://natnaelalemseged.com",
                 "name": "Natnael Alemseged – Portfolio",
                 "publisher": {
-                    "@id": "https://natnael-alemseged.vercel.app/#person",
+                    "@id": "https://natnaelalemseged.com/#person",
                 },
             },
             {
                 "@type": "BreadcrumbList",
-                "@id": "https://natnael-alemseged.vercel.app/#breadcrumb",
+                "@id": "https://natnaelalemseged.com/#breadcrumb",
                 "itemListElement": [
                     {
                         "@type": "ListItem",
                         "position": 1,
                         "name": "Home",
-                        "item": "https://natnael-alemseged.vercel.app",
+                        "item": "https://natnaelalemseged.com",
                     },
                     {
                         "@type": "ListItem",
                         "position": 2,
                         "name": "Projects",
-                        "item": "https://natnael-alemseged.vercel.app/projects",
+                        "item": "https://natnaelalemseged.com/projects",
                     },
                 ],
             },
