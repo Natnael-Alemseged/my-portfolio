@@ -89,9 +89,9 @@ Include links to GitHub repos or live demos if available.`,
     {
         title: 'Contact Information',
         content: `Contact Details:
-- Email: your.email@example.com
-- GitHub: github.com/yourusername
-- LinkedIn: linkedin.com/in/yourusername
+- Email: natiaabaydam@gmail.com
+- GitHub: github.com/Natnael-Alemseged
+- LinkedIn: linkedin.com/in/natnael-alemseged
 - Location: Ethiopia
 - Availability: Open to opportunities`,
         tags: ['contact', 'availability'],
