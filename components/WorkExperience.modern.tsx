@@ -63,7 +63,7 @@ const experiences: Experience[] = [
     },
     {
         id: 5,
-        title: 'Senior Full-Stack Developer & Founder',
+        title: 'Full-Stack Developer & Founder',
         company: 'Metshafe – Addis Ababa',
         period: 'Jun 2022 – Present',
         highlights: [
@@ -125,12 +125,11 @@ export default function WorkExperience() {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className={`relative flex flex-col md:flex-row gap-8 items-stretch ${
-                                    index % 2 === 0 ? "md:flex-row-reverse" : ""
-                                }`}
+                                className={`relative flex flex-col md:flex-row gap-8 items-stretch ${index % 2 === 0 ? "md:flex-row-reverse" : ""
+                                    }`}
                             >
                                 {/* Timeline Dot */}
-                                <motion.div 
+                                <motion.div
                                     className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#00ff99] rounded-full border-4 border-[#0d0d0d] shadow-lg z-10"
                                     whileHover={{ scale: 1.5 }}
                                     transition={{ duration: 0.3 }}
@@ -145,11 +144,10 @@ export default function WorkExperience() {
                                 >
                                     <button
                                         onClick={() => toggleExperience(exp.id)}
-                                        className={`w-full text-left bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border-l-4 ${
-                                            activeId === exp.id 
-                                                ? "border-[#00ff99]" 
-                                                : "border-gray-700 hover:border-[#00ff99]"
-                                        }`}
+                                        className={`w-full text-left bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border-l-4 ${activeId === exp.id
+                                            ? "border-[#00ff99]"
+                                            : "border-gray-700 hover:border-[#00ff99]"
+                                            }`}
                                     >
                                         <div className="flex items-start justify-between gap-4">
                                             <div className="flex-1">

@@ -9,25 +9,33 @@ export default function About() {
         <section
             id="about"
             className="relative w-full text-white py-20 px-6 md:px-12 overflow-hidden bg-black"
-            style={{
-                backgroundImage: "url('/glorb.png')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-            }}
         >
+            {/* Responsive Background */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {/* Mobile: Greenish Glow (Glorb) */}
+                <div className="md:hidden absolute -top-[10%] -left-[10%] w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,_rgba(0,255,153,0.15)_0%,_rgba(0,0,0,0)_60%)] blur-[80px]" />
+                <div className="md:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(34,211,238,0.1)_0%,_rgba(0,0,0,0)_50%)] blur-[100px]" />
+
+                {/* Desktop: Image Background */}
+                <div
+                    className="hidden md:block absolute inset-0 bg-cover bg-center bg-no-repeat"
+                    style={{ backgroundImage: "url('/glorb.png')" }}
+                />
+            </div>
             <div className="relative max-w-6xl mx-auto space-y-10">
-                <div className="text-center space-y-4">
-                    <p className="text-xs uppercase tracking-[0.5em] text-[#00ff99]">
-                        Senior Software Engineer · AI · Mobile · Cloud
-                    </p>
-                    <h2 className="text-3xl md:text-5xl font-bold">
-                        Shipping AI-native mobile and web platforms with measurable impact
-                    </h2>
-                    <p className="text-gray-300 max-w-4xl mx-auto">
-                        I partner with remote product teams to build high-performance experiences across Flutter, React Native, Next.js, and AI stacks. 
-                        From 10K+ DAU social platforms to agentic workspaces and Lambda-scale pipelines, I translate ambitious roadmaps into resilient software.
-                    </p>
+                <div className="text-center space-y-6 md:space-y-8 md:bg-black/40 md:backdrop-blur-md md:border md:border-white/10 md:rounded-[40px] md:p-12 md:shadow-2xl">
+                    <div className="space-y-4">
+                        <p className="text-xs uppercase tracking-[0.5em] text-[#00ff99]">
+                            Senior Software Engineer · AI · Mobile · Cloud
+                        </p>
+                        <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+                            Shipping AI-native mobile and web platforms <br className="hidden md:block" /> with measurable impact
+                        </h2>
+                        <p className="text-gray-300 max-w-4xl mx-auto text-base md:text-lg leading-relaxed">
+                            I partner with remote product teams to build high-performance experiences across Flutter, React Native, Next.js, and AI stacks.
+                            From 10K+ DAU social platforms to agentic workspaces and Lambda-scale pipelines, I translate ambitious roadmaps into resilient software.
+                        </p>
+                    </div>
                 </div>
 
                 <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
