@@ -2,6 +2,7 @@
 
 import {motion} from "framer-motion";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
 import {FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos} from "react-icons/fa";
 
 interface ProjectImage {
@@ -39,8 +40,19 @@ const getPrimaryImage = (images?: ProjectImage[]): ProjectImage | undefined => {
     return [...images].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))[0];
 };
 export default function Projects({initialProjects = []}: { initialProjects?: Project[] }) {
+    const router = useRouter();
+
     const getLinkByType = (links: ProjectLink[] | undefined, type: string) =>
         links?.find((link) => link.type === type);
+
+    const navigateToProject = (slug: string) => {
+        router.push(`/projects/${slug}`);
+    };
+
+    const isFromInteractiveElement = (target: EventTarget | null) => {
+        if (!(target instanceof Element)) return false;
+        return Boolean(target.closest('a,button,[role="button"],[role="link"],input,textarea,select,label'));
+    };
 
     return (
         <section id="projects" className="relative bg-[#030303] py-20 px-6 md:px-12 text-white">
@@ -85,7 +97,21 @@ export default function Projects({initialProjects = []}: { initialProjects?: Pro
                                 whileInView={{opacity: 1, y: 0}}
                                 viewport={{once: true}}
                                 transition={{duration: 0.6, delay: (index % 3) * 0.08}}
-                                className="relative overflow-hidden rounded-3xl border border-emerald-900/40 bg-gradient-to-br from-[#050505] via-[#040a08] to-[#020202] shadow-[0_0_35px_rgba(0,255,153,0.08)] transition-all duration-400 hover:-translate-y-2 group"
+                                role="link"
+                                tabIndex={0}
+                                aria-label={`Open ${project.title} case study`}
+                                onClickCapture={(e) => {
+                                    if (isFromInteractiveElement(e.target)) return;
+                                    navigateToProject(project.slug);
+                                }}
+                                onKeyDown={(e) => {
+                                    if (isFromInteractiveElement(e.target)) return;
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        navigateToProject(project.slug);
+                                    }
+                                }}
+                                className="relative overflow-hidden rounded-3xl border border-emerald-900/40 bg-gradient-to-br from-[#050505] via-[#040a08] to-[#020202] shadow-[0_0_35px_rgba(0,255,153,0.08)] transition-all duration-400 hover:-translate-y-2 group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00ff99]/50"
                             >
                                 <div
                                     className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-400">
@@ -121,10 +147,15 @@ export default function Projects({initialProjects = []}: { initialProjects?: Pro
                                         className="absolute top-4 right-4 z-10 text-xs font-semibold px-3 py-1 rounded-full border border-white/40 backdrop-blur bg-black/70 text-white shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
                                         {schemaLabel}
                                     </div>
-                                    <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-3">
+                                </div>
+
+                                <div className="p-8 flex flex-col gap-6">
+                                    <div className="flex flex-col gap-3">
                                         <h3 className="text-2xl font-bold text-white leading-tight">
-                                            <Link href={`/projects/${project.slug}`}
-                                                  className="hover:text-emerald-300 transition">
+                                            <Link
+                                                href={`/projects/${project.slug}`}
+                                                className="hover:text-emerald-300 transition"
+                                            >
                                                 {project.title}
                                             </Link>
                                         </h3>
@@ -135,9 +166,6 @@ export default function Projects({initialProjects = []}: { initialProjects?: Pro
                                             View case
                                         </Link>
                                     </div>
-                                </div>
-
-                                <div className="p-8 flex flex-col gap-6">
                                     <div className="space-y-3">
                                         <p className="text-gray-300 leading-relaxed line-clamp-3">{project.summary}</p>
                                         {project.keyTakeaway && (
@@ -208,12 +236,6 @@ export default function Projects({initialProjects = []}: { initialProjects?: Pro
                                                 <FaAppStoreIos size={18}/>
                                             </a>
                                         )}
-                                        <Link
-                                            href={`/projects/${project.slug}`}
-                                            className="ml-auto text-sm text-[#00ff99] hover:text-white transition"
-                                        >
-                                            Dive deeper →
-                                        </Link>
                                     </div>
                                 </div>
                             </motion.article>

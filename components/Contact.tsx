@@ -48,6 +48,17 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+
+    if (!accessKey) {
+      toast.error("Contact form is not configured. Please add the access key.", {
+        duration: 5000,
+        position: "bottom-center",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -56,11 +67,12 @@ export default function Contact() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
+          access_key: accessKey,
           name: formData.name,
           email: formData.email,
           message: formData.message,
           subject: `New Contact Form Submission from ${formData.name}`,
+          from_name: "Portfolio Contact Form",
         }),
       });
 
@@ -78,11 +90,11 @@ export default function Contact() {
         });
         setFormData({ name: "", email: "", message: "" });
       } else {
-        throw new Error("Form submission failed");
+        throw new Error(result.message || "Form submission failed");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Form submission error:", error);
-      toast.error("Failed to send message. Please try again or email me directly.", {
+      toast.error(error.message || "Failed to send message. Please try again or email me directly.", {
         duration: 5000,
         position: "bottom-center",
         style: {
@@ -188,6 +200,9 @@ export default function Contact() {
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
+                      {/* Honeypot Spam Protection */}
+                      <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} />
+
                       <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                           <User className="inline w-4 h-4 mr-2" />
@@ -256,6 +271,7 @@ export default function Contact() {
                     </form>
                   </div>
                 </motion.div>
+
               </motion.div>
             ) : (
               // Calendar View: Full Section

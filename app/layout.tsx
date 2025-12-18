@@ -93,7 +93,7 @@ export default function RootLayout({
 
         <Header/>
 
-        <main className="flex-grow">
+        <main className="flex-grow pt-20">
             <Suspense fallback={<Loading/>}>
                 {children}
             </Suspense>

@@ -4,6 +4,8 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";
 
 export default function Hero() {
+    const fmt = (value: number) => Number(value.toFixed(6));
+
     return (
         <section
             id="hero"
@@ -111,13 +113,21 @@ export default function Hero() {
                                     fill="none"
                                 />
                                 {Array.from({ length: 30 }).map((_, i) => (
+                                    (() => {
+                                        const angle = (i * 12 * Math.PI) / 180;
+                                        const cx = fmt(250 + 200 * Math.cos(angle));
+                                        const cy = fmt(250 + 200 * Math.sin(angle));
+
+                                        return (
                                     <circle
                                         key={i}
-                                        cx={250 + 200 * Math.cos((i * 12 * Math.PI) / 180)}
-                                        cy={250 + 200 * Math.sin((i * 12 * Math.PI) / 180)}
+                                        cx={cx}
+                                        cy={cy}
                                         r="3"
                                         fill="#00ff99"
                                     />
+                                        );
+                                    })()
                                 ))}
                             </g>
 
