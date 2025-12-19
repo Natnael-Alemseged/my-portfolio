@@ -23,7 +23,7 @@ export default function About() {
                 />
             </div>
             <div className="relative max-w-6xl mx-auto space-y-10">
-                <div className="text-center space-y-6 md:space-y-8 md:bg-black/40 md:backdrop-blur-md md:border md:border-white/10 md:rounded-[40px] md:p-12 md:shadow-2xl">
+                <div className="text-center space-y-6 md:space-y-8 md:bg-black/70 md:backdrop-blur-md md:border md:border-white/10 md:rounded-[40px] md:p-12 md:shadow-2xl">
                     <div className="space-y-4">
                         <p className="text-xs uppercase tracking-[0.5em] text-[#00ff99]">
                             Senior Software Engineer · AI · Mobile · Cloud
@@ -39,7 +39,7 @@ export default function About() {
                 </div>
 
                 <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
-                    <div className="space-y-6 bg-black/50 border border-white/10 rounded-3xl p-8 backdrop-blur-lg">
+                    <div className="space-y-6 bg-black/50 border border-white/10 rounded-3xl p-8 md:backdrop-blur-lg">
                         <h3 className="text-2xl font-semibold text-[#00ff99]">Core Focus</h3>
                         <div className="space-y-6">
                             {["AI Systems & Automation", "Cross-Platform Mobile", "Cloud-Native Web", "Technical Leadership"].map((area) => (
@@ -59,7 +59,7 @@ export default function About() {
                     </div>
 
                     <div className="space-y-6">
-                        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#0d1a14]/80 via-[#030303]/90 to-[#020202]/90 p-8 backdrop-blur">
+                        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#0d1a14]/80 via-[#030303]/90 to-[#020202]/90 p-8 md:backdrop-blur">
                             <p className="text-sm uppercase tracking-[0.4em] text-[#00ff99]/80">Principles</p>
                             <ul className="mt-4 space-y-3 text-gray-200">
                                 <li>• Product-led engineering with explicit KPIs</li>
@@ -73,7 +73,7 @@ export default function About() {
                             {highlights.map((item) => (
                                 <div
                                     key={item.label}
-                                    className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center backdrop-blur"
+                                    className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center md:backdrop-blur"
                                 >
                                     <span className="text-3xl font-bold text-[#00ff99] block">{item.value}</span>
                                     <span className="text-xs uppercase tracking-[0.3em] text-gray-300 block">

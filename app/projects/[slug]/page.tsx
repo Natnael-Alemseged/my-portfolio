@@ -178,6 +178,9 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         },
     };
 
+    const hasLinkType = (type: string) => Boolean(project.links?.some((link) => link.type === type));
+    const deviceFrame = hasLinkType('appstore') || hasLinkType('playstore') ? 'phone' : 'tablet';
+
     return (
         <>
             {/* Schema.org JSON-LD */}
@@ -218,7 +221,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                     {/* Images Gallery */}
                     {project.images && project.images.length > 0 && (
                         <AnimatedSection className="mb-12">
-                            <ProjectImageCarousel images={project.images} />
+                            <ProjectImageCarousel images={project.images} device={deviceFrame} />
                         </AnimatedSection>
                     )}
 

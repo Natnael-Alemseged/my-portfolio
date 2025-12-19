@@ -47,7 +47,7 @@ export default function Header() {
     ];
 
     return (
-        <header id="header" className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-[#0d0d0d]/80 backdrop-blur-md border-b border-gray-800">
+        <header id="header" className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-[#0d0d0d]/95 md:bg-[#0d0d0d]/80 md:backdrop-blur-md border-b border-gray-800">
             {/* Logo */}
             <Link href="/" className="text-xl font-bold text-white tracking-widest z-50">
                 Natnael Alemseged

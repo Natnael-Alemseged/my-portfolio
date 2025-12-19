@@ -8,17 +8,17 @@ import toast, { Toaster } from "react-hot-toast";
 const contactMethods = [
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/natnaelalemseged",
+    href: "https://www.linkedin.com/in/natnael-alemseged",
     icon: "in",
   },
   {
     label: "GitHub",
-    href: "https://github.com/natnaelalemseged",
+    href: "https://github.com/Natnael-Alemseged",
     icon: "{ }",
   },
   {
     label: "Email",
-    href: "mailto:natnaelalemseged@gmail.com",
+    href: "mailto:natiaabaydam@gmail.com",
     icon: "@",
   },
 ];

@@ -51,13 +51,13 @@ export default function Projects({initialProjects = []}: { initialProjects?: Pro
 
     const isFromInteractiveElement = (target: EventTarget | null) => {
         if (!(target instanceof Element)) return false;
-        return Boolean(target.closest('a,button,[role="button"],[role="link"],input,textarea,select,label'));
+        return Boolean(target.closest('a,button,[role="button"],input,textarea,select,label'));
     };
 
     return (
         <section id="projects" className="relative bg-[#030303] py-20 px-6 md:px-12 text-white">
             <div
-                className="absolute inset-x-0 -top-20 h-32 bg-gradient-to-b from-[#00ff9955] to-transparent blur-3xl pointer-events-none"/>
+                className="absolute inset-x-0 -top-20 h-32 bg-gradient-to-b from-[#00ff9955] to-transparent blur-none md:blur-3xl pointer-events-none"/>
             <div className="max-w-7xl mx-auto relative">
                 <div className="flex flex-col items-center gap-4 mb-14">
                     <p className="text-sm uppercase tracking-[0.4em] text-emerald-400">Selected Work</p>
@@ -82,9 +82,11 @@ export default function Projects({initialProjects = []}: { initialProjects?: Pro
                         const logoImage = project.logo_image;
                         
                         // Debug logging
-                        console.log(`Project: ${project.title}`);
-                        console.log('logo_image:', project.logo_image);
-                        console.log('coverImage:', coverImage);
+                        if (process.env.NODE_ENV !== 'production') {
+                            console.log(`Project: ${project.title}`);
+                            console.log('logo_image:', project.logo_image);
+                            console.log('coverImage:', coverImage);
+                        }
                         
                         const baseImage = logoImage || coverImage;
                         const hoverImage =
@@ -115,7 +117,7 @@ export default function Projects({initialProjects = []}: { initialProjects?: Pro
                             >
                                 <div
                                     className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                                    <div className="absolute inset-0 blur-3xl bg-[#00ff99]/15"/>
+                                    <div className="hidden md:block absolute inset-0 blur-3xl bg-[#00ff99]/15"/>
                                     <div
                                         className="absolute -inset-px rounded-[26px] border border-[#00ff99]/30 animate-pulse-slow"/>
                                 </div>
@@ -144,7 +146,7 @@ export default function Projects({initialProjects = []}: { initialProjects?: Pro
                                     <div
                                         className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"/>
                                     <div
-                                        className="absolute top-4 right-4 z-10 text-xs font-semibold px-3 py-1 rounded-full border border-white/40 backdrop-blur bg-black/70 text-white shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
+                                        className="absolute top-4 right-4 z-10 text-xs font-semibold px-3 py-1 rounded-full border border-white/40 md:backdrop-blur bg-black/80 md:bg-black/70 text-white shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
                                         {schemaLabel}
                                     </div>
                                 </div>

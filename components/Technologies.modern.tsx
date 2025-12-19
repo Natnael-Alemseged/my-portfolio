@@ -162,7 +162,7 @@ export default function Technologies() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.3, delay: index * 0.04 }}
                                 whileHover={{ scale: 1.08, y: -8 }}
-                                className="group relative flex flex-col items-center justify-center p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[#00ff99]/50 hover:bg-white/10 transition-all duration-300 cursor-pointer backdrop-blur-sm"
+                                className="group relative flex flex-col items-center justify-center p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[#00ff99]/50 hover:bg-white/10 transition-all duration-300 cursor-pointer md:backdrop-blur-sm"
                             >
                                 <div className="text-5xl mb-3 transition-transform duration-300 group-hover:scale-110">
                                     {tech.icon}
