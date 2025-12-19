@@ -42,10 +42,73 @@ export default function Contact() {
     email: "",
     message: "",
   });
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    message: false,
+  });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const validateField = (field: "name" | "email" | "message", value: string) => {
+    const v = value.trim();
+
+    if (field === "name") {
+      if (!v) return "Name is required";
+      if (v.length < 2) return "Name must be at least 2 characters";
+      if (v.length > 80) return "Name must be 80 characters or less";
+      return;
+    }
+
+    if (field === "email") {
+      if (!v) return "Email is required";
+      if (v.length > 254) return "Email is too long";
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(v)) return "Please enter a valid email";
+      return;
+    }
+
+    if (!v) return "Message is required";
+    if (v.length <0) return "Message must be at least 10 characters";
+    if (v.length > 2000) return "Message must be 2000 characters or less";
+    return;
+  };
+
+  const validateForm = (data: typeof formData) => {
+    const nextErrors: { name?: string; email?: string; message?: string } = {};
+    (Object.keys(data) as Array<keyof typeof data>).forEach((key) => {
+      const err = validateField(key, data[key]);
+      if (err) nextErrors[key] = err;
+    });
+    return nextErrors;
+  };
+
+  const isFormValid = Object.values(validateForm(formData)).length === 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const formEl = e.currentTarget as HTMLFormElement;
+    const botcheck = new FormData(formEl).get("botcheck");
+
+    if (botcheck) {
+      toast.error("Failed to send message. Please try again.", {
+        duration: 5000,
+        position: "bottom-center",
+      });
+      return;
+    }
+
+    const nextErrors = validateForm(formData);
+    setErrors(nextErrors);
+    setTouched({ name: true, email: true, message: true });
+    if (Object.values(nextErrors).length > 0) {
+      toast.error("Please fix the highlighted fields.", {
+        duration: 4000,
+        position: "bottom-center",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
@@ -68,11 +131,12 @@ export default function Contact() {
         },
         body: JSON.stringify({
           access_key: accessKey,
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-          subject: `New Contact Form Submission from ${formData.name}`,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim(),
+          subject: `New Contact Form Submission from ${formData.name.trim()}`,
           from_name: "Portfolio Contact Form",
+          botcheck: "",
         }),
       });
 
@@ -89,6 +153,8 @@ export default function Contact() {
           },
         });
         setFormData({ name: "", email: "", message: "" });
+        setTouched({ name: false, email: false, message: false });
+        setErrors({});
       } else {
         throw new Error(result.message || "Form submission failed");
       }
@@ -109,10 +175,27 @@ export default function Contact() {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    if (name === "name" || name === "email" || name === "message") {
+      if (touched[name]) {
+        const err = validateField(name, value);
+        setErrors((prev) => ({ ...prev, [name]: err }));
+      }
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    if (name !== "name" && name !== "email" && name !== "message") return;
+
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    const err = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: err }));
   };
 
   return (
@@ -214,10 +297,18 @@ export default function Contact() {
                           name="name"
                           value={formData.name}
                           onChange={handleInputChange}
+                          onBlur={handleBlur}
                           required
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00ff99] focus:border-transparent transition"
+                          aria-invalid={Boolean(touched.name && errors.name)}
+                          aria-describedby={touched.name && errors.name ? "contact-name-error" : undefined}
+                          className={`w-full px-4 py-3 bg-white/5 border rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00ff99] focus:border-transparent transition ${touched.name && errors.name ? "border-red-500/60" : "border-white/10"}`}
                           placeholder="John Doe"
                         />
+                        {touched.name && errors.name ? (
+                          <p id="contact-name-error" className="mt-1 text-xs text-red-400">
+                            {errors.name}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div>
@@ -231,10 +322,18 @@ export default function Contact() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
+                          onBlur={handleBlur}
                           required
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00ff99] focus:border-transparent transition"
+                          aria-invalid={Boolean(touched.email && errors.email)}
+                          aria-describedby={touched.email && errors.email ? "contact-email-error" : undefined}
+                          className={`w-full px-4 py-3 bg-white/5 border rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00ff99] focus:border-transparent transition ${touched.email && errors.email ? "border-red-500/60" : "border-white/10"}`}
                           placeholder="john@example.com"
                         />
+                        {touched.email && errors.email ? (
+                          <p id="contact-email-error" className="mt-1 text-xs text-red-400">
+                            {errors.email}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div>
@@ -247,16 +346,24 @@ export default function Contact() {
                           name="message"
                           value={formData.message}
                           onChange={handleInputChange}
+                          onBlur={handleBlur}
                           required
                           rows={5}
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00ff99] focus:border-transparent transition resize-none"
+                          aria-invalid={Boolean(touched.message && errors.message)}
+                          aria-describedby={touched.message && errors.message ? "contact-message-error" : undefined}
+                          className={`w-full px-4 py-3 bg-white/5 border rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00ff99] focus:border-transparent transition resize-none ${touched.message && errors.message ? "border-red-500/60" : "border-white/10"}`}
                           placeholder="Tell me about your project..."
                         />
+                        {touched.message && errors.message ? (
+                          <p id="contact-message-error" className="mt-1 text-xs text-red-400">
+                            {errors.message}
+                          </p>
+                        ) : null}
                       </div>
 
                       <button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !isFormValid}
                         className="w-full px-6 py-3 bg-[#00ff99] text-black font-semibold rounded-xl hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isSubmitting ? (
