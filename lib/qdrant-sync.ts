@@ -9,22 +9,32 @@ env.remoteHost = 'https://huggingface.co';
 env.remotePathTemplate = '{model}/resolve/main/';
 env.allowLocalModels = false;
 
-const QDRANT_URL = process.env.QDRANT_URL;
-const QDRANT_API_KEY = process.env.QDRANT_API_KEY;
-const COLLECTION_NAME = "chat_memories";
+// Lazy initialization of Qdrant client
+let client: QdrantClient | null = null;
 
-if (!QDRANT_URL || !QDRANT_API_KEY) {
-    if (process.env.NODE_ENV === 'production') {
-        throw new Error('Missing Qdrant credentials in environment variables');
-    } else {
-        console.warn('⚠️ Qdrant credentials missing in environment variables');
+function getQdrantClient() {
+    if (client) return client;
+
+    const QDRANT_URL = process.env.QDRANT_URL;
+    const QDRANT_API_KEY = process.env.QDRANT_API_KEY;
+
+    if (!QDRANT_URL || !QDRANT_API_KEY) {
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error('Missing Qdrant credentials in environment variables');
+        } else {
+            console.warn('⚠️ Qdrant credentials missing in environment variables');
+        }
     }
+
+    client = new QdrantClient({
+        url: QDRANT_URL || '',
+        apiKey: QDRANT_API_KEY || '',
+    });
+
+    return client;
 }
 
-const client = new QdrantClient({
-    url: QDRANT_URL || '',
-    apiKey: QDRANT_API_KEY || '',
-});
+const COLLECTION_NAME = "chat_memories";
 
 /**
  * Converts a 24-char MongoDB ObjectId hex string into a valid 36-char UUID string.
@@ -90,6 +100,7 @@ function formatProjectMemory(project: any) {
  * Ensures the Qdrant collection exists and is configured correctly
  */
 export async function initQdrant() {
+    const client = getQdrantClient();
     const collections = await client.getCollections();
     const exists = collections.collections.some((c: any) => c.name === COLLECTION_NAME);
 
@@ -130,6 +141,7 @@ export async function syncProjectToQdrant(project: any) {
 
     try {
         await initQdrant();
+        const client = getQdrantClient();
         const content = formatProjectMemory(project);
         const user_id = 'natnael_owner'; // Default for portfolio content
 
@@ -180,6 +192,7 @@ export async function syncProjectToQdrant(project: any) {
 export async function deleteProjectFromQdrant(projectId: string) {
     try {
         const pointId = mongoIdToUuid(projectId);
+        const client = getQdrantClient();
         await client.delete(COLLECTION_NAME, {
             points: [pointId],
         });
@@ -196,6 +209,7 @@ export async function deleteProjectFromQdrant(projectId: string) {
 export async function searchMemories(query: string, limit: number = 5) {
     try {
         await initQdrant();
+        const client = getQdrantClient();
         const embedding = await generateEmbedding(query);
 
         const results = await client.search(COLLECTION_NAME, {
@@ -214,6 +228,7 @@ export async function searchMemories(query: string, limit: number = 5) {
         });
 
         return results.map((r: any) => r.payload?.content as string).filter(Boolean);
+
     } catch (error) {
         console.error('❌ Qdrant search error:', error);
         return [];
