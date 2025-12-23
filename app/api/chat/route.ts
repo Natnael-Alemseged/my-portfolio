@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { searchMemories } from '@/lib/qdrant-sync';
 
+// Force Node.js runtime for streaming support
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
     try {
         // Initialize Groq client (uses OpenAI SDK with Groq base URL)

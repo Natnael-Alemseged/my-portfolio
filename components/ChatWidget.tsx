@@ -8,11 +8,12 @@ interface Message {
     content: string;
 }
 
-const INITIAL_GREETING = `ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL
+const INITIAL_HEADER = `ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL
 INITIALIZING BIOMETRIC SCAN...
-IDENTITY CONFIRMED: VISITOR.
+IDENTITY CONFIRMED: VISITOR.`;
 
-Greetings. I am Natnael's Automated Persona. How may I assist you?`;
+const INITIAL_GREETING = `Greetings. I am Natnael's Automated Persona. How may I assist you?`;
+
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
@@ -20,9 +21,11 @@ export default function ChatWidget() {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [hasPlayedIntro, setHasPlayedIntro] = useState(false);
-    const [introText, setIntroText] = useState('');
+    const [showHeader, setShowHeader] = useState(false);
+    const [greetingText, setGreetingText] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const introIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const introTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const greetingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const isIntroAnimating = isOpen && !hasPlayedIntro;
 
     const scrollToBottom = () => {
@@ -31,39 +34,57 @@ export default function ChatWidget() {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages, isOpen, introText]);
+    }, [messages, isOpen, greetingText]);
 
     useEffect(() => {
         if (!isOpen || hasPlayedIntro) return;
 
-        if (introIntervalRef.current) {
-            clearInterval(introIntervalRef.current);
+        // Clear any existing timers
+        if (introTimeoutRef.current) {
+            clearTimeout(introTimeoutRef.current);
+        }
+        if (greetingIntervalRef.current) {
+            clearInterval(greetingIntervalRef.current);
         }
 
-        let index = 0;
-        setIntroText('');
+        // Step 1: Show header instantly
+        setShowHeader(true);
+        setGreetingText('');
 
-        introIntervalRef.current = setInterval(() => {
-            index += 1;
-            setIntroText(INITIAL_GREETING.slice(0, index));
+        // Step 2: Wait 2 seconds with cursor, then stream greeting
+        introTimeoutRef.current = setTimeout(() => {
+            let index = 0;
+            greetingIntervalRef.current = setInterval(() => {
+                index += 1;
+                setGreetingText(INITIAL_GREETING.slice(0, index));
 
-            if (index >= INITIAL_GREETING.length) {
-                if (introIntervalRef.current) {
-                    clearInterval(introIntervalRef.current);
-                    introIntervalRef.current = null;
+                if (index >= INITIAL_GREETING.length) {
+                    if (greetingIntervalRef.current) {
+                        clearInterval(greetingIntervalRef.current);
+                        greetingIntervalRef.current = null;
+                    }
+                    setHasPlayedIntro(true);
+                    setShowHeader(false);
+                    setGreetingText('');
+                    // Set the complete message
+                    setMessages((prev) =>
+                        prev.length ? prev : [{
+                            role: 'assistant',
+                            content: `${INITIAL_HEADER}\n\n${INITIAL_GREETING}`
+                        }]
+                    );
                 }
-                setHasPlayedIntro(true);
-                setIntroText('');
-                setMessages((prev) =>
-                    prev.length ? prev : [{ role: 'assistant', content: INITIAL_GREETING }]
-                );
-            }
-        }, 30);
+            }, 30);
+        }, 2000);
 
         return () => {
-            if (introIntervalRef.current) {
-                clearInterval(introIntervalRef.current);
-                introIntervalRef.current = null;
+            if (introTimeoutRef.current) {
+                clearTimeout(introTimeoutRef.current);
+                introTimeoutRef.current = null;
+            }
+            if (greetingIntervalRef.current) {
+                clearInterval(greetingIntervalRef.current);
+                greetingIntervalRef.current = null;
             }
         };
     }, [isOpen, hasPlayedIntro]);
@@ -86,49 +107,73 @@ export default function ChatWidget() {
                 }),
             });
 
-            if (!response.ok) throw new Error('Failed to get response');
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status} ${response.statusText}`);
+            }
 
             const reader = response.body?.getReader();
+            if (!reader) {
+                throw new Error('Response body is not readable');
+            }
+
             const decoder = new TextDecoder();
             let assistantMessage = '';
+            let buffer = '';
 
+            // Add empty assistant message that will be updated
             setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
 
-            while (reader) {
+            while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
-                const chunk = decoder.decode(value);
-                const lines = chunk.split('\n');
+                // Decode chunk and add to buffer
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+
+                // Keep the last incomplete line in the buffer
+                buffer = lines.pop() || '';
 
                 for (const line of lines) {
                     if (line.startsWith('data: ')) {
-                        const data = line.slice(6);
-                        if (data === '[DONE]') break;
+                        const data = line.slice(6).trim();
+                        if (data === '[DONE]') {
+                            break;
+                        }
 
                         try {
                             const parsed = JSON.parse(data);
-                            assistantMessage += parsed.content;
-                            setMessages((prev) => {
-                                const newMessages = [...prev];
-                                newMessages[newMessages.length - 1].content = assistantMessage;
-                                return newMessages;
-                            });
-                        } catch {
-                            // Skip invalid JSON
+                            if (parsed.content) {
+                                assistantMessage += parsed.content;
+                                // Update the last message with accumulated content
+                                setMessages((prev) => {
+                                    const newMessages = [...prev];
+                                    newMessages[newMessages.length - 1] = {
+                                        role: 'assistant',
+                                        content: assistantMessage
+                                    };
+                                    return newMessages;
+                                });
+                            }
+                        } catch (e) {
+                            console.warn('Failed to parse SSE data:', data, e);
                         }
                     }
                 }
             }
         } catch (error) {
             console.error('Chat error:', error);
-            setMessages((prev) => [
-                ...prev,
-                {
-                    role: 'assistant',
-                    content: "ERROR: CONNECTION LOST\nPlease try again later.",
-                },
-            ]);
+            setMessages((prev) => {
+                // Remove the empty assistant message if it exists
+                const filtered = prev.filter(m => m.content !== '');
+                return [
+                    ...filtered,
+                    {
+                        role: 'assistant',
+                        content: "ERROR: CONNECTION LOST\nPlease try again later.",
+                    },
+                ];
+            });
         } finally {
             setIsLoading(false);
         }
@@ -189,7 +234,9 @@ export default function ChatWidget() {
                                     className="whitespace-pre-wrap leading-relaxed text-sm md:text-base"
                                     style={{ textShadow: '0 0 2px #00ff99' }}
                                 >
-                                    {introText || '\u00A0'}
+                                    {showHeader && INITIAL_HEADER}
+                                    {showHeader && greetingText && '\n\n'}
+                                    {greetingText}
                                 </span>
                                 <span className="inline-block w-2 h-4 bg-[#00ff99] ml-1 animate-pulse align-middle"></span>
                             </div>
@@ -234,7 +281,7 @@ export default function ChatWidget() {
                             onKeyPress={handleKeyPress}
                             placeholder={isIntroAnimating ? 'BOOTING TERMINAL...' : 'ENTER COMMAND...'}
                             disabled={isLoading || isIntroAnimating}
-                            className="w-full bg-black border border-[#00ff99]/50 text-[#00ff99] pl-8 pr-12 py-3 text-sm font-mono focus:outline-none focus:border-[#00ff99] focus:shadow-[0_0_15px_rgba(0,255,153,0.3)] transition-all placeholder:text-[#00ff99]/30 uppercase disabled:opacity-50"
+                            className="w-full bg-black border border-[#00ff99]/50 text-[#00ff99] pl-8 pr-20 py-3 text-sm font-mono focus:outline-none focus:border-[#00ff99] focus:shadow-[0_0_15px_rgba(0,255,153,0.3)] transition-all placeholder:text-[#00ff99]/30 placeholder:uppercase disabled:opacity-50"
                         />
                         <button
                             onClick={handleSend}
