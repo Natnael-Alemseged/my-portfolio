@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const ProjectIntegrationSchema = new mongoose.Schema({
     projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
-    service: { type: String, required: true, enum: ['supermemory', 'algolia', 'other'] },
+    service: { type: String, required: true, enum: ['supermemory', 'algolia', 'qdrant', 'other'] },
     externalId: { type: String, required: true }, // supermemoryId, algoliaId, etc.
     metadata: { type: mongoose.Schema.Types.Mixed },
     syncedAt: { type: Date, default: Date.now },

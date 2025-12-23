@@ -2,8 +2,14 @@
 
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";
+import {useEffect} from "react";
 
 export default function Hero() {
+    useEffect(() => {
+        //since some of the backends for my projects are on render a health check request is sent to spinup the apis
+        fetch('https://taaft-backend.onrender.com/health');
+    }, []);
+
     const fmt = (value: number) => Number(value.toFixed(6));
 
     return (

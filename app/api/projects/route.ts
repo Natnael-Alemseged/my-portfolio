@@ -4,9 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
 import {
-    syncProjectToSupermemory,
-    syncAllProjectsIndex,
-} from '@/lib/supermemory-sync';
+    syncProjectToQdrant,
+} from '@/lib/qdrant-sync';
 
 export async function GET(req: NextRequest) {
     // Your existing GET logic is fine — keep it as-is
@@ -48,12 +47,8 @@ export async function POST(req: NextRequest) {
         // === Create the project ===
         const project = await Project.create(body);
 
-        // === Sync to Supermemory (rich formatting + index) ===
-        // This handles: formatting, customId upsert, metadata, ProjectIntegration record, and skips private projects
-        await syncProjectToSupermemory(project);
-
-        // This rebuilds the master "list all projects" index — critical for reliable enumeration
-        await syncAllProjectsIndex();
+        // === Sync to Qdrant ===
+        await syncProjectToQdrant(project);
 
         // === Return the created project ===
         return NextResponse.json(project, { status: 201 });

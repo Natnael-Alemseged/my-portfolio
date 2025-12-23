@@ -4,10 +4,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
 import {
-    syncProjectToSupermemory,
-    syncAllProjectsIndex,
-    deleteProjectFromSupermemory,
-} from '@/lib/supermemory-sync';
+    syncProjectToQdrant,
+    deleteProjectFromQdrant,
+} from '@/lib/qdrant-sync';
 
 // Helper for Admin Auth (shared across methods)
 function isAdmin(req: NextRequest): boolean {
@@ -56,9 +55,8 @@ export async function PUT(
             return NextResponse.json({ error: 'Project not found' }, { status: 404 });
         }
 
-        // === Sync to Supermemory using shared helpers ===
-        await syncProjectToSupermemory(updatedProject); // Handles upsert, formatting, private skip, integration record
-        await syncAllProjectsIndex(); // Keep the master list fresh
+        // === Sync to Qdrant ===
+        await syncProjectToQdrant(updatedProject);
 
         return NextResponse.json(updatedProject);
     } catch (error) {
@@ -84,9 +82,8 @@ export async function DELETE(
             return NextResponse.json({ error: 'Project not found' }, { status: 404 });
         }
 
-        // === Clean removal from Supermemory ===
-        await deleteProjectFromSupermemory(id); // Deletes memory + integration record
-        await syncAllProjectsIndex(); // Rebuild index without this project
+        // === Clean removal from Qdrant ===
+        await deleteProjectFromQdrant(id);
 
         return NextResponse.json({ message: 'Project deleted successfully' });
     } catch (error) {

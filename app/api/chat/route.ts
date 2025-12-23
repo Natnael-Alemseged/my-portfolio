@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import Supermemory from 'supermemory';
+import { searchMemories } from '@/lib/qdrant-sync';
 
 export async function POST(req: NextRequest) {
     try {
@@ -8,10 +8,6 @@ export async function POST(req: NextRequest) {
         const openai = new OpenAI({
             apiKey: process.env.GROQ_API_KEY,
             baseURL: 'https://api.groq.com/openai/v1',
-        });
-
-        const supermemory = new Supermemory({
-            apiKey: process.env.SUPERMEMORY_API_KEY,
         });
 
         const { message, conversationHistory = [] } = await req.json();
@@ -25,19 +21,13 @@ export async function POST(req: NextRequest) {
 
         let context = '';
         try {
-            // Query SuperMemory for relevant context with unique container tag
-            const memoryResults = await supermemory.search.execute({
-                q: message,
-                limit: 5,
-                containerTags: ['natnael-portfolio-chatbot'], // Unique container for this portfolio
-            });
+            // Query Qdrant for relevant context
+            const memoryResults = await searchMemories(message, 5);
 
             // Extract relevant context from memory results
-            context = memoryResults.results
-                ?.map((result: { content?: string | null; text?: string | null }) => result.content || result.text)
-                .join('\n\n') || '';
+            context = memoryResults.join('\n\n') || '';
         } catch (smError) {
-            console.error('Supermemory search error:', smError);
+            console.error('Qdrant search error:', smError);
             context = '';
         }
 
