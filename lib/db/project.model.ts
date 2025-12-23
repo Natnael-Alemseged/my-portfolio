@@ -24,39 +24,42 @@ const ProjectSchema = new mongoose.Schema({
     title: { type: String, required: true },
     summary: { type: String, required: true },
     role: { type: String },
-    
+
     problem: { type: String },
     solution: { type: String },
     keyTakeaway: { type: String }, // Quick insight for LLMs and summaries
-    
+
     content: { type: String },
     contentFormat: { type: String, enum: ['markdown', 'html'], default: 'markdown' },
-    
+
     architecture: { type: String },
     features: [{ type: String }],
-    
+
     techStack: [{ type: String }],
     tags: [{ type: String }],
-    
+
     images: [ImageSchema],
-    logo_image:ImageSchema,
+    logo_image: ImageSchema,
     links: [LinkSchema],
-    
+
     metrics: MetricsSchema,
-    
+
     // SEO & Visibility
     featured: { type: Boolean, default: false },
     status: { type: String, enum: ['active', 'archived', 'in-progress'], default: 'active' },
     visibility: { type: String, enum: ['public', 'private', 'unlisted'], default: 'public' },
     schemaType: { type: String, enum: ['SoftwareApplication', 'WebApplication', 'MobileApplication', 'CreativeWork'], default: 'SoftwareApplication' },
-    
+
+    // Ordering
+    position: { type: Number, default: 0 },
+
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     publishedAt: { type: Date }, // When made public (different from createdAt for drafts)
 });
 
 // Auto-generate slug from title before validation so required slug passes
-ProjectSchema.pre('validate', function(next) {
+ProjectSchema.pre('validate', function (next) {
     if (this.isModified('title') && !this.slug) {
         this.slug = this.title
             .toLowerCase()
@@ -67,12 +70,12 @@ ProjectSchema.pre('validate', function(next) {
 });
 
 // Handle publishedAt & updatedAt timestamps
-ProjectSchema.pre('save', function(next) {
+ProjectSchema.pre('save', function (next) {
     // Set publishedAt when visibility changes to public
     if (this.isModified('visibility') && this.visibility === 'public' && !this.publishedAt) {
         this.publishedAt = new Date();
     }
-    
+
     this.updatedAt = new Date();
     next();
 });

@@ -41,6 +41,7 @@ async function getProjects() {
         const projects = await Project.find({ visibility: 'public' })
             .sort({ featured: -1, createdAt: -1 })
             .lean();
+        console.log('projects', JSON.stringify( projects, null, 2));
         return JSON.parse(JSON.stringify(projects));
     } catch (error) {
         console.error("Failed to fetch projects", error);

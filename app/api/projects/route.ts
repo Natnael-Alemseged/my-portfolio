@@ -19,9 +19,11 @@ export async function GET(req: NextRequest) {
             cookie?.value === process.env.ADMIN_PASSWORD;
 
         const query = isAdmin ? {} : { visibility: { $in: ['public', 'unlisted'] } };
-        const projects = await Project.find(query).sort({ createdAt: -1 });
+        const projects = await Project.find(query).sort({ position: 1, createdAt: -1 });
+        const response= NextResponse.json(projects);
+        console.log(response);
 
-        return NextResponse.json(projects);
+        return response;
     } catch (error) {
         console.error('Error fetching projects:', error);
         return NextResponse.json({ error: 'Failed to fetch projects' }, { status: 500 });
