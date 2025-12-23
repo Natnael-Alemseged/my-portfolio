@@ -2,26 +2,67 @@
 import { motion, AnimatePresence } from "framer-motion";
 import InlineWidget from "@calcom/embed-react";
 import { useState } from "react";
-import { Send, Calendar, X, Mail, User, MessageSquare } from "lucide-react";
+import { Send, Calendar, X, Mail, User, MessageSquare, Linkedin } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
-const contactMethods = [
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/natnael-alemseged",
-    icon: "in",
-  },
-  {
-    label: "GitHub",
-    href: "https://github.com/Natnael-Alemseged",
-    icon: "{ }",
-  },
-  {
-    label: "Email",
-    href: "mailto:natiaabaydam@gmail.com",
-    icon: "@",
-  },
-];
+type ViewType = "quick-message" | "book-call";
+
+const ContactOption = ({
+  icon,
+  label,
+  isActive,
+  onClick,
+  href,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  isActive?: boolean;
+  onClick?: () => void;
+  href?: string;
+}) => {
+  const baseClasses =
+    "group inline-flex items-center gap-2 rounded-full px-4 py-2 md:px-5 md:py-3 text-sm font-semibold transition-all duration-300 cursor-pointer";
+  const activeClasses =
+    "bg-[#00ff99] text-[#0d0d0d] shadow-lg hover:shadow-xl border border-[#00ff99]";
+  const inactiveClasses =
+    "border border-white/10 bg-white/5 text-white hover:border-[#00ff99]/60 hover:bg-[#00ff99]/10";
+
+  const content = (
+    <>
+      <span
+        className={`flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full text-sm font-bold transition ${isActive
+          ? "bg-black/10 text-black border border-black/10"
+          : "border border-[#00ff99]/40 bg-[#00ff99]/15 text-[#00ff99] group-hover:border-[#00ff99] group-hover:bg-[#00ff99]/25"
+          }`}
+      >
+        {icon}
+      </span>
+      {label}
+    </>
+  );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${baseClasses} ${isActive ? activeClasses : inactiveClasses}`}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      className={`${baseClasses} ${isActive ? activeClasses : inactiveClasses}`}
+    >
+      {content}
+    </button>
+  );
+};
 
 const containerVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -36,7 +77,7 @@ const containerVariants = {
 };
 
 export default function Contact() {
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [activeView, setActiveView] = useState<ViewType>("quick-message");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -69,7 +110,7 @@ export default function Contact() {
     }
 
     if (!v) return "Message is required";
-    if (v.length <0) return "Message must be at least 10 characters";
+    if (v.length < 0) return "Message must be at least 10 characters";
     if (v.length > 2000) return "Message must be 2000 characters or less";
     return;
   };
@@ -198,6 +239,31 @@ export default function Contact() {
     setErrors((prev) => ({ ...prev, [name]: err }));
   };
 
+  const contactOptions = [
+    {
+      label: "Book a Call",
+      icon: <Calendar size={16} />,
+      onClick: () => setActiveView("book-call"),
+      isActive: activeView === "book-call",
+    },
+    {
+      label: "Quick Message",
+      icon: <MessageSquare size={16} />,
+      onClick: () => setActiveView("quick-message"),
+      isActive: activeView === "quick-message",
+    },
+    {
+      label: "Email",
+      href: "mailto:natiaabaydam@gmail.com",
+      icon: <Mail size={16} />,
+    },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/natnael-alemseged",
+      icon: <Linkedin size={16} />,
+    },
+  ];
+
   return (
     <>
       <Toaster />
@@ -218,7 +284,7 @@ export default function Contact() {
 
         <div className="relative mx-auto max-w-7xl">
           <AnimatePresence mode="wait">
-            {!showCalendar ? (
+            {activeView === "quick-message" ? (
               // Default View: Text/Links + Contact Form
               <motion.div
                 key="contact-form"
@@ -241,30 +307,9 @@ export default function Contact() {
                   </p>
 
                   <div className="flex flex-wrap gap-3 md:gap-4">
-                    {contactMethods.map((method) => (
-                      <a
-                        key={method.label}
-                        href={method.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 md:px-5 md:py-3 text-sm font-semibold text-white transition hover:border-[#00ff99]/60 hover:bg-[#00ff99]/10"
-                      >
-                        <span className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-full border border-[#00ff99]/40 bg-[#00ff99]/15 text-sm font-bold text-[#00ff99] transition group-hover:border-[#00ff99] group-hover:bg-[#00ff99]/25">
-                          {method.icon}
-                        </span>
-                        {method.label}
-                      </a>
+                    {contactOptions.map((option) => (
+                      <ContactOption key={option.label} {...option} />
                     ))}
-                  </div>
-
-                  <div className="pt-4">
-                    <button
-                      onClick={() => setShowCalendar(true)}
-                      className="inline-flex items-center gap-2 px-8 py-3 bg-[#00ff99] text-[#0d0d0d] rounded-full hover:bg-white transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
-                    >
-                      <Calendar size={20} />
-                      Book a call
-                    </button>
                   </div>
                 </div>
 
@@ -390,6 +435,13 @@ export default function Contact() {
                 transition={{ duration: 0.4 }}
                 className="max-w-4xl mx-auto"
               >
+                {/* Options Header in Calendar View */}
+                <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-8">
+                  {contactOptions.map((option) => (
+                    <ContactOption key={option.label} {...option} />
+                  ))}
+                </div>
+
                 <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#0f0f0f]/50 p-4 md:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.35)]">
                   {/* Header with Back Button */}
                   <div className="flex items-center justify-between mb-6">
@@ -402,7 +454,7 @@ export default function Contact() {
                       </p>
                     </div>
                     <button
-                      onClick={() => setShowCalendar(false)}
+                      onClick={() => setActiveView("quick-message")}
                       className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-[#00ff99]/60 transition text-sm font-semibold"
                     >
                       <X size={18} />

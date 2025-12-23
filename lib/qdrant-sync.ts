@@ -9,13 +9,21 @@ env.remoteHost = 'https://huggingface.co';
 env.remotePathTemplate = '{model}/resolve/main/';
 env.allowLocalModels = false;
 
-const QDRANT_URL = process.env.QDRANT_URL || "https://243611bd-d88f-4f57-b555-961de2837783.eu-central-1-0.aws.cloud.qdrant.io:6333";
-const QDRANT_API_KEY = process.env.QDRANT_API_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.WduVcd0VT32PEgrUQ75I-MsLfkShppEyKIxv77Pn-2g";
+const QDRANT_URL = process.env.QDRANT_URL;
+const QDRANT_API_KEY = process.env.QDRANT_API_KEY;
 const COLLECTION_NAME = "chat_memories";
 
+if (!QDRANT_URL || !QDRANT_API_KEY) {
+    if (process.env.NODE_ENV === 'production') {
+        throw new Error('Missing Qdrant credentials in environment variables');
+    } else {
+        console.warn('⚠️ Qdrant credentials missing in environment variables');
+    }
+}
+
 const client = new QdrantClient({
-    url: QDRANT_URL,
-    apiKey: QDRANT_API_KEY,
+    url: QDRANT_URL || '',
+    apiKey: QDRANT_API_KEY || '',
 });
 
 /**
