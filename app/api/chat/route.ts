@@ -6,6 +6,10 @@ import { searchMemories } from '@/lib/qdrant-sync';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+export async function GET() {
+    return new NextResponse('Chat API endpoint is running', { status: 200 });
+}
+
 export async function POST(req: NextRequest) {
     try {
         // Initialize Groq client (uses OpenAI SDK with Groq base URL)

@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"projectId":{"$numberInt":"1"},"service":{"$numberInt":"1"}},"name":"projectId_1_service_1","background":true,"unique":true}],"uuid":"14c5ae062ce44dfaaf99e4e438bb013d","collectionName":"projectintegrations","type":"collection"}

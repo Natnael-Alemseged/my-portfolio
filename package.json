@@ -8,7 +8,8 @@
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
-    "migrate:positions": "tsx scripts/migrate-positions.ts"
+    "migrate:positions": "tsx scripts/migrate-positions.ts",
+    "add-positions": "tsx scripts/add-position-to-projects.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.948.0",

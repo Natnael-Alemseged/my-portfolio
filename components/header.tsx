@@ -27,7 +27,12 @@ export default function Header() {
         };
     }, [isMobileMenuOpen]);
 
-    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string, id: string) => {
+        if (window.location.pathname !== '/') {
+            // Navigate to home page with section hash
+            return;
+        }
+
         e.preventDefault();
         setIsMobileMenuOpen(false);
         const element = document.getElementById(id);
@@ -40,10 +45,10 @@ export default function Header() {
     };
 
     const navLinks = [
-        { name: "About", href: "#about", id: "about" },
-        { name: "Projects", href: "#projects", id: "projects" },
-        { name: "Testimonials", href: "#testimonials", id: "testimonials" },
-        { name: "Work Experience", href: "#workExperience", id: "workExperience" },
+        { name: "About", href: "/#about", id: "about" },
+        { name: "Projects", href: "/#projects", id: "projects" },
+        { name: "Testimonials", href: "/#testimonials", id: "testimonials" },
+        { name: "Work Experience", href: "/#workExperience", id: "workExperience" },
     ];
 
     return (
@@ -56,14 +61,15 @@ export default function Header() {
             {/* Desktop Nav Links */}
             <nav className="hidden md:flex items-center space-x-8">
                 {navLinks.map((link) => (
-                    <a
+                    <Link
                         key={link.name}
                         href={link.href}
                         className="text-gray-300 hover:text-white transition-colors cursor-pointer font-medium"
-                        onClick={(e) => scrollToSection(e, link.id)}
+                        scroll={false}
+                        onClick={(e) => scrollToSection(e, link.href, link.id)}
                     >
                         {link.name}
-                    </a>
+                    </Link>
                 ))}
             </nav>
 
@@ -99,14 +105,15 @@ export default function Header() {
                         >
                             <nav className="flex flex-col space-y-6">
                                 {navLinks.map((link) => (
-                                    <a
+                                    <Link
                                         key={link.name}
                                         href={link.href}
                                         className="text-lg font-medium text-white border-b border-gray-800 pb-4"
-                                        onClick={(e) => scrollToSection(e, link.id)}
+                                        scroll={false}
+                                        onClick={(e) => scrollToSection(e, link.href, link.id)}
                                     >
                                         {link.name}
-                                    </a>
+                                    </Link>
                                 ))}
                             </nav>
 

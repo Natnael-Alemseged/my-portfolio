@@ -32,6 +32,7 @@ export async function PATCH(req: NextRequest) {
         const updatePromises = projectIds.map((id, index) =>
             Project.findByIdAndUpdate(
                 id,
+
                 { position: index },
                 { new: true } // return the updated document
             )
