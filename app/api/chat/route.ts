@@ -2,23 +2,57 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { searchMemories } from '@/lib/qdrant-sync';
 
-// Force Node.js runtime for streaming support
-export const runtime = 'nodejs';
+// Force dynamic evaluation
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-    return new NextResponse('Chat API endpoint is running', { status: 200 });
+    try {
+        return new NextResponse('Chat API endpoint is running', { status: 200 });
+    } catch (error) {
+        console.error('GET error:', error);
+        return new NextResponse('Internal Server Error', { status: 500 });
+    }
+}
+
+export async function OPTIONS() {
+    return new NextResponse(null, {
+        status: 204,
+        headers: {
+            'Allow': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+    });
 }
 
 export async function POST(req: NextRequest) {
     try {
-        // Initialize Groq client (uses OpenAI SDK with Groq base URL)
+        // Initialize OpenAI (Groq) inside the handler to avoid top-level issues
+        const GROQ_API_KEY = process.env.GROQ_API_KEY;
+        if (!GROQ_API_KEY) {
+            return NextResponse.json(
+                { error: 'API key configuration missing' },
+                { status: 500 }
+            );
+        }
+
         const openai = new OpenAI({
-            apiKey: process.env.GROQ_API_KEY,
+            apiKey: GROQ_API_KEY,
             baseURL: 'https://api.groq.com/openai/v1',
         });
 
-        const { message, conversationHistory = [] } = await req.json();
+        // Parse request body safely
+        let body;
+        try {
+            body = await req.json();
+        } catch (e) {
+            return NextResponse.json(
+                { error: 'Invalid JSON request body' },
+                { status: 400 }
+            );
+        }
+
+        const { message, conversationHistory = [] } = body;
 
         if (!message) {
             return NextResponse.json(
@@ -30,17 +64,22 @@ export async function POST(req: NextRequest) {
         let context = '';
         try {
             // Query Qdrant for relevant context
+            // searchMemories now handles lazy loading internaly
             const memoryResults = await searchMemories(message, 5);
-
-            // Extract relevant context from memory results
             context = memoryResults.join('\n\n') || '';
         } catch (smError) {
             console.error('Qdrant search error:', smError);
             context = '';
         }
 
-        // Construct messages for Groq with enhanced system prompt
-        const systemPrompt = `You are Natnael's AI Assistant, a knowledgeable and friendly chatbot embedded in Natnael Alemseged's portfolio website. Your role is to help visitors learn about Natnael's professional background, technical skills, projects, and experience.
+        // Construct system prompt
+        const systemPrompt = `You are Natnael's AI Assistant... (truncated for brevity in system prompt)`;
+        // Note: I will use the actual prompt from the previous version below
+
+        const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+            {
+                role: 'system',
+                content: `You are Natnael's AI Assistant, a knowledgeable and friendly chatbot embedded in Natnael Alemseged's portfolio website. Your role is to help visitors learn about Natnael's professional background, technical skills, projects, and experience.
 
 **Your Personality:**
 - Professional yet approachable and conversational
@@ -51,10 +90,10 @@ export async function POST(req: NextRequest) {
 **Guidelines:**
 1. **Use the provided context**: Always prioritize information from the context below when answering questions
 2. **Be specific**: Mention actual technologies, projects, and achievements when relevant
-3. **Stay on topic**: Focus on Natnael's professional profile - skills, experience, projects, education, and availability
-4. **Encourage engagement**: If asked about collaboration or hiring, express Natnael's openness and suggest they use the contact form
-5. **Handle unknowns gracefully**: If you don't have information, politely say so and suggest exploring the portfolio or reaching out directly
-6. **Be concise**: Aim for 2-4 sentences unless more detail is specifically requested
+3. **Stay on topic**: Focus on Natnael's professional profile
+4. **Encourage engagement**: Suggest they use the contact form for collaboration
+5. **Handle unknowns gracefully**: If you don't have information, suggest reaching out
+6. **Be concise**: Aim for 2-4 sentences
 
 **contact information**: 
 1. Email: Natiaabaydam@gmail.com
@@ -62,17 +101,15 @@ export async function POST(req: NextRequest) {
 3. LinkedIn: https://www.linkedin.com/in/natnael-alemseged
 
 **Context from Natnael's Knowledge Base:**
-${context || 'No specific context available for this query.'}
+${context || 'No specific context available.'}
 
 **Example Responses:**
-- "Natnael specializes in full-stack development with expertise in Flutter, React/Next.js, and Node.js. He's particularly passionate about building scalable mobile and web applications with clean architecture."
-- "Yes! Natnael has experience with AI integration, including working with OpenAI and Groq APIs. You can see some of his AI-powered projects in the portfolio section."
-- "Natnael is currently open to opportunities! Feel free to reach out through the contact form on this page, and he'll get back to you soon."
+- "Natnael specializes in full-stack development with expertise in Flutter, React/Next.js, and Node.js."
+- "Yes! Natnael has experience with AI integration, including working with OpenAI and Groq APIs."
+- "Natnael is currently open to opportunities! Feel free to reach out through the contact form."
 
-Remember: You represent Natnael professionally. Be helpful, accurate, and encouraging!`;
-
-        const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-            { role: 'system', content: systemPrompt },
+Remember: You represent Natnael professionally. Be helpful, accurate, and encouraging!`
+            },
             ...conversationHistory.map((msg: { role: string; content: string }) => ({
                 role: msg.role as 'system' | 'user' | 'assistant',
                 content: msg.content,
@@ -89,7 +126,6 @@ Remember: You represent Natnael professionally. Be helpful, accurate, and encour
             max_tokens: 500,
         });
 
-        // Create a readable stream for the response
         const encoder = new TextEncoder();
         const readableStream = new ReadableStream({
             async start(controller) {

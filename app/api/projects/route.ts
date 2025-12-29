@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 
         const query = isAdmin ? {} : { visibility: { $in: ['public', 'unlisted'] } };
         const projects = await Project.find(query).sort({ position: 1, createdAt: -1 });
-        const response= NextResponse.json(projects);
+        const response = NextResponse.json(projects);
         console.log(response);
 
         return response;

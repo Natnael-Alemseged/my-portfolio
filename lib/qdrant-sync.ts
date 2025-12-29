@@ -1,13 +1,28 @@
 import { QdrantClient } from '@qdrant/js-client-rest';
-import { pipeline, env } from '@xenova/transformers';
+// Transformers will be dynamically imported
 import Project from '@/lib/db/project.model';
 import ProjectIntegration from '@/lib/db/project-integration.model';
 
-// Configure Xenova transformers
-env.allowRemoteModels = true;
-env.remoteHost = 'https://huggingface.co';
-env.remotePathTemplate = '{model}/resolve/main/';
-env.allowLocalModels = false;
+// Transformers will be lazily loaded
+let pipeline: any = null;
+let env: any = null;
+
+async function loadTransformers() {
+    if (pipeline && env) return { pipeline, env };
+
+    // Dynamically import to avoid top-level load errors in environments without WASM support
+    const transformers = await import('@xenova/transformers');
+    pipeline = transformers.pipeline;
+    env = transformers.env;
+
+    // Configure Xenova transformers
+    env.allowRemoteModels = true;
+    env.remoteHost = 'https://huggingface.co';
+    env.remotePathTemplate = '{model}/resolve/main/';
+    env.allowLocalModels = false;
+
+    return { pipeline, env };
+}
 
 // Lazy initialization of Qdrant client
 let client: QdrantClient | null = null;
@@ -49,6 +64,7 @@ let embedder: any = null;
 
 async function getEmbedder() {
     if (!embedder) {
+        const { pipeline } = await loadTransformers();
         console.log('Loading embedding model...');
         embedder = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
         console.log('Embedding model loaded successfully');
