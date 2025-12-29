@@ -324,13 +324,13 @@ export default function Hero() {
 
                             <div className="flex items-center gap-6 pt-2">
                                 <div className="flex flex-col">
-                                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Focus</span>
-                                    <span className="text-[#00ff99] font-mono text-sm font-bold">AI Systems</span>
+                                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Specialty</span>
+                                    <span className="text-[#00ff99] font-mono text-sm font-bold">Agentic Intelligence</span>
                                 </div>
                                 <div className="w-px h-8 bg-white/10" />
                                 <div className="flex flex-col">
-                                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Experience</span>
-                                    <span className="text-white font-mono text-sm font-bold uppercase">Production Ready</span>
+                                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Track Record</span>
+                                    <span className="text-white font-mono text-sm font-bold uppercase">40+ Projects Shipped</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -404,7 +404,7 @@ export default function Hero() {
                                 />
                             </div>
 
-                                                    </div>
+                        </div>
                     </motion.div>
                 </div>
             </div>
