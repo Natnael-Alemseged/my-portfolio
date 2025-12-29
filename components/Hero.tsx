@@ -238,7 +238,7 @@ import { useEffect } from "react";
 
 export default function Hero() {
     useEffect(() => {
-        fetch("https://taaft-backend.onrender.com/health").catch(() => {});
+        fetch("https://taaft-backend.onrender.com/health").catch(() => { });
     }, []);
 
     const containerVariants = {
@@ -254,17 +254,30 @@ export default function Hero() {
         visible: {
             opacity: 1,
             y: 0,
-            transition: { duration: 0.8, ease: "circOut" },
+            transition: { duration: 0.8, ease: "circOut" as const },
         },
     };
 
     return (
         <section
             id="hero"
-            className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden pt-10"
+            className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden"
         >
-            {/* Ambient background glow */}
-            <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-[#00ff99]/10 blur-[150px] rounded-full pointer-events-none" />
+            {/* NEW: Interactive Neural Grid Background */}
+            <div className="absolute inset-0 z-0 opacity-[0.15]">
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        backgroundImage: `radial-gradient(#00ff99 0.5px, transparent 0.5px)`,
+                        backgroundSize: '40px 40px',
+                    }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+            </div>
+
+            {/* Ambient background glows */}
+            <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-[#00ff99]/5 blur-[150px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
 
             <div className="relative z-10 w-full px-4 md:px-12 lg:px-24">
                 <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-12 lg:gap-24 items-center">
@@ -288,23 +301,39 @@ export default function Hero() {
                         {/* Headline */}
                         <motion.h1
                             variants={itemVariants}
-                            className="text-5xl md:text-7xl lg:text-[6.5rem] font-black leading-[0.95] tracking-tight text-white"
+                            className="text-4xl md:text-6xl lg:text-[4.8rem] font-black leading-[1.1] md:leading-[1.0] tracking-tight text-white mb-2"
                         >
-                            Engineering <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-[#00ff99] to-[#00ff99]/30">
-                Intelligent AI Systems.
-              </span>
+                            AI Engineer & <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-br from-white via-[#00ff99] to-[#00ff99]/40">
+                                Full-Stack Developer
+                            </span>
                         </motion.h1>
 
-                        {/* Subtext */}
-                        <motion.p
+                        {/* Impact Tagline & Description block */}
+                        <motion.div
                             variants={itemVariants}
-                            className="text-gray-400 text-lg md:text-xl max-w-xl leading-relaxed"
+                            className="space-y-6 md:space-y-7 pl-4 md:pl-6 border-l-2 border-[#00ff99]/30 relative"
                         >
-                            I design and build production-grade AI systems — from agentic
-                            workflows to scalable backend architectures — focused on real
-                            world impact, reliability, and performance.
-                        </motion.p>
+                            {/* Decorative line end caps */}
+                            <div className="absolute -top-1 -left-[2px] w-1 h-1 bg-[#00ff99] rounded-full" />
+                            <div className="absolute -bottom-1 -left-[2px] w-1 h-1 bg-[#00ff99] rounded-full" />
+
+                            <p className="text-gray-300 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
+                                Building <span className="text-white font-bold">agentic systems</span>, scalable backends, and high-performance mobile/web experiences. I partner with teams to transform complex ideas into <span className="text-white font-bold">production-grade solutions</span>.
+                            </p>
+
+                            <div className="flex items-center gap-6 pt-2">
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Focus</span>
+                                    <span className="text-[#00ff99] font-mono text-sm font-bold">AI Systems</span>
+                                </div>
+                                <div className="w-px h-8 bg-white/10" />
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Experience</span>
+                                    <span className="text-white font-mono text-sm font-bold uppercase">Production Ready</span>
+                                </div>
+                            </div>
+                        </motion.div>
 
                         {/* CTA */}
                         <motion.div
@@ -333,26 +362,49 @@ export default function Hero() {
                         </motion.div>
                     </motion.div>
 
-                    {/* RIGHT VISUAL */}
+                    {/* RIGHT VISUAL - Futuristic Orbital Avatar */}
                     <motion.div
-                        initial={{ opacity: 0, x: 40 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 1, ease: "circOut", delay: 0.4 }}
+                        initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
+                        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                        transition={{ duration: 1.2, ease: "circOut", delay: 0.4 }}
                         className="relative hidden lg:flex justify-center items-center"
                     >
-                        <div className="absolute inset-0 bg-[#00ff99]/10 blur-[120px] rounded-full" />
+                        {/* Orbital Effects */}
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                            className="absolute w-[420px] h-[420px] rounded-full border border-dashed border-[#00ff99]/10"
+                        />
+                        <motion.div
+                            animate={{ rotate: -360 }}
+                            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                            className="absolute w-[380px] h-[380px] rounded-full border border-dotted border-[#00ff99]/5"
+                        />
 
-                        <div className="relative w-[280px] h-[280px] md:w-[320px] md:h-[320px]">
-                            <div className="absolute inset-0 rounded-full overflow-hidden border border-[#00ff99]/20 shadow-[0_0_50px_rgba(0,255,153,0.25)]">
+                        <div className="absolute inset-0 bg-[#00ff99]/5 blur-[120px] rounded-full" />
+
+                        <div className="relative w-[320px] h-[320px] md:w-[380px] md:h-[380px]">
+                            {/* Glowing Ring Border */}
+                            <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-[#00ff99]/40 via-transparent to-blue-500/40 blur-sm" />
+
+                            <div className="absolute inset-0 rounded-full overflow-hidden border border-white/10 bg-black/40 backdrop-blur-md shadow-[0_0_60px_rgba(0,255,153,0.15)] z-10">
                                 <Image
                                     src="/avatar_HD.png"
                                     alt="Natnael Alemseged"
                                     fill
-                                    className="object-cover"
+                                    className="object-cover hover:scale-105 transition-transform duration-700"
                                     priority
                                 />
+
+                                {/* Scanning line effect */}
+                                <motion.div
+                                    animate={{ translateY: ['0%', '400%'] }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                    className="absolute top-0 left-0 right-0 h-1 bg-[#00ff99]/20 blur-md z-20"
+                                />
                             </div>
-                        </div>
+
+                                                    </div>
                     </motion.div>
                 </div>
             </div>
