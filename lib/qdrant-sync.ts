@@ -12,6 +12,7 @@ async function loadTransformers() {
 
     const transformers = await import('@xenova/transformers');
 
+
     pipeline = transformers.pipeline;
     env = transformers.env;
 
