@@ -10,26 +10,22 @@ let env: any = null;
 async function loadTransformers() {
     if (pipeline && env) return { pipeline, env };
 
-    // Use the new package name
     const transformers = await import('@huggingface/transformers');
     pipeline = transformers.pipeline;
     env = transformers.env;
 
-    // IMPORTANT: Force WASM and disable native bindings before anything else
+    // 1. Disable native node bindings to stop the search for .so files
     env.allowLocalModels = false;
-    env.allowRemoteModels = true;
-
-    // In v3, you must explicitly disable the native 'onnx' backend
-    // to prevent it searching for .so files
     if (env.backends?.onnx) {
         env.backends.onnx.node = false;
         env.backends.onnx.wasm.numThreads = 1;
-        // Updated CDN path for v3
-        env.backends.onnx.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0/dist/';
+        // Point to the v3 dist for WASM files
+        env.backends.onnx.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.0/dist/';
     }
 
-    // Serverless cache configuration
+    // 2. Vercel-specific: Use /tmp for model storage
     env.cacheDir = '/tmp/transformers-cache';
+    env.allowRemoteModels = true;
 
     return { pipeline, env };
 }
