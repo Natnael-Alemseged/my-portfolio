@@ -8,37 +8,31 @@ let pipeline: any = null;
 let env: any = null;
 
 async function loadTransformers() {
-    if (pipeline && env) return {pipeline, env};
+    if (pipeline && env) return { pipeline, env };
 
-    // Dynamically import to avoid top-level load errors in environments without WASM support
-    const transformers = await import('@xenova/transformers');
+    // Use the new package name
+    const transformers = await import('@huggingface/transformers');
     pipeline = transformers.pipeline;
     env = transformers.env;
 
-    // Configure Xenova transformers for serverless environments
-    env.allowRemoteModels = true;
-    env.remoteHost = 'https://huggingface.co';
-    env.remotePathTemplate = '{model}/resolve/main/';
+    // IMPORTANT: Force WASM and disable native bindings before anything else
     env.allowLocalModels = false;
+    env.allowRemoteModels = true;
 
-    // Vercel/Serverless specific fixes
-    env.cacheDir = '/tmp/transformers-cache';
-    env.useBrowserCache = false;
-
-    // Force WASM backend and disable native ONNX to avoid libonnxruntime errors
+    // In v3, you must explicitly disable the native 'onnx' backend
+    // to prevent it searching for .so files
     if (env.backends?.onnx) {
-        env.backends.onnx.wasm.numThreads = 1;
-        env.backends.onnx.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/@xenova/transformers/dist/';
         env.backends.onnx.node = false;
-        // Some versions of Xenova allow forcing the WASM backend
-        // if (env.backends.onnx.wasm) {
-        //     env.backends.onnx.wasm.proxy = false;
-        // }
+        env.backends.onnx.wasm.numThreads = 1;
+        // Updated CDN path for v3
+        env.backends.onnx.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0/dist/';
     }
 
-    return {pipeline, env};
-}
+    // Serverless cache configuration
+    env.cacheDir = '/tmp/transformers-cache';
 
+    return { pipeline, env };
+}
 // Lazy initialization of Qdrant client
 let client: QdrantClient | null = null;
 

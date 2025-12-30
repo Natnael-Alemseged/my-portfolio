@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  serverExternalPackages: ['@xenova/transformers'],
+  // Add the new package name here
+  serverExternalPackages: ['@huggingface/transformers'],
 };
 
 export default nextConfig;
