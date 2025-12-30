@@ -1,34 +1,6 @@
-import {QdrantClient} from '@qdrant/js-client-rest';
-// Transformers will be dynamically imported
+import { QdrantClient } from '@qdrant/js-client-rest';
 import Project from '@/lib/db/project.model';
 import ProjectIntegration from '@/lib/db/project-integration.model';
-
-// Transformers will be lazily loaded
-let pipeline: any = null;
-let env: any = null;
-
-async function loadTransformers() {
-    if (pipeline && env) return { pipeline, env };
-
-    const transformers = await import('@xenova/transformers/wasm');
-
-
-    pipeline = transformers.pipeline;
-    env = transformers.env;
-
-    // HARD FORCE WASM
-    env.allowLocalModels = false;
-    env.allowRemoteModels = true;
-    env.useBrowserCache = false;
-
-    env.backends.onnx.wasm.numThreads = 1;
-    env.backends.onnx.wasm.wasmPaths =
-        'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/';
-
-    env.cacheDir = '/tmp/transformers-cache';
-
-    return { pipeline, env };
-}
 
 // Lazy initialization of Qdrant client
 let client: QdrantClient | null = null;
@@ -59,29 +31,60 @@ const COLLECTION_NAME = "chat_memories";
 
 /**
  * Converts a 24-char MongoDB ObjectId hex string into a valid 36-char UUID string.
- * This is required because Qdrant only accepts UUIDs or unsigned integers as point IDs.
  */
 function mongoIdToUuid(mongoId: string): string {
     const hex = mongoId.padEnd(32, '0');
     return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
 
-let embedder: any = null;
-
-async function getEmbedder() {
-    if (!embedder) {
-        const {pipeline} = await loadTransformers();
-        console.log('Loading embedding model...');
-        embedder = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
-        console.log('Embedding model loaded successfully');
-    }
-    return embedder;
-}
-
+/**
+ * Generates an embedding using Hugging Face's free Inference API.
+ * This avoids the libonnxruntime issue in serverless environments (Vercel).
+ */
 export async function generateEmbedding(text: string) {
-    const generate = await getEmbedder();
-    const output = await generate(text, {pooling: 'mean', normalize: true});
-    return Array.from(output.data) as number[];
+    const HF_TOKEN = process.env.HUGGINGFACE_TOKEN;
+    const modelId = "BAAI/bge-small-en-v1.5";
+    const apiUrl = `https://router.huggingface.co/hf-inference/models/${modelId}`;
+
+    try {
+        const response = await fetch(apiUrl, {
+            headers: {
+                "Content-Type": "application/json",
+                ...(HF_TOKEN ? { Authorization: `Bearer ${HF_TOKEN}` } : {}),
+            },
+            method: "POST",
+            body: JSON.stringify({
+                inputs: text
+            }),
+        });
+
+        // First check if response is ok before trying to parse JSON
+        if (!response.ok) {
+            const errorText = await response.text();
+            let errorMessage = errorText;
+            try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = errorJson.error || JSON.stringify(errorJson);
+            } catch (e) {
+                // Not JSON
+            }
+
+            if (errorMessage.includes("currently loading")) {
+                console.warn("⏳ Hugging Face model is loading, retrying in 5s...");
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                return generateEmbedding(text);
+            }
+            throw new Error(`Hugging Face API Error: ${errorMessage}`);
+        }
+
+        const result = await response.json();
+
+        // Pipeline format usually returns number[] directly or [number[]]
+        return (Array.isArray(result[0]) ? result[0] : result) as number[];
+    } catch (error) {
+        console.error("❌ Cloud embedding failed:", error);
+        throw error;
+    }
 }
 
 const CONTAINER_TAG = 'natnael-portfolio-chatbot';
@@ -129,35 +132,31 @@ export async function initQdrant() {
     if (!exists) {
         await client.createCollection(COLLECTION_NAME, {
             vectors: {
-                size: 384,
+                size: 384, // Compatible with all-MiniLM-L6-v2
                 distance: 'Cosine',
             },
         });
     }
 
-    // Indices are idempotent in newer Qdrant or we can ignore errors
     try {
         await client.createPayloadIndex(COLLECTION_NAME, {
             field_name: 'user_id',
             field_schema: 'keyword',
         });
-    } catch (e) {
-    }
+    } catch (e) { }
 
     try {
         await client.createPayloadIndex(COLLECTION_NAME, {
             field_name: 'containerTag',
             field_schema: 'keyword',
         });
-    } catch (e) {
-    }
+    } catch (e) { }
 }
 
 /**
  * Sync (or update) a single project memory to Qdrant
  */
 export async function syncProjectToQdrant(project: any) {
-    // Don't sync private projects
     if (project.visibility === 'private') {
         await deleteProjectFromQdrant(project._id.toString());
         return;
@@ -167,10 +166,8 @@ export async function syncProjectToQdrant(project: any) {
         await initQdrant();
         const client = getQdrantClient();
         const content = formatProjectMemory(project);
-        const user_id = 'natnael_owner'; // Default for portfolio content
-
+        const user_id = 'natnael_owner';
         const pointId = mongoIdToUuid(project._id.toString());
-
         const embedding = await generateEmbedding(content);
 
         await client.upsert(COLLECTION_NAME, {
@@ -192,16 +189,15 @@ export async function syncProjectToQdrant(project: any) {
             ],
         });
 
-        // Update integration record
         await ProjectIntegration.findOneAndUpdate(
-            {projectId: project._id, service: 'qdrant'},
+            { projectId: project._id, service: 'qdrant' },
             {
                 projectId: project._id,
                 service: 'qdrant',
                 externalId: pointId,
                 syncedAt: new Date(),
             },
-            {upsert: true}
+            { upsert: true }
         );
 
         console.log(`✅ Synced project "${project.title}" to Qdrant`);
@@ -220,7 +216,7 @@ export async function deleteProjectFromQdrant(projectId: string) {
         await client.delete(COLLECTION_NAME, {
             points: [pointId],
         });
-        await ProjectIntegration.deleteOne({projectId, service: 'qdrant'});
+        await ProjectIntegration.deleteOne({ projectId, service: 'qdrant' });
         console.log(`🗑️ Deleted Qdrant entry for project ${projectId}`);
     } catch (error) {
         console.error(`❌ Failed to delete Qdrant entry for project ${projectId}:`, error);
@@ -250,7 +246,8 @@ export async function searchMemories(query: string, limit: number = 5) {
                 ],
             },
         });
-        console.log('searched qdrant successfully');
+
+        console.log('✅ Searched Qdrant successfully');
         return results.map((r: any) => r.payload?.content as string).filter(Boolean);
 
     } catch (error) {
