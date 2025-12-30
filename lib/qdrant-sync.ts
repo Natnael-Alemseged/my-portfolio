@@ -29,10 +29,11 @@ async function loadTransformers() {
     if (env.backends?.onnx) {
         env.backends.onnx.wasm.numThreads = 1;
         env.backends.onnx.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/@xenova/transformers/dist/';
+        env.backends.onnx.node = false;
         // Some versions of Xenova allow forcing the WASM backend
-        if (env.backends.onnx.wasm) {
-            env.backends.onnx.wasm.proxy = false;
-        }
+        // if (env.backends.onnx.wasm) {
+        //     env.backends.onnx.wasm.proxy = false;
+        // }
     }
 
     return {pipeline, env};
@@ -258,7 +259,7 @@ export async function searchMemories(query: string, limit: number = 5) {
                 ],
             },
         });
-
+        console.log('searched qdrant successfully');
         return results.map((r: any) => r.payload?.content as string).filter(Boolean);
 
     } catch (error) {
