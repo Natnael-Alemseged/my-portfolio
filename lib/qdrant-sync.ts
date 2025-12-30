@@ -15,11 +15,25 @@ async function loadTransformers() {
     pipeline = transformers.pipeline;
     env = transformers.env;
 
-    // Configure Xenova transformers
+    // Configure Xenova transformers for serverless environments
     env.allowRemoteModels = true;
     env.remoteHost = 'https://huggingface.co';
     env.remotePathTemplate = '{model}/resolve/main/';
     env.allowLocalModels = false;
+
+    // Vercel/Serverless specific fixes
+    env.cacheDir = '/tmp/transformers-cache';
+    env.useBrowserCache = false;
+
+    // Force WASM backend and disable native ONNX to avoid libonnxruntime errors
+    if (env.backends?.onnx) {
+        env.backends.onnx.wasm.numThreads = 1;
+        env.backends.onnx.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/@xenova/transformers/dist/';
+        // Some versions of Xenova allow forcing the WASM backend
+        if (env.backends.onnx.wasm) {
+            env.backends.onnx.wasm.proxy = false;
+        }
+    }
 
     return { pipeline, env };
 }
