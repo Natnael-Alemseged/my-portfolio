@@ -15,7 +15,7 @@ const experiences: Experience[] = [
     {
         id: 1,
         title: 'Senior Software Engineer',
-        company: 'HireArmada – Remote',
+        company: 'HireArmada – Atlanta, GA - Remote',
         period: 'Aug 2025 – Present',
         highlights: [
             "Shipped AI-driven backends and full-stack features using Node.js, FastAPI, Flutter, Next.js, Prisma, Composio, MCP, and Langflow.",
@@ -29,7 +29,7 @@ const experiences: Experience[] = [
     {
         id: 2,
         title: 'Senior Full-Stack Developer',
-        company: 'Startup Agile – Atlanta, GA',
+        company: 'Startup Agile – Atlanta, GA - Remote',
         period: 'Jan 2025 – Present',
         highlights: [
             "Led React/Next.js web + React Native (Expo) mobile delivery; hit milestones 15% ahead of schedule.",
@@ -41,7 +41,7 @@ const experiences: Experience[] = [
     {
         id: 3,
         title: 'AI Engineer',
-        company: 'DataCore Softwares – Fort Lauderdale, FL',
+        company: 'DataCore Softwares – Fort Lauderdale, FL - Remote',
         period: 'Jan 2025 – Jul 2025',
         highlights: [
             "Built AI-powered storage services w/ Python, FastAPI, Docker, self-hosted LLMs for detection, transcription, translation.",
@@ -53,7 +53,7 @@ const experiences: Experience[] = [
     {
         id: 4,
         title: 'Senior Mobile Developer',
-        company: 'Qemer Software Technologies – Addis Ababa',
+        company: 'Qemer Software Technologies – Addis Ababa,ET - Onsite',
         period: 'Jan 2024 – Jun 2025',
         highlights: [
             "Led delivery of 10+ cross-platform Flutter/Ionic apps; execution velocity improved 40%.",
@@ -64,7 +64,7 @@ const experiences: Experience[] = [
     {
         id: 5,
         title: 'Full-Stack Developer & Founder',
-        company: 'Metshafe – Addis Ababa',
+        company: 'Metshafe – Addis Ababa - Onsite',
         period: 'Jun 2022 – Present',
         highlights: [
             "Co-founded Metshafe eBook platform, leading product strategy, architecture, and launch.",
