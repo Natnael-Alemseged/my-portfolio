@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://natnaelalemseged.com
-
-# Sitemaps
-Sitemap: https://natnaelalemseged.com/sitemap.xml
