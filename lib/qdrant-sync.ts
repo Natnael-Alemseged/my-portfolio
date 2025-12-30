@@ -10,25 +10,25 @@ let env: any = null;
 async function loadTransformers() {
     if (pipeline && env) return { pipeline, env };
 
-    const transformers = await import('@huggingface/transformers');
+    const transformers = await import('@xenova/transformers');
+
     pipeline = transformers.pipeline;
     env = transformers.env;
 
-    // 1. Disable native node bindings to stop the search for .so files
+    // HARD FORCE WASM
     env.allowLocalModels = false;
-    if (env.backends?.onnx) {
-        env.backends.onnx.node = false;
-        env.backends.onnx.wasm.numThreads = 1;
-        // Point to the v3 dist for WASM files
-        env.backends.onnx.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.0/dist/';
-    }
-
-    // 2. Vercel-specific: Use /tmp for model storage
-    env.cacheDir = '/tmp/transformers-cache';
     env.allowRemoteModels = true;
+    env.useBrowserCache = false;
+
+    env.backends.onnx.wasm.numThreads = 1;
+    env.backends.onnx.wasm.wasmPaths =
+        'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/';
+
+    env.cacheDir = '/tmp/transformers-cache';
 
     return { pipeline, env };
 }
+
 // Lazy initialization of Qdrant client
 let client: QdrantClient | null = null;
 

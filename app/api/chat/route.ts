@@ -4,6 +4,7 @@ import { searchMemories } from '@/lib/qdrant-sync';
 
 // Force dynamic evaluation
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function GET() {
     try {
