@@ -1,4 +1,4 @@
-import { QdrantClient } from '@qdrant/js-client-rest';
+import {QdrantClient} from '@qdrant/js-client-rest';
 // Transformers will be dynamically imported
 import Project from '@/lib/db/project.model';
 import ProjectIntegration from '@/lib/db/project-integration.model';
@@ -8,7 +8,7 @@ let pipeline: any = null;
 let env: any = null;
 
 async function loadTransformers() {
-    if (pipeline && env) return { pipeline, env };
+    if (pipeline && env) return {pipeline, env};
 
     // Dynamically import to avoid top-level load errors in environments without WASM support
     const transformers = await import('@xenova/transformers');
@@ -35,7 +35,7 @@ async function loadTransformers() {
         }
     }
 
-    return { pipeline, env };
+    return {pipeline, env};
 }
 
 // Lazy initialization of Qdrant client
@@ -78,7 +78,7 @@ let embedder: any = null;
 
 async function getEmbedder() {
     if (!embedder) {
-        const { pipeline } = await loadTransformers();
+        const {pipeline} = await loadTransformers();
         console.log('Loading embedding model...');
         embedder = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
         console.log('Embedding model loaded successfully');
@@ -88,7 +88,7 @@ async function getEmbedder() {
 
 export async function generateEmbedding(text: string) {
     const generate = await getEmbedder();
-    const output = await generate(text, { pooling: 'mean', normalize: true });
+    const output = await generate(text, {pooling: 'mean', normalize: true});
     return Array.from(output.data) as number[];
 }
 
@@ -149,14 +149,16 @@ export async function initQdrant() {
             field_name: 'user_id',
             field_schema: 'keyword',
         });
-    } catch (e) { }
+    } catch (e) {
+    }
 
     try {
         await client.createPayloadIndex(COLLECTION_NAME, {
             field_name: 'containerTag',
             field_schema: 'keyword',
         });
-    } catch (e) { }
+    } catch (e) {
+    }
 }
 
 /**
@@ -200,14 +202,14 @@ export async function syncProjectToQdrant(project: any) {
 
         // Update integration record
         await ProjectIntegration.findOneAndUpdate(
-            { projectId: project._id, service: 'qdrant' },
+            {projectId: project._id, service: 'qdrant'},
             {
                 projectId: project._id,
                 service: 'qdrant',
                 externalId: pointId,
                 syncedAt: new Date(),
             },
-            { upsert: true }
+            {upsert: true}
         );
 
         console.log(`✅ Synced project "${project.title}" to Qdrant`);
@@ -226,7 +228,7 @@ export async function deleteProjectFromQdrant(projectId: string) {
         await client.delete(COLLECTION_NAME, {
             points: [pointId],
         });
-        await ProjectIntegration.deleteOne({ projectId, service: 'qdrant' });
+        await ProjectIntegration.deleteOne({projectId, service: 'qdrant'});
         console.log(`🗑️ Deleted Qdrant entry for project ${projectId}`);
     } catch (error) {
         console.error(`❌ Failed to delete Qdrant entry for project ${projectId}:`, error);
