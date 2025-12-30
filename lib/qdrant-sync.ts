@@ -10,7 +10,7 @@ let env: any = null;
 async function loadTransformers() {
     if (pipeline && env) return { pipeline, env };
 
-    const transformers = await import('@xenova/transformers');
+    const transformers = await import('@xenova/transformers/wasm');
 
 
     pipeline = transformers.pipeline;
