@@ -44,7 +44,7 @@ export const metadata: Metadata = {
             url: "https://www.linkedin.com/in/natnael-alemseged",
         },
     ],
-    metadataBase: new URL("https://natnaelalemseged.com"),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ? (process.env.NEXT_PUBLIC_SITE_URL.startsWith('http') ? process.env.NEXT_PUBLIC_SITE_URL : `https://${process.env.NEXT_PUBLIC_SITE_URL}`) : "https://natnaelalemseged.com"),
     openGraph: {
         title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
         description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
