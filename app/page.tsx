@@ -39,7 +39,10 @@ async function getProjects() {
     try {
         await connectToDatabase();
         // Only fetch public projects for homepage
-        const projects = await Project.find({ visibility: 'public' })
+        const projects = await Project.find({
+            visibility: 'public',
+            status: { $ne: 'archived' }
+        })
             .sort({ position: 1, createdAt: -1 })
             .lean();
         console.log('projects', JSON.stringify(projects, null, 2));

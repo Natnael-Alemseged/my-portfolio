@@ -16,7 +16,10 @@ export const metadata: Metadata = {
 async function getProjects() {
     try {
         await connectToDatabase();
-        const projects = await Project.find({ visibility: "public" })
+        const projects = await Project.find({
+            visibility: "public",
+            status: { $ne: "archived" }
+        })
             .sort({ position: 1, createdAt: -1 })
             .lean();
         return JSON.parse(JSON.stringify(projects));

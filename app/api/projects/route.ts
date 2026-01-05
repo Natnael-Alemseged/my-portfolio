@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
             adminPassword === process.env.ADMIN_PASSWORD ||
             cookie?.value === process.env.ADMIN_PASSWORD;
 
-        const query = isAdmin ? {} : { visibility: { $in: ['public', 'unlisted'] } };
+        const query = isAdmin ? {} : { visibility: { $in: ['public', 'unlisted'] }, status: { $ne: 'archived' } };
         const projects = await Project.find(query).sort({ position: 1, createdAt: -1 });
         const response = NextResponse.json(projects);
         console.log(response);

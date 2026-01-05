@@ -157,7 +157,7 @@ export async function initQdrant() {
  * Sync (or update) a single project memory to Qdrant
  */
 export async function syncProjectToQdrant(project: any) {
-    if (project.visibility === 'private') {
+    if (project.visibility === 'private' || project.status === 'archived') {
         await deleteProjectFromQdrant(project._id.toString());
         return;
     }

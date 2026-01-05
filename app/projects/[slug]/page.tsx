@@ -53,7 +53,11 @@ interface ProjectData {
 async function getProject(slug: string): Promise<ProjectData | null> {
     try {
         await connectToDatabase();
-        const project = await Project.findOne({ slug, visibility: 'public' }).lean();
+        const project = await Project.findOne({
+            slug,
+            visibility: 'public',
+            status: { $ne: 'archived' }
+        }).lean();
         return project ? JSON.parse(JSON.stringify(project)) : null;
     } catch (error) {
         console.error('Error fetching project:', error);

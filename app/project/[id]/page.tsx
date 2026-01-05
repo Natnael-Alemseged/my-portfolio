@@ -7,7 +7,11 @@ import { FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos, FaArrowLeft } from 'rea
 async function getProject(id: string) {
     try {
         await connectToDatabase();
-        const project = await Project.findById(id).lean();
+        const project = await Project.findOne({
+            _id: id,
+            visibility: 'public',
+            status: { $ne: 'archived' }
+        }).lean();
         if (!project) return null;
         return JSON.parse(JSON.stringify(project));
     } catch {

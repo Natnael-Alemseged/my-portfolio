@@ -22,7 +22,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     try {
         await connectToDatabase();
-        const projects = await Project.find({ visibility: 'public' })
+        const projects = await Project.find({
+            visibility: 'public',
+            status: { $ne: 'archived' }
+        })
             .select('slug updatedAt createdAt')
             .lean();
 
