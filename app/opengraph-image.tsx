@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 export const alt = 'Natnael Alemseged – AI Engineer & Full-Stack Developer';
 export const size = { width: 1200, height: 630 };
@@ -24,7 +24,7 @@ export default async function OG() {
                 {/* Left Side – Avatar */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <img
-                        src="/avatar_HD.png" // Updated image if you have higher-res
+                        src={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://natnaelalemseged.com'}/avatar_HD.png`}
                         alt="Natnael Alemseged"
                         width={200}
                         height={200}
