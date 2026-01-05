@@ -50,6 +50,7 @@ export default async function ProjectsPage() {
                 subtitle="A comprehensive collection of my engineering work, experiments, and open-source contributions."
                 badge="All Work"
                 layout="grid"
+                referrerSource="archive"
             />
         </main>
     );

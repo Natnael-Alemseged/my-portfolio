@@ -48,7 +48,8 @@ export default function Projects({
     title = "Product Engineering Case Studies",
     subtitle = "Real-world projects spanning AI copilots, mobile ride-hailing, platform infrastructure, and high-impact experiments.",
     badge = "Selected Work",
-    layout = "carousel"
+    layout = "carousel",
+    referrerSource
 }: {
     initialProjects?: Project[],
     limit?: number,
@@ -56,7 +57,8 @@ export default function Projects({
     title?: string,
     subtitle?: string,
     badge?: string,
-    layout?: "carousel" | "grid"
+    layout?: "carousel" | "grid",
+    referrerSource?: string
 }) {
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -66,7 +68,8 @@ export default function Projects({
     const displayedProjects = limit ? initialProjects.slice(0, limit) : initialProjects;
 
     const navigateToProject = (slug: string) => {
-        router.push(`/projects/${slug}`);
+        const url = `/projects/${slug}${referrerSource ? `?from=${referrerSource}` : ''}`;
+        router.push(url);
     };
 
     const getLinkByType = (links: ProjectLink[] | undefined, type: string) =>
@@ -223,14 +226,14 @@ export default function Projects({
                                         <div className="flex flex-col gap-3">
                                             <h3 className="text-2xl font-bold text-white leading-tight">
                                                 <Link
-                                                    href={`/projects/${project.slug}`}
+                                                    href={`/projects/${project.slug}${referrerSource ? `?from=${referrerSource}` : ''}`}
                                                     className="hover:text-emerald-300 transition"
                                                 >
                                                     {project.title}
                                                 </Link>
                                             </h3>
                                             <Link
-                                                href={`/projects/${project.slug}`}
+                                                href={`/projects/${project.slug}${referrerSource ? `?from=${referrerSource}` : ''}`}
                                                 className="w-fit text-sm text-black font-semibold bg-[#00ff99] px-4 py-1.5 rounded-full hover:bg-white transition shadow-[0_10px_25px_rgba(0,255,153,0.35)]"
                                             >
                                                 View case

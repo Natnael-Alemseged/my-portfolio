@@ -3,11 +3,12 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
-import { FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos, FaArrowLeft } from 'react-icons/fa';
+import { FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import AnimatedSection from '@/components/AnimatedSection';
 import ProjectImageCarousel from '@/components/ProjectImageCarousel';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -155,8 +156,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
 }
 
-export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProjectDetailPage({
+    params,
+    searchParams
+}: {
+    params: Promise<{ slug: string }>,
+    searchParams: Promise<{ from?: string }>
+}) {
     const { slug } = await params;
+    const { from } = await searchParams;
     const project = await getProject(slug);
 
     if (!project) {
@@ -259,15 +267,9 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
             <div className="min-h-screen bg-[#0d0d0d] text-white">
                 <div className="max-w-6xl mx-auto px-6 py-12 md:py-20">
-                    {/* Back Button */}
-                    <AnimatedSection className="mb-8">
-                        <Link
-                            href="/#projects"
-                            className="inline-flex items-center gap-2 text-[#00ff99] hover:underline"
-                            aria-label="Back to projects section"
-                        >
-                            <FaArrowLeft /> Back to Projects
-                        </Link>
+                    {/* Breadcrumbs Section */}
+                    <AnimatedSection className="mb-4">
+                        <Breadcrumbs projectTitle={project.title} from={from} />
                     </AnimatedSection>
 
                     {/* Hero Section */}
@@ -455,7 +457,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                                 {relatedProjects.map((p: any) => (
                                     <Link
                                         key={p.slug}
-                                        href={`/projects/${p.slug}`}
+                                        href={`/projects/${p.slug}${from ? `?from=${from}` : ''}`}
                                         className="group relative p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-emerald-500/20 transition-all duration-300"
                                     >
                                         <div className="flex flex-col gap-3">
