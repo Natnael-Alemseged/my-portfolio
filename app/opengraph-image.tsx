@@ -12,7 +12,9 @@ export const contentType = 'image/png';
 // Image generation
 export default async function Image() {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-        ? (process.env.NEXT_PUBLIC_SITE_URL.startsWith('http') ? process.env.NEXT_PUBLIC_SITE_URL : `https://${process.env.NEXT_PUBLIC_SITE_URL}`)
+        ? (process.env.NEXT_PUBLIC_SITE_URL.startsWith('http')
+            ? process.env.NEXT_PUBLIC_SITE_URL
+            : (process.env.NEXT_PUBLIC_SITE_URL.includes('localhost') ? `http://${process.env.NEXT_PUBLIC_SITE_URL}` : `https://${process.env.NEXT_PUBLIC_SITE_URL}`))
         : 'https://natnaelalemseged.com';
 
     // Fetch avatar as ArrayBuffer for reliable embedding
