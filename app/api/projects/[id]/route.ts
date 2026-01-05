@@ -49,6 +49,14 @@ export async function PUT(
         const { id } = await params;
         const body = await req.json();
 
+        // Automatically update slug if title is changed but slug is not explicitly provided
+        if (body.title && !body.slug) {
+            body.slug = body.title
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+        }
+
         const updatedProject = await Project.findByIdAndUpdate(id, body, { new: true });
 
         if (!updatedProject) {

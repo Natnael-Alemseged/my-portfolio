@@ -46,6 +46,14 @@ export async function POST(req: NextRequest) {
         await connectToDatabase();
         const body = await req.json();
 
+        // Automatically generate slug from title if not provided
+        if (body.title && !body.slug) {
+            body.slug = body.title
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+        }
+
         // === Create the project ===
         const project = await Project.create(body);
 
