@@ -65,6 +65,57 @@ async function getProject(slug: string): Promise<ProjectData | null> {
     }
 }
 
+async function getRelatedProjects(currentSlug: string, schemaType?: string, tags?: string[]) {
+    try {
+        await connectToDatabase();
+
+        // 1. Try to find projects with the same schemaType (excluding current)
+        let relatedProjects = await Project.find({
+            slug: { $ne: currentSlug },
+            visibility: 'public',
+            status: { $ne: 'archived' },
+            schemaType: schemaType
+        })
+            .limit(3)
+            .lean();
+
+        // 2. If not enough, find projects with shared tags
+        if (relatedProjects.length < 3) {
+            const excludedSlugs = [currentSlug, ...relatedProjects.map(p => p.slug)];
+            const byTags = await Project.find({
+                slug: { $nin: excludedSlugs },
+                visibility: 'public',
+                status: { $ne: 'archived' },
+                tags: { $in: tags || [] }
+            })
+                .limit(3 - relatedProjects.length)
+                .lean();
+
+            relatedProjects = [...relatedProjects, ...byTags];
+        }
+
+        // 3. If still not enough, fill with newest public projects
+        if (relatedProjects.length < 3) {
+            const excludedSlugs = [currentSlug, ...relatedProjects.map(p => p.slug)];
+            const recentProjects = await Project.find({
+                slug: { $nin: excludedSlugs },
+                visibility: 'public',
+                status: { $ne: 'archived' }
+            })
+                .sort({ createdAt: -1 })
+                .limit(3 - relatedProjects.length)
+                .lean();
+
+            relatedProjects = [...relatedProjects, ...recentProjects];
+        }
+
+        return JSON.parse(JSON.stringify(relatedProjects));
+    } catch (error) {
+        console.error('Error fetching related projects:', error);
+        return [];
+    }
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const project = await getProject(slug);
@@ -108,6 +159,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     if (!project) {
         notFound();
     }
+
+    const relatedProjects = await getRelatedProjects(slug, project.schemaType, project.tags);
 
     // Schema.org JSON-LD for SEO
     const jsonLd = {
@@ -378,6 +431,38 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                         </AnimatedSection>
                     )}
                 </div>
+
+                {/* Related Projects Section */}
+                {relatedProjects.length > 0 && (
+                    <div className="mt-20 border-t border-white/5 pt-16 px-4 md:px-8">
+                        <div className="flex flex-col gap-8">
+                            <div className="text-center">
+                                <h3 className="text-sm uppercase tracking-[0.3em] text-emerald-400 mb-2">More {project.schemaType?.replace('Application', '') || 'Related'} Software</h3>
+                                <p className="text-gray-400 text-sm">Case studies in similar engineering domains.</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {relatedProjects.map((p: any) => (
+                                    <Link
+                                        key={p.slug}
+                                        href={`/projects/${p.slug}`}
+                                        className="group relative p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-emerald-500/20 transition-all duration-300"
+                                    >
+                                        <div className="flex flex-col gap-3">
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="text-white font-semibold group-hover:text-emerald-400 transition-colors">{p.title}</h4>
+                                                <span className="text-[10px] text-gray-500 font-mono">→</span>
+                                            </div>
+                                            <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
+                                                {p.summary}
+                                            </p>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );

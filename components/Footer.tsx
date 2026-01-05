@@ -195,6 +195,7 @@
 
 import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
+import Link from "next/link";
 
 const socials = [
     {
@@ -249,6 +250,16 @@ export default function Footer() {
                                 <span className="text-sm group-hover:scale-110 transition-transform duration-300">{social.icon}</span>
                             </a>
                         ))}
+                    </div>
+
+                    {/* Navigation & Archive */}
+                    <div className="flex flex-col items-center gap-4">
+                        <Link
+                            href="/projects"
+                            className="text-gray-400 hover:text-[#00ff99] text-xs font-semibold uppercase tracking-widest transition-colors"
+                        >
+                            Full Project Archive —&gt;
+                        </Link>
                     </div>
 
                     {/* Copyright & Stack */}

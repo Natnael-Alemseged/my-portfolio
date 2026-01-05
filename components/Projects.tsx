@@ -314,12 +314,9 @@ export default function Projects({
 
                         {/* View All Card */}
                         {showViewAll && initialProjects.length > (limit || 0) && (
-                            <motion.div
-                                initial={{ opacity: 0, x: 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                className={`relative flex-shrink-0 ${layout === "carousel" ? "w-[85vw] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] snap-start" : "w-full min-h-[400px]"} flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-emerald-900/40 bg-emerald-950/5 group cursor-pointer hover:bg-emerald-950/10 transition-all duration-300`}
-                                onClick={() => router.push('/projects')}
+                            <Link
+                                href="/projects"
+                                className={`relative flex-shrink-0 ${layout === "carousel" ? "w-[85vw] md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.33rem)] snap-start" : "w-full min-h-[400px]"} flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-emerald-900/40 bg-emerald-950/5 group cursor-pointer hover:bg-emerald-950/10 transition-all duration-300 no-underline`}
                             >
                                 <div className="p-12 text-center flex flex-col items-center gap-6">
                                     <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-black transition-all duration-500 shadow-lg">
@@ -333,7 +330,7 @@ export default function Projects({
                                         Browse Everything <span>→</span>
                                     </span>
                                 </div>
-                            </motion.div>
+                            </Link>
                         )}
                     </div>
                 </div>
