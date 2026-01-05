@@ -22,14 +22,12 @@ export const generateMetadata = (): Metadata => ({
         description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
         url: "https://natnaelalemseged.com",
         siteName: "Natnael Alemseged",
-        images: [{ url: "/og-image.jpg" }],
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
         title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
         description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
-        images: ["/og-image.jpg"],
     },
     alternates: {
         canonical: "/",
