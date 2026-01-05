@@ -354,38 +354,40 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                     )}
 
                     {/* Tech Stack & Tags */}
-                    <AnimatedSection className="mb-12">
-                        {project.techStack && project.techStack.length > 0 && (
-                            <div className="mb-6">
-                                <h2 className="text-2xl font-bold text-[#00ff99] mb-4">Tech Stack</h2>
-                                <div className="flex flex-wrap gap-3">
-                                    {project.techStack.map((tech) => (
-                                        <span
-                                            key={tech}
-                                            className="bg-gray-800 text-emerald-400 px-4 py-2 rounded-full border border-emerald-900/30"
-                                        >
-                                            {tech}
-                                        </span>
-                                    ))}
+                    {((project.techStack && project.techStack.length > 0) || (project.tags && project.tags.length > 0)) && (
+                        <AnimatedSection className="mb-12">
+                            {project.techStack && project.techStack.length > 0 && (
+                                <div className="mb-6">
+                                    <h2 className="text-2xl font-bold text-[#00ff99] mb-4">Tech Stack</h2>
+                                    <div className="flex flex-wrap gap-3">
+                                        {project.techStack.map((tech: string) => (
+                                            <span
+                                                key={tech}
+                                                className="bg-gray-800 text-emerald-400 px-4 py-2 rounded-full border border-emerald-900/30 text-sm md:text-base font-medium"
+                                            >
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                        {project.tags && project.tags.length > 0 && (
-                            <div>
-                                <h2 className="text-2xl font-bold text-[#00ff99] mb-4">Tags</h2>
-                                <div className="flex flex-wrap gap-2">
-                                    {project.tags.map((tag) => (
-                                        <span
-                                            key={tag}
-                                            className="bg-gray-900 text-gray-400 text-sm px-3 py-1 rounded-full"
-                                        >
-                                            #{tag}
-                                        </span>
-                                    ))}
+                            )}
+                            {project.tags && project.tags.length > 0 && (
+                                <div>
+                                    <h2 className="text-2xl font-bold text-[#00ff99] mb-4">Tags</h2>
+                                    <div className="flex flex-wrap gap-2">
+                                        {project.tags.map((tag: string) => (
+                                            <span
+                                                key={tag}
+                                                className="bg-gray-900 text-gray-400 text-[10px] md:text-sm px-3 py-1 rounded-full uppercase tracking-wider border border-white/5"
+                                            >
+                                                #{tag}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </AnimatedSection>
+                            )}
+                        </AnimatedSection>
+                    )}
 
                     {/* Metrics */}
                     {project.metrics && (project.metrics.duration || project.metrics.teamSize || project.metrics.impact) && (
