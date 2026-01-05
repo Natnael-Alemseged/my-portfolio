@@ -15,9 +15,9 @@ export async function GET() {
         content += `> AI Engineer and Full-Stack Developer specializing in LLM-powered systems, LangGraph agents, FastAPI backends, vector databases, Next.js, and Flutter.\n\n`;
 
         content += `## Contact & Socials\n\n`;
-        content += `- [Website](${siteUrl})\n`;
-        content += `- [LinkedIn](https://www.linkedin.com/in/natnael-alemseged)\n`;
-        content += `- [GitHub](https://github.com/Natnael-Alemseged)\n\n`;
+        content += `- [Website](${siteUrl}): Portfolio website.\n`;
+        content += `- [LinkedIn](https://www.linkedin.com/in/natnael-alemseged): Professional profile.\n`;
+        content += `- [GitHub](https://github.com/Natnael-Alemseged): Code repositories.\n\n`;
 
         content += `## Key Projects\n\n`;
 
@@ -27,8 +27,8 @@ export async function GET() {
                 ? ` Tech stack: ${project.techStack.join(', ')}.`
                 : '';
 
-            // Format: - [Title](URL) Description
-            content += `- [${project.title}](${projectUrl}) ${project.summary}${techStack}\n`;
+            // Format: - [Title](URL): Description
+            content += `- [${project.title}](${projectUrl}): ${project.summary}${techStack}\n`;
         });
 
         return new NextResponse(content, {
