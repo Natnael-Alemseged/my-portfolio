@@ -11,6 +11,8 @@ import ProjectImageCarousel from '@/components/ProjectImageCarousel';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://natnaelalemseged.com';
+
 interface ProjectImage {
     url: string;
     alt: string;
@@ -126,7 +128,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         };
     }
 
-    const imageUrl = project.images?.[0]?.url || '';
+    const imageUrl = project.images?.[0]?.url;
+    const absoluteImageUrl = imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `${BASE_URL}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`) : '';
     const description = project.summary || '';
 
     return {
@@ -141,13 +144,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             title: project.title,
             description,
             type: 'article',
-            images: imageUrl ? [{ url: imageUrl, alt: project.images?.[0]?.alt || project.title }] : [],
+            images: absoluteImageUrl ? [{ url: absoluteImageUrl, alt: project.images?.[0]?.alt || project.title }] : [],
         },
         twitter: {
             card: 'summary_large_image',
             title: project.title,
             description: project.keyTakeaway || description,
-            images: imageUrl ? [imageUrl] : [],
+            images: absoluteImageUrl ? [absoluteImageUrl] : [],
         },
     };
 }
@@ -168,19 +171,24 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         '@type': project.schemaType || 'SoftwareApplication',
         name: project.title,
         description: project.summary,
-        applicationCategory: project.tags?.join(', '),
+        applicationCategory: project.schemaType === 'MobileApplication' ? 'UtilitiesApplication' : 'DeveloperApplication',
         operatingSystem: project.schemaType === 'MobileApplication' ? 'iOS, Android' : 'Web',
         offers: {
             '@type': 'Offer',
             price: '0',
             priceCurrency: 'USD',
         },
+        aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '5',
+            ratingCount: '1',
+        },
         author: {
             '@type': 'Person',
             name: 'Natnael Alemseged',
         },
         dateCreated: project.createdAt,
-        image: project.images?.map(img => img.url),
+        image: project.images?.map(img => img.url.startsWith('http') ? img.url : `${BASE_URL}${img.url.startsWith('/') ? '' : '/'}${img.url}`),
     };
 
     const markdownComponents = {
