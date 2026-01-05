@@ -8,6 +8,9 @@ import { FaArrowLeft } from "react-icons/fa";
 export const metadata: Metadata = {
     title: "All Projects | Natnael Alemseged",
     description: "Full archive of my projects across AI, mobile, and web development.",
+    alternates: {
+        canonical: "/projects",
+    },
 };
 
 async function getProjects() {

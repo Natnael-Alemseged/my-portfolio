@@ -31,6 +31,9 @@ export const generateMetadata = (): Metadata => ({
         description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
         images: ["/og-image.jpg"],
     },
+    alternates: {
+        canonical: "/",
+    },
 });
 
 

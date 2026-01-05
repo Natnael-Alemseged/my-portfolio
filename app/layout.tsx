@@ -1,9 +1,9 @@
 // app/layout.tsx
 
-import type {Metadata} from "next";
-import {Inter} from "next/font/google";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import React, {Suspense} from "react";
+import React, { Suspense } from "react";
 
 import Loading from "@/app/Loading";
 import StructuredData from "@/components/StructuredData";
@@ -18,7 +18,7 @@ import ChatWidget from "@/components/ChatWidget";
 //     ssr: false,
 // });
 
-const inter = Inter({subsets: ["latin"]});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
@@ -38,9 +38,6 @@ export const metadata: Metadata = {
         "Software Engineer",
         "Portfolio",
     ],
-    alternates: {
-        canonical: "https://natnaelalemseged.com",
-    },
     authors: [
         {
             name: "Natnael Alemseged",
@@ -82,27 +79,27 @@ export const metadata: Metadata = {
 
 
 export default function RootLayout({
-                                       children,
-                                   }: {
+    children,
+}: {
     children: React.ReactNode;
 }) {
     return (
         <html lang="en">
-        <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <StructuredData/>
+            <body className={`${inter.className} flex flex-col min-h-screen`}>
+                <StructuredData />
 
-        <Header/>
+                <Header />
 
-        <main className="flex-grow pt-20">
-            <Suspense fallback={<Loading/>}>
-                {children}
-            </Suspense>
-        </main>
+                <main className="flex-grow pt-20">
+                    <Suspense fallback={<Loading />}>
+                        {children}
+                    </Suspense>
+                </main>
 
-        <Footer/>
+                <Footer />
 
-        <ChatWidget/>
-        </body>
+                <ChatWidget />
+            </body>
         </html>
     );
 }

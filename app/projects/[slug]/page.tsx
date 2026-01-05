@@ -79,6 +79,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         description,
         keywords: [...(project.techStack || []), ...(project.tags || [])],
         authors: [{ name: 'Natnael Alemseged' }],
+        alternates: {
+            canonical: `/projects/${slug}`,
+        },
         openGraph: {
             title: project.title,
             description,
