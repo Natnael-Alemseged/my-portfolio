@@ -330,7 +330,7 @@ export default function Hero() {
                                 <div className="w-px h-8 bg-white/10" />
                                 <div className="flex flex-col">
                                     <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Track Record</span>
-                                    <span className="text-white font-mono text-sm font-bold uppercase">40+ Projects Shipped</span>
+                                    <span className="text-white font-mono text-sm font-bold uppercase">30+ Projects Shipped</span>
                                 </div>
                             </div>
                         </motion.div>
