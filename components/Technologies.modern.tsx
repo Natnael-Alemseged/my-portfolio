@@ -59,14 +59,9 @@ const categories: { [key: string]: Tech[] } = {
     "Frontend & Mobile": [
         {name: "Flutter", icon: <SiFlutter className="text-sky-400"/>},
         {name: "React Native", icon: <SiReact className="text-sky-500"/>},
-
         {name: "Next.js", icon: <SiNextdotjs className="text-white"/>},
-        {
-            name: "Tailwind CSS", icon: <SiTailwindcss className="text-sky-300"
-            />
-        },
+        {name: "Tailwind CSS", icon: <SiTailwindcss className="text-sky-300"/>},
         {name: "React", icon: <FaReact className="text-sky-400"/>},
-
         {name: "Ionic", icon: <SiIonic className="text-blue-500"/>},
     ],
     "Backend & APIs": [
