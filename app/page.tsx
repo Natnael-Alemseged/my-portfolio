@@ -15,7 +15,7 @@ import Project from "@/lib/db/project.model";
 export const generateMetadata = (): Metadata => ({
     title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
     description:
-        "AI Engineer and Full-Stack Developer building LLM-powered systems, agent-based architectures, and scalable backends using FastAPI, LangGraph, vector databases, Next.js, and Flutter.",
+        "AI Engineer & Full-Stack Developer building LLM systems, agent workflows, and scalable backends with FastAPI, LangGraph, Next.js, and Flutter.",
     authors: [{ name: "Natnael Alemseged" }],
     openGraph: {
         title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",

@@ -57,10 +57,11 @@ const testimonials: Testimonial[] = [
   }
 ];
 
-const TestimonialCard = ({ t }: { t: Testimonial }) => (
+const TestimonialCard = ({ t, ariaHidden = false }: { t: Testimonial; ariaHidden?: boolean }) => (
   <motion.div
     whileHover={{ y: -5, scale: 1.02 }}
     className="flex-shrink-0 w-[450px] mx-6 group relative"
+    aria-hidden={ariaHidden}
   >
     {/* Glow Effect Layer */}
     <div className="absolute -inset-0.5 bg-gradient-to-r from-[#00ff99]/20 to-transparent rounded-3xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
@@ -134,9 +135,16 @@ export default function Testimonials() {
           style={{ display: "flex", width: "fit-content" }}
           className="hover:[animation-play-state:paused]"
         >
-          {/* Multiply items to ensure seamless loop */}
-          {[...testimonials, ...testimonials, ...testimonials].map((t, idx) => (
-            <TestimonialCard key={`${t.id}-${idx}`} t={t} />
+          {/* First set (Visible for SEO/Screen Readers) */}
+          {testimonials.map((t) => (
+            <TestimonialCard key={`${t.id}-0`} t={t} />
+          ))}
+          {/* Duplicate sets (Hidden from SEO/Screen Readers) */}
+          {testimonials.map((t) => (
+            <TestimonialCard key={`${t.id}-1`} t={t} ariaHidden={true} />
+          ))}
+          {testimonials.map((t) => (
+            <TestimonialCard key={`${t.id}-2`} t={t} ariaHidden={true} />
           ))}
         </motion.div>
 

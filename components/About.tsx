@@ -1,5 +1,5 @@
 const highlights = [
-    { label: "Projects Shipped", value: "40+" },
+    { label: "Projects Shipped", value: "30+" },
     { label: "DAU Managed", value: "10K+" },
     { label: "Bug Reduction", value: "65%" },
     { label: "Efficiency Gain", value: "30%" },

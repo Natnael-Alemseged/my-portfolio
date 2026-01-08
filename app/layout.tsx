@@ -23,7 +23,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
     title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
     description:
-        "AI Engineer and Full-Stack Developer specializing in LLM-powered systems, LangGraph agents, FastAPI backends, vector databases, Next.js, and Flutter.",
+        "AI Engineer & Full-Stack Developer building LLM systems, agent workflows, and scalable backends with FastAPI, LangGraph, Next.js, and Flutter.",
     keywords: [
         "Full-stack developer",
         "AI Engineer",
