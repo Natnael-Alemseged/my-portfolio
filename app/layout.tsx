@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import React, { Suspense } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import Loading from "@/app/Loading";
 import StructuredData from "@/components/StructuredData";
@@ -96,6 +97,7 @@ export default function RootLayout({
                 <Footer />
 
                 <ChatWidget />
+                <SpeedInsights />
             </body>
         </html>
     );
