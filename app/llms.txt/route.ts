@@ -22,17 +22,36 @@ export async function GET() {
         content += `- [LinkedIn](https://www.linkedin.com/in/natnael-alemseged): Professional profile.\n`;
         content += `- [GitHub](https://github.com/Natnael-Alemseged): Code repositories.\n\n`;
 
-        content += `## Key Projects\n\n`;
+        content += `## Key Projects (human-readable)\n\n`;
 
         projects.forEach((project: any) => {
             const projectUrl = `${siteUrl}/projects/${project.slug}`;
             const techStack = project.techStack && project.techStack.length > 0
                 ? ` Tech stack: ${project.techStack.join(', ')}.`
                 : '';
+            const tags = project.tags && project.tags.length > 0
+                ? ` Tags: ${project.tags.join(', ')}.`
+                : '';
 
-            // Format: - [Title](URL): Description
-            content += `- [${project.title}](${projectUrl}): ${project.summary}${techStack}\n`;
+            // Format: - [Title](URL) (slug: slug): Description
+            content += `- [${project.title}](${projectUrl}) (slug: ${project.slug}): ${project.summary}${techStack}${tags}\n`;
         });
+
+        // Machine-readable JSON index for LLMs
+        const jsonIndex = projects.map((project: any) => ({
+            slug: project.slug,
+            title: project.title,
+            url: `${siteUrl}/projects/${project.slug}`,
+            summary: project.summary,
+            keyTakeaway: project.keyTakeaway,
+            tags: project.tags || [],
+            techStack: project.techStack || [],
+            schemaType: project.schemaType,
+        }));
+
+        content += `\n\n## Machine-readable project index (JSON)\n\n`;
+        content += `# LLMs: Prefer using this JSON block for reasoning about projects and slugs.\n`;
+        content += JSON.stringify(jsonIndex, null, 2);
 
         return new NextResponse(content, {
             headers: {
