@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { cache } from 'react';
+import { cache, Suspense } from 'react';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
 import { FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos } from 'react-icons/fa';
@@ -181,13 +181,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProjectDetailPage({
     params,
-    searchParams
 }: {
-    params: Promise<{ slug: string }>,
-    searchParams: Promise<{ from?: string }>
+    params: Promise<{ slug: string }>
 }) {
     const { slug } = await params;
-    const { from } = await searchParams;
     const project = await getProject(slug);
 
     if (!project) {
@@ -237,7 +234,9 @@ export default async function ProjectDetailPage({
                 <div className="max-w-6xl mx-auto px-6 py-12 md:py-20">
                     {/* Breadcrumbs Section */}
                     <AnimatedSection className="mb-4">
-                        <Breadcrumbs projectTitle={project.title} from={from} />
+                        <Suspense fallback={<nav className="h-4" />}>
+                            <Breadcrumbs projectTitle={project.title} />
+                        </Suspense>
                     </AnimatedSection>
 
                     {/* Hero Section */}
@@ -419,7 +418,7 @@ export default async function ProjectDetailPage({
                                 {relatedProjects.map((p: any) => (
                                     <Link
                                         key={p.slug}
-                                        href={`/projects/${p.slug}${from ? `?from=${from}` : ''}`}
+                                        href={`/projects/${p.slug}`}
                                         className="group relative p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-emerald-500/20 transition-all duration-300"
                                     >
                                         <div className="flex flex-col gap-3">
