@@ -111,6 +111,7 @@ export default function ProjectImageCarousel({ images, device = 'tablet' }: Proj
                                         alt={image.alt}
                                         fill
                                         sizes="(max-width: 640px) 260px, 420px"
+                                        priority={idx === 0}
                                         className="object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:scale-105"
                                     />
                                 </div>
