@@ -38,20 +38,21 @@ export const generateMetadata = (): Metadata => ({
 async function getProjects() {
     try {
         await connectToDatabase();
-        // Only fetch public projects for homepage
         const projects = await Project.find({
             visibility: 'public',
             status: { $ne: 'archived' }
         })
+            .select("_id slug title summary keyTakeaway images logo_image techStack tags links featured schemaType")
             .sort({ position: 1, createdAt: -1 })
             .lean();
-        console.log('projects', JSON.stringify(projects, null, 2));
         return JSON.parse(JSON.stringify(projects));
     } catch (error) {
         console.error("Failed to fetch projects", error);
         return [];
     }
 }
+
+export const revalidate = 3600; // ISR: revalidate homepage every hour
 
 export default async function Home() {
     const projects = await getProjects();
