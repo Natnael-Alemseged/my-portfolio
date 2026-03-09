@@ -10,14 +10,11 @@ import Loading from "@/app/Loading";
 import StructuredData from "@/components/StructuredData";
 import Header from "@/components/header";
 import Footer from "@/components/Footer";
-import ChatWidget from "@/components/ChatWidget";
+import dynamic from "next/dynamic";
 
-
-// import dynamic from "next/dynamic";
-//
-// const ChatWidget = dynamic(() => import("@/components/ChatWidget"), {
-//     ssr: false,
-// });
+const ChatWidget = dynamic(() => import("@/components/ChatWidget"), {
+    ssr: false,
+});
 
 const inter = Inter({ subsets: ["latin"] });
 
