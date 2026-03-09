@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 export interface CarouselImage {
@@ -104,11 +105,13 @@ export default function ProjectImageCarousel({ images, device = 'tablet' }: Proj
                                 <div className="absolute top-[10px] left-1/2 -translate-x-1/2 z-10 h-[18px] w-[90px] rounded-full bg-black/70 border border-white/10" />
                             )}
                             <div className={screenClassName}>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <img
+                                <div className="absolute inset-0 flex items-center justify-center [&>img]:object-contain">
+                                    <Image
                                         src={image.url}
                                         alt={image.alt}
-                                        className="max-h-full w-auto object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:scale-105"
+                                        fill
+                                        sizes="(max-width: 640px) 260px, 420px"
+                                        className="object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:scale-105"
                                     />
                                 </div>
                             </div>
