@@ -315,7 +315,7 @@ export default function Projects({
                             );
                         })}
 
-                        {/* View All Card */}
+                        {/* View All Card - in carousel/grid as last item */}
                         {showViewAll && initialProjects.length > (limit || 0) && (
                             <Link
                                 href="/projects"
@@ -336,6 +336,19 @@ export default function Projects({
                             </Link>
                         )}
                     </div>
+
+                    {/* View all – prominent CTA below cards (no need to scroll to end) */}
+                    {showViewAll && initialProjects.length > (limit || 0) && (
+                        <div className="flex justify-center pt-8 pb-4">
+                            <Link
+                                href="/projects"
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold hover:bg-emerald-500 hover:text-black transition-all duration-300"
+                            >
+                                View all {initialProjects.length} projects
+                                <FaChevronRight className="w-4 h-4" />
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>
