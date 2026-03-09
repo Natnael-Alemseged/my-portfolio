@@ -4,16 +4,20 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
+import { useSearchParams } from 'next/navigation';
+
 interface BreadcrumbsProps {
     projectTitle: string;
-    from?: string;
 }
 
-export default function Breadcrumbs({ projectTitle, from }: BreadcrumbsProps) {
+export default function Breadcrumbs({ projectTitle }: BreadcrumbsProps) {
     const [cameFromArchive, setCameFromArchive] = useState(false);
 
+    const searchParams = useSearchParams();
+    const from = searchParams.get('from');
+
     useEffect(() => {
-        // Use the 'from' prop as priority, fallback to referrer
+        // Use the 'from' param as priority, fallback to referrer
         if (from === 'archive') {
             setCameFromArchive(true);
         } else {
