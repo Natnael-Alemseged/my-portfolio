@@ -5,13 +5,10 @@ import { cache } from 'react';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
 import { FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos } from 'react-icons/fa';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import AnimatedSection from '@/components/AnimatedSection';
 import ProjectImageCarousel from '@/components/ProjectImageCarousel';
+import ProjectMarkdownContent from '@/components/ProjectMarkdownContent';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://natnaelalemseged.com';
 
@@ -225,61 +222,6 @@ export default async function ProjectDetailPage({
         image: project.images?.map(img => img.url.startsWith('http') ? img.url : `${BASE_URL}${img.url.startsWith('/') ? '' : '/'}${img.url}`),
     };
 
-    const markdownComponents = {
-        h2: ({ children }: any) => (
-            <h2 className="text-2xl font-bold text-[#00ff99] mt-10 mb-4">{children}</h2>
-        ),
-        h3: ({ children }: any) => (
-            <h3 className="text-xl font-semibold text-white mt-8 mb-3">{children}</h3>
-        ),
-        p: ({ children }: any) => (
-            <p className="text-gray-300 leading-relaxed mb-4">{children}</p>
-        ),
-        ul: ({ children }: any) => (
-            <ul className="space-y-3 mb-6">{children}</ul>
-        ),
-        li: ({ children }: any) => (
-            <li className="flex items-start gap-3 bg-gray-900/70 border border-emerald-900/30 rounded-lg p-3">
-                <span className="text-[#00ff99] mt-1">•</span>
-                <span className="text-gray-200">{children}</span>
-            </li>
-        ),
-        blockquote: ({ children }: any) => (
-            <blockquote className="border-l-4 border-[#00ff99] bg-gray-900/50 p-4 rounded-r-lg italic text-emerald-200 mb-6">
-                {children}
-            </blockquote>
-        ),
-        strong: ({ children }: any) => (
-            <strong className="text-white font-semibold">{children}</strong>
-        ),
-        code: ({
-            inline,
-            className,
-            children,
-            ...props
-        }: any) => {
-            const match = /language-(\w+)/.exec(className || '');
-            if (!inline && match) {
-                return (
-                    <SyntaxHighlighter
-                        style={atomDark}
-                        language={match[1]}
-                        PreTag="div"
-                        className="rounded-xl border border-emerald-900/30 shadow-[0_0_20px_rgba(0,255,153,0.12)]"
-                        {...props}
-                    >
-                        {String(children).replace(/\n$/, '')}
-                    </SyntaxHighlighter>
-                );
-            }
-            return (
-                <code className="bg-gray-900/70 text-emerald-200 px-1.5 py-0.5 rounded" {...props}>
-                    {children}
-                </code>
-            );
-        },
-    };
-
     const hasLinkType = (type: string) => Boolean(project.links?.some((link) => link.type === type));
     const deviceFrame = hasLinkType('appstore') || hasLinkType('playstore') ? 'phone' : 'tablet';
 
@@ -367,16 +309,10 @@ export default async function ProjectDetailPage({
                         <AnimatedSection className="mb-12">
                             <h2 className="text-2xl font-bold text-[#00ff99] mb-6">Deep Dive</h2>
                             <div className="text-gray-300 leading-relaxed space-y-4">
-                                {project.contentFormat === 'html' ? (
-                                    <div className="prose prose-invert prose-emerald max-w-none" dangerouslySetInnerHTML={{ __html: project.content }} />
-                                ) : (
-                                    <ReactMarkdown
-                                        remarkPlugins={[remarkGfm]}
-                                        components={markdownComponents}
-                                    >
-                                        {project.content}
-                                    </ReactMarkdown>
-                                )}
+                                <ProjectMarkdownContent
+                                    content={project.content}
+                                    contentFormat={project.contentFormat}
+                                />
                             </div>
                         </AnimatedSection>
                     )}
