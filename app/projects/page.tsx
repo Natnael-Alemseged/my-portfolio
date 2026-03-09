@@ -30,6 +30,8 @@ async function getProjects() {
     }
 }
 
+export const revalidate = 3600; // ISR: revalidate projects list every hour
+
 export default async function ProjectsPage() {
     const projects = await getProjects();
 
