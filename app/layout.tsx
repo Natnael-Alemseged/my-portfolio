@@ -10,11 +10,7 @@ import Loading from "@/app/Loading";
 import StructuredData from "@/components/StructuredData";
 import Header from "@/components/header";
 import Footer from "@/components/Footer";
-import dynamic from "next/dynamic";
-
-const ChatWidget = dynamic(() => import("@/components/ChatWidget"), {
-    ssr: false,
-});
+import ChatWidgetWrapper from "@/components/ChatWidgetWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -93,7 +89,7 @@ export default function RootLayout({
 
                 <Footer />
 
-                <ChatWidget />
+                <ChatWidgetWrapper />
                 <SpeedInsights />
             </body>
         </html>
