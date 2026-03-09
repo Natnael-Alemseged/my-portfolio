@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { cache } from 'react';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
 import { FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos } from 'react-icons/fa';
@@ -53,7 +54,7 @@ interface ProjectData {
     createdAt?: string;
 }
 
-async function getProject(slug: string): Promise<ProjectData | null> {
+async function getProjectUncached(slug: string): Promise<ProjectData | null> {
     try {
         await connectToDatabase();
         const project = await Project.findOne({
@@ -66,6 +67,31 @@ async function getProject(slug: string): Promise<ProjectData | null> {
         console.error('Error fetching project:', error);
         return null;
     }
+}
+
+const getProject = cache(getProjectUncached);
+
+async function getPublicProjectSlugs(): Promise<string[]> {
+    try {
+        await connectToDatabase();
+        const projects = await Project.find({
+            visibility: 'public',
+            status: { $ne: 'archived' }
+        })
+            .select('slug')
+            .lean();
+        return projects.map((p) => p.slug);
+    } catch (error) {
+        console.error('Error fetching project slugs:', error);
+        return [];
+    }
+}
+
+export const revalidate = 3600; // ISR: revalidate project pages every hour
+
+export async function generateStaticParams() {
+    const slugs = await getPublicProjectSlugs();
+    return slugs.map((slug) => ({ slug }));
 }
 
 async function getRelatedProjects(currentSlug: string, schemaType?: string, tags?: string[]) {
