@@ -20,6 +20,7 @@ async function getProjects() {
             visibility: "public",
             status: { $ne: "archived" }
         })
+            .select("_id slug title summary keyTakeaway images logo_image techStack tags links featured schemaType")
             .sort({ position: 1, createdAt: -1 })
             .lean();
         return JSON.parse(JSON.stringify(projects));
