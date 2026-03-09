@@ -1,4 +1,6 @@
 import { ImageResponse } from 'next/og';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 // Image metadata
 export const alt = 'Natnael Alemseged – AI Engineer & Full-Stack Developer';
@@ -11,16 +13,9 @@ export const contentType = 'image/png';
 
 // Image generation
 export default async function Image() {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-        ? (process.env.NEXT_PUBLIC_SITE_URL.startsWith('http')
-            ? process.env.NEXT_PUBLIC_SITE_URL
-            : (process.env.NEXT_PUBLIC_SITE_URL.includes('localhost') ? `http://${process.env.NEXT_PUBLIC_SITE_URL}` : `https://${process.env.NEXT_PUBLIC_SITE_URL}`))
-        : 'https://natnaelalemseged.com';
-
-    // Fetch avatar as ArrayBuffer for reliable embedding
-    const avatarData = await fetch(new URL(`${siteUrl}/avatar_HD.png`)).then(
-        (res) => res.arrayBuffer()
-    );
+    // Read avatar from filesystem to avoid network issues at build time
+    const avatarData = readFileSync(join(process.cwd(), 'public', 'avatar_HD.png'));
+    const avatarDataString = `data:image/png;base64,${avatarData.toString('base64')}`;
 
     return new ImageResponse(
         (
@@ -39,7 +34,7 @@ export default async function Image() {
                 {/* Left Side – Avatar */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <img
-                        src={avatarData as any}
+                        src={avatarDataString}
                         alt="Natnael Alemseged"
                         width={200}
                         height={200}
