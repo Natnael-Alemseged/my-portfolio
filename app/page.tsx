@@ -7,27 +7,28 @@ import Testimonials from "@/components/Testimonials";
 import WorkExperience from "@/components/WorkExperience.modern";
 // import Technologies from "@/components/Technologies";
 import Technologies from "@/components/Technologies.modern";
-import AvailabilityGlobe from "@/components/AvailabilityGlobe";
+import FdeEdge from "@/components/FdeEdge";
+import Publications from "@/components/Publications";
 import Contact from "@/components/Contact";
 import connectToDatabase from "@/lib/db/mongoose";
 import Project from "@/lib/db/project.model";
 
 export const generateMetadata = (): Metadata => ({
-    title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
+    title: "Natnael Alemseged – Senior AI Agent Engineer | Forward Deployed Engineer",
     description:
-        "AI Engineer & Full-Stack Developer building LLM systems, agent workflows, and scalable backends with FastAPI, LangGraph, Next.js, and Flutter.",
+        "Senior AI Agent Engineer & Forward Deployed Engineer building deterministic multi-agent architectures, enterprise evaluation frameworks (Evals), and high-performance cross-platform systems.",
     authors: [{ name: "Natnael Alemseged" }],
     openGraph: {
-        title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
-        description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
+        title: "Natnael Alemseged – Senior AI Agent Engineer | Forward Deployed Engineer",
+        description: "Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent state machines, system-level evals, and high-performance cross-platform systems.",
         url: "https://natnaelalemseged.com",
         siteName: "Natnael Alemseged",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
-        description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
+        title: "Natnael Alemseged – Senior AI Agent Engineer | Forward Deployed Engineer",
+        description: "Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent state machines, system-level evals, and high-performance cross-platform systems.",
     },
     alternates: {
         canonical: "/",
@@ -58,7 +59,7 @@ export default async function Home() {
     const projects = await getProjects();
 
     return (
-        <div className="min-h-screen bg-[#f9fafb]">
+        <div className="min-h-screen bg-[#030303]">
 
 
             {/* Hero Section */}
@@ -69,8 +70,14 @@ export default async function Home() {
 
             <Technologies />
 
+            {/* FDE Edge (Why Hire Me) Section */}
+            <FdeEdge />
+
             {/* Projects Section */}
             <Projects initialProjects={projects} limit={6} showViewAll={true} />
+
+            {/* Publications & Alignment Section */}
+            <Publications />
 
             {/* Testimonials */}
             <Testimonials />
