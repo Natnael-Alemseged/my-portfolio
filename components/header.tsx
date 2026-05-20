@@ -2,7 +2,7 @@
 
 
 import Link from "next/link";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaDev, FaGithub, FaLinkedin } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -81,6 +81,9 @@ export default function Header() {
                 <Link href="https://www.linkedin.com/in/natnael-alemseged" target="_blank">
                     <FaLinkedin className="w-5 h-5 hover:text-white transition-colors" />
                 </Link>
+                <Link href="https://dev.to/natnael_alemseged" target="_blank" aria-label="DEV Community blog">
+                    <FaDev className="w-5 h-5 hover:text-white transition-colors" />
+                </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -123,6 +126,9 @@ export default function Header() {
                                 </Link>
                                 <Link href="https://www.linkedin.com/in/natnael-alemseged" target="_blank" className="text-gray-400 hover:text-white">
                                     <FaLinkedin className="w-8 h-8" />
+                                </Link>
+                                <Link href="https://dev.to/natnael_alemseged" target="_blank" className="text-gray-400 hover:text-white" aria-label="DEV Community blog">
+                                    <FaDev className="w-8 h-8" />
                                 </Link>
                             </div>
                         </motion.div>
