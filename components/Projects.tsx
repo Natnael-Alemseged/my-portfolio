@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 
 interface ProjectImage {
     url: string;
@@ -38,7 +38,16 @@ const getPrimaryImage = (images?: ProjectImage[]): ProjectImage | undefined => {
     if (!images || images.length === 0) {
         return undefined;
     }
-    return [...images].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))[0];
+    let primary = images[0];
+    let primaryOrder = primary.order ?? 0;
+    for (let i = 1; i < images.length; i++) {
+        const order = images[i].order ?? 0;
+        if (order < primaryOrder) {
+            primary = images[i];
+            primaryOrder = order;
+        }
+    }
+    return primary;
 };
 
 export default function Projects({
@@ -63,9 +72,13 @@ export default function Projects({
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
-    const [canScrollRight, setCanScrollRight] = useState(true);
+    const [canScrollRight, setCanScrollRight] = useState(false);
+    const rafIdRef = useRef<number | null>(null);
 
-    const displayedProjects = limit ? initialProjects.slice(0, limit) : initialProjects;
+    const displayedProjects = useMemo(
+        () => (limit ? initialProjects.slice(0, limit) : initialProjects),
+        [initialProjects, limit]
+    );
 
     const navigateToProject = (slug: string) => {
         const url = `/projects/${slug}${referrerSource ? `?from=${referrerSource}` : ''}`;
@@ -80,19 +93,33 @@ export default function Projects({
         return Boolean(target.closest('a,button,[role="button"],input,textarea,select,label'));
     };
 
-    const checkScroll = () => {
+    const checkScroll = useCallback(() => {
         if (scrollRef.current) {
             const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
             setCanScrollLeft(scrollLeft > 10);
             setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
         }
-    };
+    }, []);
+
+    const scheduleCheckScroll = useCallback(() => {
+        if (rafIdRef.current != null) return;
+        rafIdRef.current = window.requestAnimationFrame(() => {
+            rafIdRef.current = null;
+            checkScroll();
+        });
+    }, [checkScroll]);
 
     useEffect(() => {
-        checkScroll();
-        window.addEventListener('resize', checkScroll);
-        return () => window.removeEventListener('resize', checkScroll);
-    }, [displayedProjects]);
+        scheduleCheckScroll();
+        window.addEventListener('resize', scheduleCheckScroll);
+        return () => {
+            window.removeEventListener('resize', scheduleCheckScroll);
+            if (rafIdRef.current != null) {
+                window.cancelAnimationFrame(rafIdRef.current);
+                rafIdRef.current = null;
+            }
+        };
+    }, [scheduleCheckScroll, displayedProjects.length]);
 
     const scroll = (direction: 'left' | 'right') => {
         if (scrollRef.current) {
@@ -141,7 +168,7 @@ export default function Projects({
 
                     <div
                         ref={scrollRef}
-                        onScroll={layout === "carousel" ? checkScroll : undefined}
+                        onScroll={layout === "carousel" ? scheduleCheckScroll : undefined}
                         className={
                             layout === "carousel"
                                 ? "flex gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-12 px-2"
@@ -166,10 +193,11 @@ export default function Projects({
                             return (
                                 <motion.article
                                     key={project._id}
-                                    initial={{ opacity: 0, x: 50 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.6, delay: (index % 3) * 0.1 }}
+                                    initial={layout === "carousel" ? { opacity: 1, x: 0 } : { opacity: 0, y: 20 }}
+                                    {...(layout === "carousel"
+                                        ? { animate: { opacity: 1, x: 0 } }
+                                        : { whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.2 } })}
+                                    transition={layout === "carousel" ? { duration: 0 } : { duration: 0.6, delay: (index % 3) * 0.1 }}
                                     role="link"
                                     tabIndex={0}
                                     aria-label={`Open ${project.title} case study`}
