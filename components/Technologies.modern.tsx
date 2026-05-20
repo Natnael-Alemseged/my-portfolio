@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Brain, Bot, Cpu, Database, Terminal, Network, Sparkles } from "lucide-react";
+
 import {
     FaReact,
     FaNodeJs,
@@ -39,6 +41,8 @@ import {
     SiPostman,
     SiSupabase,
     SiDart,
+    SiNestjs,
+    SiRabbitmq,
     // SiVercel,
     // SiNetlify,
 } from "react-icons/si";
@@ -49,50 +53,43 @@ interface Tech {
 }
 
 const categories: { [key: string]: Tech[] } = {
-    "Languages": [
+    "AI Architecture": [
+        { name: "LangGraph", icon: <Network size={48} className="text-[#00ff99]" /> },
+        { name: "LangFlow", icon: <Cpu size={48} className="text-teal-400" /> },
+        { name: "Multi-Agent Systems", icon: <Bot size={48} className="text-teal-400" /> },
+        { name: "Deterministic State Machines", icon: <Terminal size={48} className="text-[#00ff99]" /> },
+        { name: "Directed Acyclic Graphs (DAGs)", icon: <Network size={48} className="text-blue-400" /> },
+        { name: "LLM-as-a-Judge / Evals", icon: <Brain size={48} className="text-pink-400" /> },
+        { name: "RAG Pipelines", icon: <Cpu size={48} className="text-purple-400" /> },
+        { name: "Token Cache Optimization", icon: <Sparkles size={48} className="text-yellow-400" /> },
+    ],
+    "Backend & Systems": [
+        { name: "NestJS Framework", icon: <SiNestjs className="text-red-600" /> },
+        { name: "Express.js", icon: <SiExpress className="text-gray-300" /> },
+        { name: "Async Python (FastAPI)", icon: <SiFastapi className="text-green-400" /> },
+        { name: "Node.js / TypeScript", icon: <FaNodeJs className="text-green-500" /> },
+        { name: "Custom MCP Servers", icon: <Terminal size={48} className="text-sky-400" /> },
+        { name: "Structured Outputs (Pydantic)", icon: <Brain size={48} className="text-teal-400" /> },
+        { name: "WebSockets & Asyncio", icon: <SiSocketdotio className="text-white" /> },
+        { name: "RESTful & GraphQL APIs", icon: <SiGraphql className="text-pink-500" /> },
+    ],
+    "Mobile & Cross-Platform": [
+        { name: "React Native (Expo)", icon: <SiReact className="text-sky-500" /> },
+        { name: "Flutter (Native Bridge)", icon: <SiFlutter className="text-sky-400" /> },
         { name: "Dart", icon: <SiDart className="text-sky-400" /> },
-        { name: "TypeScript", icon: <SiTypescript className="text-blue-500" /> },
-        { name: "Python", icon: <FaPython className="text-blue-400" /> },
-        { name: "JavaScript", icon: <SiJavascript className="text-yellow-400" /> },
-        { name: "Kotlin", icon: <SiJetbrains className="text-purple-500" /> },
-    ],
-    "Frontend & Mobile": [
-        { name: "Flutter", icon: <SiFlutter className="text-sky-400" /> },
-        { name: "React Native", icon: <SiReact className="text-sky-500" /> },
         { name: "Next.js", icon: <SiNextdotjs className="text-white" /> },
+        { name: "TypeScript", icon: <SiTypescript className="text-blue-500" /> },
         { name: "Tailwind CSS", icon: <SiTailwindcss className="text-sky-300" /> },
-        { name: "React", icon: <FaReact className="text-sky-400" /> },
-        { name: "Ionic", icon: <SiIonic className="text-blue-500" /> },
     ],
-    "Backend & APIs": [
-        { name: "Node.js", icon: <FaNodeJs className="text-green-500" /> },
-        { name: "Express", icon: <SiExpress className="text-gray-300" /> },
-        { name: "FastAPI", icon: <SiFastapi className="text-green-400" /> },
-        { name: "Prisma", icon: <SiPrisma className="text-white" /> },
-        { name: "GraphQL", icon: <SiGraphql className="text-pink-500" /> },
-        { name: "Socket.io", icon: <SiSocketdotio className="text-white" /> },
-    ],
-    "Databases": [
-        { name: "PostgreSQL", icon: <SiPostgresql className="text-sky-500" /> },
+    "Infrastructure & MLOps": [
         { name: "MongoDB", icon: <SiMongodb className="text-green-500" /> },
-        { name: "Redis", icon: <SiRedis className="text-red-500" /> },
-        { name: "Firebase", icon: <SiFirebase className="text-yellow-400" /> },
-        { name: "Supabase", icon: <SiSupabase className="text-green-400" /> },
-    ],
-    "Cloud & DevOps": [
-        { name: "AWS", icon: <FaAws className="text-orange-400" /> },
-        { name: "Docker", icon: <FaDocker className="text-blue-400" /> },
-        { name: "Kubernetes", icon: <SiKubernetes className="text-blue-500" /> },
-        { name: "Terraform", icon: <SiTerraform className="text-purple-500" /> },
-        { name: "GitHub Actions", icon: <SiGithubactions className="text-gray-300" /> },
-        // { name: "Vercel", icon: <SiVercel className="text-white" /> },
-        // { name: "Netlify", icon: <SiNetlify className="text-teal-400" /> },
-    ],
-    "Monitoring & Tools": [
-        { name: "Git", icon: <FaGitAlt className="text-orange-500" /> },
-        { name: "Prometheus", icon: <SiPrometheus className="text-orange-500" /> },
-        { name: "Grafana", icon: <SiGrafana className="text-orange-400" /> },
-        { name: "Postman", icon: <SiPostman className="text-orange-500" /> },
+        { name: "RabbitMQ Broker", icon: <SiRabbitmq className="text-orange-500" /> },
+        { name: "Docker & Kubernetes", icon: <FaDocker className="text-blue-400" /> },
+        { name: "PostgreSQL / Prisma", icon: <SiPostgresql className="text-sky-500" /> },
+        { name: "Redis Cache", icon: <SiRedis className="text-red-500" /> },
+        { name: "Vector Databases", icon: <Database size={48} className="text-purple-400" /> },
+        { name: "CI/CD & GitHub Actions", icon: <SiGithubactions className="text-gray-300" /> },
+        { name: "Observability (Grafana/Prometheus)", icon: <SiGrafana className="text-orange-400" /> },
     ],
 };
 
@@ -201,7 +198,7 @@ const MatrixRain = ({
 };
 
 export default function Technologies() {
-    const [activeTab, setActiveTab] = useState("Languages");
+    const [activeTab, setActiveTab] = useState("AI Architecture");
 
     const techs = categories[activeTab];
 
@@ -222,7 +219,7 @@ export default function Technologies() {
                     className="relative text-center mb-16"
                 >
                     <p className="text-xs uppercase tracking-[0.5em] text-[#00ff99] mb-4">
-                        Full-Stack Arsenal
+                        Cognitive Stack & Tech Arsenal
                     </p>
                     <div className="relative inline-block">
                         <h2 className="text-4xl md:text-5xl font-bold mb-4 relative z-10">
@@ -230,15 +227,15 @@ export default function Technologies() {
                         </h2>
                         {/* Decorative Header Matrix Bar */}
                         <div
-                            className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-48 h-1 overflow-hidden opacity-50">
+                            className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-64 h-1 overflow-hidden opacity-50">
                             <MatrixRain opacity={0.8} fontSize={8} speed={2} density={2} />
                         </div>
                     </div>
-                    <p className="text-gray-400 max-w-3xl mx-auto mt-8">
-                        Comprehensive toolkit spanning languages, frameworks, databases, cloud infrastructure, and
-                        DevOps—powering enterprise-grade mobile, web, and AI solutions
+                    <p className="text-gray-400 max-w-3xl mx-auto mt-8 font-sans leading-relaxed">
+                        Advanced autonomous AI orchestrations alongside a production-ready, type-safe full-stack ecosystem spanning frontend platforms, cloud infrastructure, databases, and automated pipelines.
                     </p>
                 </motion.div>
+
 
                 {/* Tabs */}
                 <div className="flex justify-center gap-2 mb-14 flex-wrap px-4">

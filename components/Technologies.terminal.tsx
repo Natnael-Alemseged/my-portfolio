@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Terminal } from "lucide-react";
+import { Terminal, Brain, Bot, Cpu, Database, Network, Sparkles } from "lucide-react";
 import {
     FaReact,
     FaNodeJs,
@@ -35,6 +35,8 @@ import {
     SiGrafana,
     SiPostman,
     SiSupabase,
+    SiNestjs,
+    SiRabbitmq,
     SiVercel,
     SiNetlify,
 } from "react-icons/si";
@@ -45,6 +47,15 @@ interface Tech {
 }
 
 const categories: { [key: string]: Tech[] } = {
+    "AI & Agentic": [
+        { name: "LangGraph / LangChain", icon: <Network size={48} className="text-[#00ff99]" /> },
+        { name: "LangFlow Orchestration", icon: <Cpu size={48} className="text-purple-400" /> },
+        { name: "MCP Architectures", icon: <Terminal size={48} className="text-[#00ff99]" /> },
+        { name: "Qdrant / VectorDB", icon: <Database size={48} className="text-purple-400" /> },
+        { name: "LLM Workflows", icon: <Brain size={48} className="text-pink-400" /> },
+        { name: "FastAPI Agents", icon: <SiFastapi className="text-green-400" /> },
+        { name: "RAG Architectures", icon: <Cpu size={48} className="text-blue-400" /> },
+    ],
     "Languages": [
         { name: "TypeScript", icon: <SiTypescript className="text-blue-500" /> },
         { name: "JavaScript", icon: <SiJavascript className="text-yellow-400" /> },
@@ -61,6 +72,7 @@ const categories: { [key: string]: Tech[] } = {
         { name: "Ionic", icon: <SiIonic className="text-blue-500" /> },
     ],
     "Backend & APIs": [
+        { name: "NestJS", icon: <SiNestjs className="text-red-600" /> },
         { name: "Node.js", icon: <FaNodeJs className="text-green-500" /> },
         { name: "Express", icon: <SiExpress className="text-gray-300" /> },
         { name: "FastAPI", icon: <SiFastapi className="text-green-400" /> },
@@ -71,6 +83,7 @@ const categories: { [key: string]: Tech[] } = {
     "Databases": [
         { name: "PostgreSQL", icon: <SiPostgresql className="text-sky-500" /> },
         { name: "MongoDB", icon: <SiMongodb className="text-green-500" /> },
+        { name: "RabbitMQ", icon: <SiRabbitmq className="text-orange-500" /> },
         { name: "Redis", icon: <SiRedis className="text-red-500" /> },
         { name: "Firebase", icon: <SiFirebase className="text-yellow-400" /> },
         { name: "Supabase", icon: <SiSupabase className="text-green-400" /> },
@@ -93,7 +106,7 @@ const categories: { [key: string]: Tech[] } = {
 };
 
 export default function Technologies() {
-    const [activeTab, setActiveTab] = useState("Languages");
+    const [activeTab, setActiveTab] = useState("AI & Agentic");
 
     const techs = categories[activeTab];
 
@@ -117,14 +130,15 @@ export default function Technologies() {
                     <div className="flex items-center gap-3 mb-4">
                         <Terminal className="text-[#00ff99]" size={32} />
                         <h2 className="text-3xl md:text-4xl font-mono font-bold text-[#00ff99] terminal-glow uppercase tracking-wider">
-                            &gt;&gt; TECH_STACK.SYS
+                            &gt;&gt; COGNITIVE_STACK__TECH_ARSENAL.SYS
                         </h2>
                     </div>
                     <div className="h-0.5 bg-[#00ff99] mb-4 terminal-glow"></div>
                     <p className="text-gray-400 font-mono text-sm uppercase tracking-wide">
-                        [SYSTEM] Comprehensive toolkit spanning languages, frameworks, databases, cloud infrastructure, and DevOps
+                        [SYSTEM] Advanced autonomous AI orchestrations alongside a production-ready type-safe full-stack ecosystem
                     </p>
                 </motion.div>
+
 
                 {/* Tabs - Terminal Command Style */}
                 <div className="flex justify-center gap-2 mb-14 flex-wrap px-4">
