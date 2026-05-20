@@ -82,9 +82,11 @@ const categories: { [key: string]: Tech[] } = {
         { name: "Tailwind CSS", icon: <SiTailwindcss className="text-sky-300" /> },
     ],
     "Infrastructure & MLOps": [
+        { name: "Docker & Kubernetes", icon: <FaDocker className="text-blue-400" /> },
+        { name: "Terraform", icon: <SiTerraform className="text-[#7B42BC]" /> },
+        { name: "Ansible", icon: <SiAnsible className="text-[#EE0000]" /> },
         { name: "MongoDB", icon: <SiMongodb className="text-green-500" /> },
         { name: "RabbitMQ Broker", icon: <SiRabbitmq className="text-orange-500" /> },
-        { name: "Docker & Kubernetes", icon: <FaDocker className="text-blue-400" /> },
         { name: "PostgreSQL / Prisma", icon: <SiPostgresql className="text-sky-500" /> },
         { name: "Redis Cache", icon: <SiRedis className="text-red-500" /> },
         { name: "Vector Databases", icon: <Database size={48} className="text-purple-400" /> },
