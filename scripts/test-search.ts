@@ -12,7 +12,8 @@ async function testSearch() {
         console.log(`Found ${results.length} results:`);
         results.forEach((r, i) => {
             console.log(`--- Result ${i + 1} ---`);
-            console.log(r.substring(0, 300) + '...');
+            console.log(`Title: ${r.title} | Score: ${r.score.toFixed(2)} | Type: ${r.chunkType}`);
+            console.log(r.content.substring(0, 300) + '...');
         });
 
         process.exit(0);

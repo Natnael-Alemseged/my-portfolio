@@ -2,8 +2,18 @@ import { QdrantClient } from '@qdrant/js-client-rest';
 import Project from '@/lib/db/project.model';
 import ProjectIntegration from '@/lib/db/project-integration.model';
 
+export interface MemoryResult {
+    content: string;
+    title: string;
+    slug: string;
+    score: number;
+    chunkType: string;
+    sourceType: string;
+}
+
 // Lazy initialization of Qdrant client
 let client: QdrantClient | null = null;
+let collectionReady = false;
 
 function getQdrantClient() {
     if (client) return client;
@@ -22,12 +32,13 @@ function getQdrantClient() {
     client = new QdrantClient({
         url: QDRANT_URL || '',
         apiKey: QDRANT_API_KEY || '',
+        checkCompatibility: false,
     });
 
     return client;
 }
 
-const COLLECTION_NAME = "chat_memories";
+const COLLECTION_NAME = "chat_memories_v2"; // bge-large-en-v1.5 @ 1024 dims (upgraded from v1 bge-small @ 384)
 
 /**
  * Converts a 24-char MongoDB ObjectId hex string into a valid 36-char UUID string.
@@ -43,7 +54,7 @@ function mongoIdToUuid(mongoId: string): string {
  */
 export async function generateEmbedding(text: string) {
     const HF_TOKEN = process.env.HUGGINGFACE_TOKEN;
-    const modelId = "BAAI/bge-small-en-v1.5";
+    const modelId = "BAAI/bge-large-en-v1.5";
     const apiUrl = `https://router.huggingface.co/hf-inference/models/${modelId}`;
 
     try {
@@ -70,9 +81,34 @@ export async function generateEmbedding(text: string) {
             }
 
             if (errorMessage.includes("currently loading")) {
-                console.warn("⏳ Hugging Face model is loading, retrying in 5s...");
-                await new Promise(resolve => setTimeout(resolve, 5000));
-                return generateEmbedding(text);
+                const maxRetries = 3;
+                const backoffDelays = [5000, 10000, 20000];
+                for (let attempt = 0; attempt < maxRetries; attempt++) {
+                    console.warn(`⏳ Hugging Face model is loading, retrying in ${backoffDelays[attempt] / 1000}s... (attempt ${attempt + 1}/${maxRetries})`);
+                    await new Promise(resolve => setTimeout(resolve, backoffDelays[attempt]));
+                    const retryResponse = await fetch(apiUrl, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            ...(HF_TOKEN ? { Authorization: `Bearer ${HF_TOKEN}` } : {}),
+                        },
+                        method: "POST",
+                        body: JSON.stringify({ inputs: text }),
+                    });
+                    if (retryResponse.ok) {
+                        const retryResult = await retryResponse.json();
+                        return (Array.isArray(retryResult[0]) ? retryResult[0] : retryResult) as number[];
+                    }
+                    const retryErrorText = await retryResponse.text();
+                    let retryErrorMessage = retryErrorText;
+                    try {
+                        const retryErrorJson = JSON.parse(retryErrorText);
+                        retryErrorMessage = retryErrorJson.error || JSON.stringify(retryErrorJson);
+                    } catch (e) { }
+                    if (!retryErrorMessage.includes("currently loading")) {
+                        throw new Error(`Hugging Face API Error: ${retryErrorMessage}`);
+                    }
+                }
+                throw new Error(`Hugging Face model still loading after ${maxRetries} retries`);
             }
             throw new Error(`Hugging Face API Error: ${errorMessage}`);
         }
@@ -132,7 +168,7 @@ export async function initQdrant() {
     if (!exists) {
         await client.createCollection(COLLECTION_NAME, {
             vectors: {
-                size: 384, // Compatible with all-MiniLM-L6-v2
+                size: 1024, // bge-large-en-v1.5
                 distance: 'Cosine',
             },
         });
@@ -151,6 +187,8 @@ export async function initQdrant() {
             field_schema: 'keyword',
         });
     } catch (e) { }
+
+    collectionReady = true;
 }
 
 /**
@@ -163,7 +201,7 @@ export async function syncProjectToQdrant(project: any) {
     }
 
     try {
-        await initQdrant();
+        if (!collectionReady) await initQdrant();
         const client = getQdrantClient();
         const content = formatProjectMemory(project);
         const user_id = 'natnael_owner';
@@ -179,6 +217,8 @@ export async function syncProjectToQdrant(project: any) {
                     payload: {
                         user_id,
                         content,
+                        title: project.title,
+                        sourceType: 'project',
                         projectId: project._id.toString(),
                         slug: project.slug,
                         visibility: project.visibility,
@@ -226,15 +266,22 @@ export async function deleteProjectFromQdrant(projectId: string) {
 /**
  * Search relevant memories in Qdrant
  */
-export async function searchMemories(query: string, limit: number = 5) {
+export async function searchMemories(query: string, limit: number = 5): Promise<MemoryResult[]> {
     try {
-        await initQdrant();
+        if (!collectionReady) {
+            await initQdrant();
+        }
         const client = getQdrantClient();
         const embedding = await generateEmbedding(query);
 
+        // Fetch a wider pool so profile chunks (which score broadly high) don't
+        // crowd out project chunks before the diversity cap is applied.
+        const fetchLimit = Math.max(limit * 3, 20);
+
+        const searchStart = Date.now();
         const results = await client.search(COLLECTION_NAME, {
             vector: embedding,
-            limit,
+            limit: fetchLimit,
             filter: {
                 must: [
                     {
@@ -246,9 +293,43 @@ export async function searchMemories(query: string, limit: number = 5) {
                 ],
             },
         });
+        const latency = Date.now() - searchStart;
 
-        console.log('✅ Searched Qdrant successfully');
-        return results.map((r: any) => r.payload?.content as string).filter(Boolean);
+        const mapped: MemoryResult[] = results
+            .filter((r: any) => r.payload?.content)
+            .map((r: any) => ({
+                content: r.payload?.content as string,
+                title: r.payload?.title ?? r.payload?.slug ?? 'Unknown',
+                slug: r.payload?.slug ?? '',
+                score: r.score,
+                chunkType: r.payload?.chunkType ?? 'overview',
+                sourceType: r.payload?.sourceType ?? 'project',
+            }));
+
+        const scoreFiltered = mapped.filter(r => r.score >= 0.55);
+
+        // Cap profile chunks at 2 so project-specific chunks are not crowded out.
+        // Profile chunks score broadly high against most queries; without this cap they
+        // can fill all 5 slots even when concrete project data is available.
+        // Then slice to `limit` so the LLM context stays bounded.
+        let profileCount = 0;
+        const filtered = scoreFiltered
+            .filter(r => {
+                if (r.sourceType === 'profile') {
+                    if (profileCount >= 2) return false;
+                    profileCount++;
+                }
+                return true;
+            })
+            .slice(0, limit);
+
+        const truncatedQuery = query.length > 80 ? query.slice(0, 80) + '...' : query;
+        console.log(
+            `🔍 RAG retrieval: query="${truncatedQuery}" candidates=${mapped.length} filtered=${filtered.length} latency=${latency}ms\n` +
+            filtered.map(r => `   - "${r.title}" (score: ${r.score.toFixed(2)}, type: ${r.chunkType})`).join('\n')
+        );
+
+        return filtered;
 
     } catch (error) {
         console.error('❌ Qdrant search error:', error);
