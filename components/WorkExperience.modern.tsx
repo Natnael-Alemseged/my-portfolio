@@ -325,28 +325,6 @@ export default function WorkExperience() {
                     </div>
                 </div>
 
-                {/* Call to Action */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="mt-24 text-center p-12 rounded-3xl bg-gradient-to-b from-white/5 to-transparent border border-white/10 backdrop-blur-sm shadow-2xl overflow-hidden relative"
-                >
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#00ff99]/10 blur-[100px] -mr-32 -mt-32" />
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#00ff99]/5 blur-[100px] -ml-32 -mb-32" />
-
-                    <h3 className="text-3xl font-bold text-white mb-4 relative z-10">Ready to build something legendary?</h3>
-                    <p className="text-gray-400 mb-10 text-lg relative z-10">
-                        I'm currently open to senior roles and strategic partnerships.
-                    </p>
-                    <a
-                        href="#contact"
-                        className="relative z-10 inline-flex items-center gap-3 px-10 py-4 bg-[#00ff99] text-black rounded-xl hover:bg-white transition-all duration-500 font-black uppercase tracking-tighter shadow-[0_0_30px_rgba(0,255,153,0.3)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] hover:-translate-y-1"
-                    >
-                        Initiate Collaboration
-                    </a>
-                </motion.div>
             </div>
         </section>
     );
