@@ -450,7 +450,7 @@ export default function Contact() {
                         Schedule a Call
                       </h3>
                       <p className="text-sm text-gray-400 mt-1">
-                        Pick a time that works for you — 15 minute discovery call
+                        Pick a time that works for you — 10 minute discovery call
                       </p>
                     </div>
                     <button
@@ -465,7 +465,7 @@ export default function Contact() {
                   {/* Calendar Widget */}
                   <div className="rounded-2xl overflow-hidden border border-white/5">
                     <InlineWidget
-                      calLink="natnael-alemseged-astaw-b9o7g9/15min"
+                      calLink="natnael-alemseged-astaw-b9o7g9/10-min-discovary"
                       config={{ theme: "dark" }}
                     />
                   </div>

@@ -64,19 +64,14 @@ export default function Footer() {
                         ))}
                     </div>
 
-                    {/* Navigation & Archive */}
-                    <div className="flex flex-col items-center gap-4">
-                        <Link
-                            href="/projects"
-                            className="text-gray-400 hover:text-[#00ff99] text-xs font-semibold uppercase tracking-widest transition-colors"
-                        >
-                            Full Project Archive —&gt;
-                        </Link>
-                    </div>
-
                     {/* Copyright & Stack */}
-                    <div className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-gray-500 text-center leading-relaxed font-medium">
-                        © {new Date().getFullYear()} Natnael Alemseged — Engineered with Next.js, Qdrant & My Creativity
+                    <div className="flex flex-col items-center gap-1.5 text-center">
+                        <div className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-gray-500 font-medium">
+                            © {new Date().getFullYear()} Natnael Alemseged. All Rights Reserved.
+                        </div>
+                        <div className="text-[8px] font-mono tracking-[0.3em] text-[#00ff99]/40 uppercase">
+                            Secure Agent Protocol // Latency Critical // Addis Ababa
+                        </div>
                     </div>
                 </div>
             </div>
