@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Terminal, X, Cpu } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -14,6 +16,35 @@ IDENTITY CONFIRMED: VISITOR.`;
 
 const INITIAL_GREETING = `Greetings. I am Natnael's Automated Persona. How may I assist you?`;
 
+const markdownComponents = {
+    p: ({ children }: { children?: React.ReactNode }) => (
+        <p className="mb-2 last:mb-0 leading-relaxed text-sm md:text-base font-mono" style={{ textShadow: '0 0 2px #00ff99' }}>{children}</p>
+    ),
+    strong: ({ children }: { children?: React.ReactNode }) => (
+        <strong className="font-extrabold text-[#00ff99] brightness-125" style={{ textShadow: '0 0 4px #00ff99' }}>{children}</strong>
+    ),
+    ul: ({ children }: { children?: React.ReactNode }) => (
+        <ul className="list-disc list-inside space-y-1 my-2 text-sm md:text-base font-mono">{children}</ul>
+    ),
+    ol: ({ children }: { children?: React.ReactNode }) => (
+        <ol className="list-decimal list-inside space-y-1 my-2 text-sm md:text-base font-mono">{children}</ol>
+    ),
+    li: ({ children }: { children?: React.ReactNode }) => (
+        <li className="leading-relaxed" style={{ textShadow: '0 0 2px #00ff99' }}>{children}</li>
+    ),
+    a: ({ href, children, ...props }: React.ComponentProps<'a'>) => (
+        <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-2 hover:bg-[#00ff99] hover:text-black transition-colors"
+            style={{ textShadow: '0 0 2px #00ff99' }}
+            {...props}
+        >
+            {children}
+        </a>
+    )
+};
 
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
@@ -51,11 +82,11 @@ export default function ChatWidget() {
         setShowHeader(true);
         setGreetingText('');
 
-        // Step 2: Wait 2 seconds with cursor, then stream greeting
+        // Step 2: Wait 100ms with cursor, then stream greeting extremely quickly
         introTimeoutRef.current = setTimeout(() => {
             let index = 0;
             greetingIntervalRef.current = setInterval(() => {
-                index += 1;
+                index += 2;
                 setGreetingText(INITIAL_GREETING.slice(0, index));
 
                 if (index >= INITIAL_GREETING.length) {
@@ -74,8 +105,8 @@ export default function ChatWidget() {
                         }]
                     );
                 }
-            }, 30);
-        }, 2000);
+            }, 10);
+        }, 100);
 
         return () => {
             if (introTimeoutRef.current) {
@@ -251,11 +282,19 @@ export default function ChatWidget() {
                                 ? 'border border-[#00ff99]/50 bg-[#00ff99]/10'
                                 : ''
                                 }`}>
-                                <span className="whitespace-pre-wrap leading-relaxed text-sm md:text-base" style={{
-                                    textShadow: '0 0 2px #00ff99'
-                                }}>
-                                    {msg.content}
-                                </span>
+                                {msg.role === 'user' ? (
+                                    <span className="whitespace-pre-wrap leading-relaxed text-sm md:text-base font-mono" style={{
+                                        textShadow: '0 0 2px #00ff99'
+                                    }}>
+                                        {msg.content}
+                                    </span>
+                                ) : (
+                                    <div className="font-mono">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                                            {msg.content}
+                                        </ReactMarkdown>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
