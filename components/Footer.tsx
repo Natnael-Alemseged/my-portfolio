@@ -1,6 +1,6 @@
 "use client";
 
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import { FaDev, FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
 import Link from "next/link";
 
@@ -19,6 +19,11 @@ const socials = [
         label: "X",
         href: "https://x.com/notaznation",
         icon: <FaX />
+    },
+    {
+        label: "DEV Blog",
+        href: "https://dev.to/natnael_alemseged",
+        icon: <FaDev />
     },
     {
         label: "Email",
