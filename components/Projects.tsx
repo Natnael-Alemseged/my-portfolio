@@ -368,21 +368,23 @@ export default function Projects({
                 className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-teal-500/[0.01] rounded-full blur-[100px] pointer-events-none" />
 
             <div className="max-w-7xl mx-auto relative">
+                {centerHeader && (
+                    <div className="flex justify-start mb-6">
+                        <Link
+                            href="/#projects"
+                            className="group inline-flex items-center gap-2.5 text-[10px] font-mono uppercase tracking-[0.25em] border border-[#00ff99]/20 bg-[#00ff99]/[0.02] hover:bg-[#00ff99]/[0.08] hover:border-[#00ff99]/50 text-gray-200 hover:text-[#00ff99] px-4 py-2.5 rounded-full transition-all duration-300 backdrop-blur-md shadow-md hover:shadow-[0_0_20px_rgba(0,255,153,0.15)]"
+                        >
+                            <FaArrowLeft className="group-hover:-translate-x-1.5 transition-transform text-[#00ff99] group-hover:text-[#00ff99]" />
+                            Back to Home
+                        </Link>
+                    </div>
+                )}
                 {/* Premium Header - Supports beautiful centering and gradient text enhancements */}
                 <div className={`flex flex-col gap-6 mb-14 pb-8 border-b border-white/[0.05] ${
                     centerHeader 
                         ? "items-center text-center max-w-3xl mx-auto" 
                         : "md:flex-row md:items-end justify-between"
                 }`}>
-                    {centerHeader && (
-                        <Link
-                            href="/#projects"
-                            className="group inline-flex items-center gap-2.5 text-[10px] font-mono uppercase tracking-[0.25em] border border-white/[0.06] bg-white/[0.02] hover:bg-[#00ff99]/[0.04] hover:border-[#00ff99]/30 hover:text-[#00ff99] px-4 py-2.5 rounded-full text-gray-400 transition-all duration-300 backdrop-blur-md shadow-md hover:shadow-[0_0_15px_rgba(0,255,153,0.1)] mb-2"
-                        >
-                            <FaArrowLeft className="group-hover:-translate-x-1.5 transition-transform text-[#00ff99]/80 group-hover:text-[#00ff99]" />
-                            Back to Home
-                        </Link>
-                    )}
                     <div className={`flex flex-col gap-3 ${centerHeader ? "items-center" : "max-w-2xl"}`}>
                         {centerHeader ? (
                             <div className="inline-flex items-center gap-2 border border-[#00ff99]/25 bg-[#00ff99]/[0.03] px-3.5 py-1.5 rounded-full font-mono text-[9px] uppercase tracking-[0.25em] text-[#00ff99] shadow-[0_0_15px_rgba(0,255,153,0.05)]">
