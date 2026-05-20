@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaGithub, FaGlobe, FaGooglePlay, FaAppStoreIos, FaChevronLeft, FaChevronRight, FaArrowLeft } from "react-icons/fa";
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 
 interface ProjectImage {
@@ -374,6 +374,15 @@ export default function Projects({
                         ? "items-center text-center max-w-3xl mx-auto" 
                         : "md:flex-row md:items-end justify-between"
                 }`}>
+                    {centerHeader && (
+                        <Link
+                            href="/#projects"
+                            className="group inline-flex items-center gap-2.5 text-[10px] font-mono uppercase tracking-[0.25em] border border-white/[0.06] bg-white/[0.02] hover:bg-[#00ff99]/[0.04] hover:border-[#00ff99]/30 hover:text-[#00ff99] px-4 py-2.5 rounded-full text-gray-400 transition-all duration-300 backdrop-blur-md shadow-md hover:shadow-[0_0_15px_rgba(0,255,153,0.1)] mb-2"
+                        >
+                            <FaArrowLeft className="group-hover:-translate-x-1.5 transition-transform text-[#00ff99]/80 group-hover:text-[#00ff99]" />
+                            Back to Home
+                        </Link>
+                    )}
                     <div className={`flex flex-col gap-3 ${centerHeader ? "items-center" : "max-w-2xl"}`}>
                         {centerHeader ? (
                             <div className="inline-flex items-center gap-2 border border-[#00ff99]/25 bg-[#00ff99]/[0.03] px-3.5 py-1.5 rounded-full font-mono text-[9px] uppercase tracking-[0.25em] text-[#00ff99] shadow-[0_0_15px_rgba(0,255,153,0.05)]">
