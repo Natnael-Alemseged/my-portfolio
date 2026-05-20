@@ -284,7 +284,8 @@ export default function Projects({
     subtitle = "Real-world projects spanning AI copilots, mobile ride-hailing, platform infrastructure, and high-impact experiments.",
     badge = "Selected Work",
     layout = "carousel",
-    referrerSource
+    referrerSource,
+    centerHeader = false
 }: {
     initialProjects?: Project[],
     limit?: number,
@@ -293,7 +294,8 @@ export default function Projects({
     subtitle?: string,
     badge?: string,
     layout?: "carousel" | "grid",
-    referrerSource?: string
+    referrerSource?: string,
+    centerHeader?: boolean
 }) {
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -366,14 +368,40 @@ export default function Projects({
                 className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-teal-500/[0.01] rounded-full blur-[100px] pointer-events-none" />
 
             <div className="max-w-7xl mx-auto relative">
-                {/* Premium Split Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 pb-8 border-b border-white/[0.05]">
-                    <div className="flex flex-col gap-3 max-w-2xl">
-                        <p className="text-xs uppercase tracking-[0.4em] text-emerald-400 font-semibold">{badge}</p>
-                        <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
-                            {title}
+                {/* Premium Header - Supports beautiful centering and gradient text enhancements */}
+                <div className={`flex flex-col gap-6 mb-14 pb-8 border-b border-white/[0.05] ${
+                    centerHeader 
+                        ? "items-center text-center max-w-3xl mx-auto" 
+                        : "md:flex-row md:items-end justify-between"
+                }`}>
+                    <div className={`flex flex-col gap-3 ${centerHeader ? "items-center" : "max-w-2xl"}`}>
+                        {centerHeader ? (
+                            <div className="inline-flex items-center gap-2 border border-[#00ff99]/25 bg-[#00ff99]/[0.03] px-3.5 py-1.5 rounded-full font-mono text-[9px] uppercase tracking-[0.25em] text-[#00ff99] shadow-[0_0_15px_rgba(0,255,153,0.05)]">
+                                <span className="relative flex h-1.5 w-1.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00ff99] opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00ff99]"></span>
+                                </span>
+                                {badge}
+                            </div>
+                        ) : (
+                            <p className="text-xs uppercase tracking-[0.4em] text-emerald-400 font-semibold">{badge}</p>
+                        )}
+                        <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+                            {centerHeader ? (
+                                <>
+                                    <span>{title.split(' ')[0]}</span>
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ff99] to-teal-300">
+                                        {title.split(' ').slice(1).join(' ')}
+                                    </span>
+                                    <span className="font-mono text-[10px] font-normal text-gray-500 uppercase tracking-widest bg-white/[0.03] border border-white/[0.05] px-2.5 py-1 rounded-md ml-1 self-center shrink-0">
+                                        {initialProjects.length} nodes
+                                    </span>
+                                </>
+                            ) : (
+                                title
+                            )}
                         </h2>
-                        <p className="text-gray-400 text-sm md:text-base leading-relaxed">
+                        <p className="text-gray-400 text-sm md:text-base leading-relaxed max-w-2xl">
                             {subtitle}
                         </p>
                     </div>
