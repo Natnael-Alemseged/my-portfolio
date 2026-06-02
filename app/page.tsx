@@ -13,6 +13,8 @@ import Contact from "@/components/Contact";
 import connectToDatabase from "@/lib/db/mongoose";
 import Project from "@/lib/db/project.model";
 
+const HOMEPAGE_PROJECT_LIMIT = 6;
+
 export const generateMetadata = (): Metadata => ({
     title: "Natnael Alemseged – Senior AI Agent Engineer | Forward Deployed Engineer",
     description:
@@ -39,24 +41,33 @@ export const generateMetadata = (): Metadata => ({
 async function getProjects() {
     try {
         await connectToDatabase();
-        const projects = await Project.find({
+        const query = {
             visibility: 'public',
             status: { $ne: 'archived' }
-        })
-            .select("_id slug title summary keyTakeaway images logo_image techStack tags links featured schemaType")
-            .sort({ position: 1, createdAt: -1 })
-            .lean();
-        return JSON.parse(JSON.stringify(projects));
+        };
+        const [projects, totalCount] = await Promise.all([
+            Project.find(query)
+                .select("_id slug title summary keyTakeaway images logo_image techStack tags links featured schemaType")
+                .sort({ position: 1, createdAt: -1 })
+                .limit(HOMEPAGE_PROJECT_LIMIT)
+                .maxTimeMS(3000)
+                .lean(),
+            Project.countDocuments(query).maxTimeMS(3000),
+        ]);
+        return {
+            projects: JSON.parse(JSON.stringify(projects)),
+            totalCount,
+        };
     } catch (error) {
         console.error("Failed to fetch projects", error);
-        return [];
+        return { projects: [], totalCount: 0 };
     }
 }
 
 export const revalidate = 3600; // ISR: revalidate homepage every hour
 
 export default async function Home() {
-    const projects = await getProjects();
+    const { projects, totalCount } = await getProjects();
 
     return (
         <div className="min-h-screen bg-[#030303]">
@@ -74,7 +85,12 @@ export default async function Home() {
             <FdeEdge />
 
             {/* Projects Section */}
-            <Projects initialProjects={projects} limit={6} showViewAll={true} />
+            <Projects
+                initialProjects={projects}
+                totalProjectCount={totalCount}
+                limit={HOMEPAGE_PROJECT_LIMIT}
+                showViewAll={true}
+            />
 
             {/* Publications & Alignment Section */}
             <Publications />

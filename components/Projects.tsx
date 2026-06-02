@@ -278,6 +278,7 @@ function ProjectCard({
 
 export default function Projects({
     initialProjects = [],
+    totalProjectCount,
     limit,
     showViewAll = false,
     title = "Product Engineering Case Studies",
@@ -288,6 +289,7 @@ export default function Projects({
     centerHeader = false
 }: {
     initialProjects?: Project[],
+    totalProjectCount?: number,
     limit?: number,
     showViewAll?: boolean,
     title?: string,
@@ -307,6 +309,7 @@ export default function Projects({
         () => (limit ? initialProjects.slice(0, limit) : initialProjects),
         [initialProjects, limit]
     );
+    const archiveCount = totalProjectCount ?? initialProjects.length;
 
     const navigateToProject = (slug: string) => {
         const url = `/projects/${slug}${referrerSource ? `?from=${referrerSource}` : ''}`;
@@ -416,12 +419,12 @@ export default function Projects({
                             {subtitle}
                         </p>
                     </div>
-                    {showViewAll && initialProjects.length > (limit || 0) && (
+                    {showViewAll && archiveCount > (limit || 0) && (
                         <Link
                             href="/projects"
                             className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.02] border border-white/[0.08] hover:border-emerald-500/40 hover:bg-emerald-500/10 text-emerald-400 text-sm font-semibold transition-all duration-300 group/btn shrink-0"
                         >
-                            <span>Explore Full Archive ({initialProjects.length})</span>
+                            <span>Explore Full Archive ({archiveCount})</span>
                             <span className="transform group-hover/btn:translate-x-1 transition-transform">→</span>
                         </Link>
                     )}
@@ -473,7 +476,7 @@ export default function Projects({
                         ))}
 
                         {/* View All Card - in carousel/grid as last item */}
-                        {showViewAll && initialProjects.length > (limit || 0) && (
+                        {showViewAll && archiveCount > (limit || 0) && (
                             <Link
                                 href="/projects"
                                 className={`relative flex-shrink-0 ${
@@ -486,7 +489,7 @@ export default function Projects({
                                     </div>
                                     <div className="space-y-2">
                                         <h3 className="text-xl font-bold text-white tracking-tight">Full Archive</h3>
-                                        <p className="text-gray-400 text-sm">View all {initialProjects.length} projects and case studies</p>
+                                        <p className="text-gray-400 text-sm">View all {archiveCount} projects and case studies</p>
                                     </div>
                                     <span className="text-emerald-400 text-sm font-semibold flex items-center gap-2 group-hover:gap-4 transition-all">
                                         Browse Everything <span>→</span>
