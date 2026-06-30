@@ -155,15 +155,39 @@ const NeuralNetworkBackground = () => {
             mouse.y = -1000;
         };
 
-        window.addEventListener("resize", resizeCanvas);
-        window.addEventListener("mousemove", handleMouseMove);
-        document.body.addEventListener("mouseleave", handleMouseLeave);
+        const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
 
-        resizeCanvas();
-        draw();
+        const start = () => {
+            window.addEventListener("resize", resizeCanvas);
+            window.addEventListener("mousemove", handleMouseMove);
+            document.body.addEventListener("mouseleave", handleMouseLeave);
+            resizeCanvas();
+            draw();
+        };
+
+        // Skip the decorative animation entirely for reduced-motion users.
+        // Otherwise defer the heavy requestAnimationFrame loop until the main
+        // thread is idle so it doesn't compete with hydration / the LCP render.
+        let startHandle: number | undefined;
+        if (!prefersReducedMotion) {
+            const ric = (
+                window as Window & {
+                    requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+                }
+            ).requestIdleCallback;
+            startHandle = ric ? ric(start, { timeout: 2000 }) : window.setTimeout(start, 1200);
+        }
 
         return () => {
             cancelAnimationFrame(animationFrameId);
+            if (startHandle !== undefined) {
+                const cic = (window as Window & { cancelIdleCallback?: (h: number) => void })
+                    .cancelIdleCallback;
+                if (cic) cic(startHandle);
+                else clearTimeout(startHandle);
+            }
             window.removeEventListener("resize", resizeCanvas);
             window.removeEventListener("mousemove", handleMouseMove);
             document.body.removeEventListener("mouseleave", handleMouseLeave);

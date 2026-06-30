@@ -265,7 +265,7 @@ export default function About() {
 
                 {/* Highlight Stats Dashboard with sparkline charts */}
                 <div className="pt-8 border-t border-white/[0.05] relative z-10">
-                    <span className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.3em] block mb-6">
+                    <span className="text-[10px] font-mono text-gray-400 uppercase tracking-[0.3em] block mb-6">
                         OPERATIONAL_HIGHLIGHTS
                     </span>
                     

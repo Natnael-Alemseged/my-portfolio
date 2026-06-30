@@ -105,7 +105,7 @@ export default function FdeEdge() {
                                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-[#00ff99]/70" />
-                                    <span className="text-[10px] font-mono text-gray-500 ml-2">fde-engine@natnael: ~ (autonomous_env)</span>
+                                    <span className="text-[10px] font-mono text-gray-400 ml-2">fde-engine@natnael: ~ (autonomous_env)</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-[9px] font-mono text-gray-600 bg-black/40 px-2 py-0.5 rounded border border-white/[0.04]">
                                     <Terminal size={10} className="text-[#00ff99]/60" />

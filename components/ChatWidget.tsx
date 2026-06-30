@@ -248,7 +248,7 @@ export default function ChatWidget() {
                             <h3 className="font-bold text-sm tracking-widest font-mono">ROBCO TERMINAL</h3>
                         </div>
                     </div>
-                    <button onClick={() => setIsOpen(false)} className="text-black hover:bg-black hover:text-[#00ff99] border border-transparent hover:border-black p-1 transition-colors">
+                    <button onClick={() => setIsOpen(false)} aria-label="Close chat" className="text-black hover:bg-black hover:text-[#00ff99] border border-transparent hover:border-black p-1 transition-colors">
                         <X size={20} />
                     </button>
                 </div>

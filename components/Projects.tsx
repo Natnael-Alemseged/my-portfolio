@@ -102,7 +102,7 @@ function ProjectCard({
             transition={layout === "carousel" ? { duration: 0 } : { duration: 0.6, delay: (index % 3) * 0.1 }}
             role="link"
             tabIndex={0}
-            aria-label={`Open ${project.title} case study`}
+            aria-label={`${project.title} – open case study`}
             onClickCapture={(e) => {
                 if (isFromInteractiveElement(e.target)) return;
                 navigateToProject(project.slug);
