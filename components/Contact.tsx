@@ -88,6 +88,7 @@ export default function Contact() {
     email: false,
     message: false,
   });
+
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
