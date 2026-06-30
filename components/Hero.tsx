@@ -454,7 +454,7 @@ const AvatarHologram = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00ff99]/5 to-black/80 z-10 pointer-events-none" />
 
                 <Image
-                    src="/avatar_HD.png"
+                    src="/avatar_HD.webp"
                     alt="Natnael Alemseged"
                     fill
                     sizes="(max-width: 768px) 250px, 350px"
