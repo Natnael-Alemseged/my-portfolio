@@ -244,10 +244,14 @@ export default function Testimonials() {
                                         onClick={() => goTo(i)}
                                         type="button"
                                         aria-label={`Go to testimonial ${i + 1}`}
-                                        className={`h-1.5 rounded-full transition-all duration-300 ${
-                                            i === activeIndex ? "w-6 bg-[#00ff99]" : "w-2 bg-white/20 hover:bg-white/40"
-                                        }`}
-                                    />
+                                        className="grid place-items-center h-6 w-6 -mx-1.5 rounded-full"
+                                    >
+                                        <span
+                                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                                                i === activeIndex ? "w-6 bg-[#00ff99]" : "w-2 bg-white/20 hover:bg-white/40"
+                                            }`}
+                                        />
+                                    </button>
                                 ))}
                             </div>
 

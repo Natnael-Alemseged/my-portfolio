@@ -214,9 +214,9 @@ export default function FdeEdge() {
                                     {card.icon}
                                 </div>
                                 <div className="space-y-1.5">
-                                    <h4 className="text-[13px] font-bold text-white font-mono uppercase tracking-wider group-hover:text-[#00ff99] transition-colors">
+                                    <h3 className="text-[13px] font-bold text-white font-mono uppercase tracking-wider group-hover:text-[#00ff99] transition-colors">
                                         {card.title}
-                                    </h4>
+                                    </h3>
                                     <p className="text-[12px] text-gray-400 leading-relaxed font-sans font-medium">
                                         {card.desc}
                                     </p>

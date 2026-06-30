@@ -63,7 +63,7 @@ const CoreCommitmentsCard = () => {
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 mb-5">
                 <div className="flex items-center gap-2">
                     <Terminal size={14} className="text-[#00ff99]" />
-                    <span className="font-mono font-bold text-white uppercase tracking-widest text-[10px]">CORE_COMMITMENTS</span>
+                    <h2 className="font-mono font-bold text-white uppercase tracking-widest text-[10px]">CORE_COMMITMENTS</h2>
                 </div>
                 <div className="flex items-center gap-1.5 font-mono text-[9px] text-[#00ff99] border border-[#00ff99]/30 px-2 py-0.5 rounded uppercase">
                     PROVEN_UTILITY
@@ -97,10 +97,10 @@ const CoreCommitmentsCard = () => {
                             {item.icon}
                         </div>
                         <div className="space-y-1">
-                            <h4 className="text-[12.5px] font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
+                            <h3 className="text-[12.5px] font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
                                 <span className="text-[#00ff99]/40 font-normal">0{idx + 1}.</span>
                                 {item.title}
-                            </h4>
+                            </h3>
                             <p className="text-[11.5px] text-gray-400 leading-normal font-sans">
                                 <strong className="text-gray-200">What:</strong> {item.what}
                             </p>
@@ -187,9 +187,9 @@ const SparklineHighlightCard = ({ label, value, description, icon, sparklinePoin
                 </div>
 
                 <div className="space-y-1">
-                    <h5 className="text-xs font-bold font-mono tracking-widest text-gray-300 uppercase">
+                    <h4 className="text-xs font-bold font-mono tracking-widest text-gray-300 uppercase">
                         {label}
-                    </h5>
+                    </h4>
                     <p className="text-[10px] text-gray-500 leading-normal font-sans group-hover:text-gray-400 transition-colors">
                         {description}
                     </p>
