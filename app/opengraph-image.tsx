@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 // Image metadata
-export const alt = 'Natnael Alemseged – AI Engineer & Full-Stack Developer';
+export const alt = 'Natnael Alemseged – Senior AI Agent Engineer & Forward Deployed Engineer';
 export const size = {
     width: 1200,
     height: 630,
@@ -51,7 +51,7 @@ export default async function Image() {
                         Natnael Alemseged
                     </div>
                     <div style={{ display: 'flex', fontSize: 28, color: '#cbd5e1', marginBottom: 40 }}>
-                        AI Engineer & Full-Stack Developer
+                        Senior AI Agent Engineer & Forward Deployed Engineer
                     </div>
                     <div style={{ display: 'flex', gap: 24 }}>
                         <img style={{ display: 'flex' }} src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width="48" height="48" />

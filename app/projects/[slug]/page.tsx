@@ -201,16 +201,6 @@ export default async function ProjectDetailPage({
         description: project.summary,
         applicationCategory: project.schemaType === 'MobileApplication' ? 'UtilitiesApplication' : 'DeveloperApplication',
         operatingSystem: project.schemaType === 'MobileApplication' ? 'iOS, Android' : 'Web',
-        offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD',
-        },
-        aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '5',
-            ratingCount: '1',
-        },
         author: {
             '@type': 'Person',
             name: 'Natnael Alemseged',

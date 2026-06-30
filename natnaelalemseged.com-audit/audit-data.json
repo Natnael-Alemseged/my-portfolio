@@ -1,0 +1,60 @@
+{
+  "summary": {
+    "health_score": 86,
+    "business_type": "Personal brand / engineering portfolio",
+    "measured_lighthouse_mobile": {"performance": 71, "accessibility": 85, "best_practices": 96, "seo": 100, "LCP_s": 7.9, "CLS": 0, "TBT_ms": 30, "FCP_s": 1.4},
+    "crux_field_data": "unavailable — insufficient Chrome traffic for CrUX eligibility",
+    "fixes_applied": [
+      "PHASE 1: Removed fabricated AggregateRating from project schema",
+      "PHASE 1: Removed $0 Offer from project schema",
+      "PHASE 1: Fixed Person schema image (now /avatar_HD.png)",
+      "PHASE 2: Unified brand positioning across 6 surfaces (Senior AI Agent Engineer & Forward Deployed Engineer)",
+      "PHASE 2: Enriched Person schema with description + knowsAbout",
+      "PHASE 2: Lowered hero image quality 92->75",
+      "PHASE 2: Removed opacity:0 LCP gate on hero portrait (kept scale animation)"
+    ],
+    "remaining_findings": [
+      "LCP 7.9s dominated by heavy client-side JS (main-thread 9.1s): canvas particle system + framer-motion in Hero",
+      "Accessibility 85: buttons missing accessible names, contrast ratios, touch targets, SVG img-role alt",
+      "Missing security headers (only HSTS present)",
+      "Re-measure performance after deploy to confirm LCP fix"
+    ]
+  },
+  "categories": [
+    {"name": "Technical SEO", "score": 88, "what_works": ["Correct robots.txt", "Complete dynamic sitemap (19 URLs)", "Server-rendered HTML", "HSTS enabled", "Per-page canonicals"], "findings": [
+      {"title": "Canonical trailing-slash inconsistency", "severity": "Low", "description": "Homepage canonical renders without slash; og:url/sitemap use trailing slash", "recommendation": "Standardize one form across canonical, og:url, sitemap, BASE_URL"},
+      {"title": "Missing security headers", "severity": "Low", "description": "Only HSTS present; no nosniff/Referrer-Policy/X-Frame-Options/CSP", "recommendation": "Add headers() in next.config.ts"}
+    ]},
+    {"name": "Content Quality", "score": 85, "what_works": ["17 unique deep case studies", "Verifiable identity (GitHub/LinkedIn)", "~1400 words on homepage"], "findings": [
+      {"title": "Inconsistent personal-brand positioning", "severity": "Medium", "description": "Four different job titles across title/layout/schema/llms.txt", "recommendation": "Align one canonical positioning string everywhere"},
+      {"title": "Thin Person schema", "severity": "Low", "description": "No description/knowsAbout/worksFor", "recommendation": "Enrich Person entity"}
+    ]},
+    {"name": "On-Page SEO", "score": 90, "what_works": ["Keyword-led 71-char title", "Strong meta description", "1xH1 + 9xH2", "Per-project generateMetadata", "Full OG/Twitter"], "findings": [
+      {"title": "Twitter creator/site not set", "severity": "Low", "description": "No @handle or X in sameAs", "recommendation": "Add if an X presence exists"}
+    ]},
+    {"name": "Schema / Structured Data", "score": 55, "what_works": ["Person+WebSite+BreadcrumbList @graph", "Per-project SoftwareApplication JSON-LD"], "findings": [
+      {"title": "Fabricated AggregateRating", "severity": "Critical", "description": "ratingValue 5 / ratingCount 1 hardcoded on all projects", "recommendation": "Remove; only use genuine verifiable reviews"},
+      {"title": "$0 Offer on non-products", "severity": "High", "description": "offers.price '0' on portfolio case studies", "recommendation": "Remove offers or gate to genuinely free software"},
+      {"title": "Person image 404", "severity": "High", "description": "/images/profile.jpg missing", "recommendation": "Point to existing asset"}
+    ]},
+    {"name": "Performance (CWV)", "score": 78, "what_works": ["Next 16 compression", "next/image optimization", "Speed Insights installed", "SSR"], "findings": [
+      {"title": "Oversized source avatar", "severity": "Medium", "description": "avatar_HD.png is 1.47MB, likely LCP", "recommendation": "Resize + WebP to ~150-250KB"},
+      {"title": "No field data", "severity": "Info", "description": "No CrUX/GSC credentials configured", "recommendation": "Configure Google API and run /seo google"}
+    ]},
+    {"name": "AI Search Readiness", "score": 92, "what_works": ["Exemplary llms.txt with JSON project index", "Clean SSR for AI crawlers", "Highly citable problem/solution passages"], "findings": [
+      {"title": "Keep llms.txt + sitemap synced", "severity": "Low", "description": "Currently aligned", "recommendation": "Feed both from same DB source"}
+    ]},
+    {"name": "Images", "score": 80, "what_works": ["All alt text present", "next/image delivery"], "findings": [
+      {"title": "Oversized source images", "severity": "Medium", "description": "Heavy source PNGs", "recommendation": "Right-size at source"}
+    ]}
+  ],
+  "action_plan": {
+    "phases": [
+      {"name": "Phase 1: Critical Fixes", "timeframe": "Week 1", "items": ["Remove fabricated AggregateRating", "Fix Person image 404", "Remove $0 Offer from non-products"]},
+      {"name": "Phase 2: High-Impact Improvements", "timeframe": "Weeks 2-3", "items": ["Standardize brand positioning", "Right-size avatar/hero images", "Add security headers"]},
+      {"name": "Phase 3: Content & Authority", "timeframe": "Month 2", "items": ["Enrich Person entity", "Resolve canonical trailing-slash convention"]},
+      {"name": "Phase 4: Monitoring & Iteration", "timeframe": "Ongoing", "items": ["Configure Google field data + GSC", "Keep llms.txt + sitemap DB-synced"]}
+    ]
+  },
+  "artifacts": {"findings_dir": "findings/", "screenshots_dir": "screenshots/"}
+}

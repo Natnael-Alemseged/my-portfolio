@@ -14,8 +14,8 @@ export async function GET() {
             .sort({ position: 1, createdAt: -1 })
             .lean();
 
-        let content = `# Natnael Alemseged - AI Engineer & Full-Stack Developer\n\n`;
-        content += `> AI Engineer and Full-Stack Developer specializing in LLM-powered systems, LangGraph agents, FastAPI backends, vector databases, Next.js, and Flutter.\n\n`;
+        let content = `# Natnael Alemseged - Senior AI Agent Engineer & Forward Deployed Engineer\n\n`;
+        content += `> Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent architectures, enterprise evaluation frameworks (Evals), LangGraph agents, FastAPI backends, vector databases, Next.js, and Flutter.\n\n`;
 
         content += `## Contact & Socials\n\n`;
         content += `- [Website](${siteUrl}): Portfolio website.\n`;

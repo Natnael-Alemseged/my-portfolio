@@ -420,8 +420,8 @@ const AvatarHologram = () => {
 
             {/* Central Hologram Frame (Contains Portrait) */}
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ scale: 0.94 }}
+                animate={{ scale: 1 }}
                 transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                 className="w-[74%] h-[74%] rounded-full relative z-10 overflow-hidden border-2 border-[#00ff99]/30 bg-black/60 shadow-[0_0_40px_rgba(0,255,153,0.25)] flex items-center justify-center group"
             >
@@ -436,7 +436,7 @@ const AvatarHologram = () => {
                     sizes="(max-width: 768px) 250px, 350px"
                     className="object-cover object-top filter grayscale contrast-115 group-hover:scale-105 group-hover:grayscale-0 transition-all duration-700"
                     priority
-                    quality={92}
+                    quality={75}
                 />
             </motion.div>
 

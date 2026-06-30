@@ -15,18 +15,20 @@ import ChatWidgetWrapper from "@/components/ChatWidgetWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
+    title: "Natnael Alemseged – Senior AI Agent Engineer & Forward Deployed Engineer",
     description:
-        "AI Engineer & Full-Stack Developer building LLM systems, agent workflows, and scalable backends with FastAPI, LangGraph, Next.js, and Flutter.",
+        "Senior AI Agent Engineer & Forward Deployed Engineer building deterministic multi-agent architectures, enterprise evaluation frameworks (Evals), and high-performance cross-platform systems.",
     keywords: [
-        "Full-stack developer",
+        "AI Agent Engineer",
+        "Forward Deployed Engineer",
         "AI Engineer",
-        "React",
-        "Flutter",
+        "Multi-agent systems",
+        "LLM Evals",
+        "Full-stack developer",
         "FastAPI",
-        "React Native",
-        "Express.js",
+        "LangGraph",
         "Next.js",
+        "Flutter",
         "TypeScript",
         "Natnael Alemseged",
         "Software Engineer",
@@ -40,16 +42,16 @@ export const metadata: Metadata = {
     ],
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ? (process.env.NEXT_PUBLIC_SITE_URL.startsWith('http') ? process.env.NEXT_PUBLIC_SITE_URL : `https://${process.env.NEXT_PUBLIC_SITE_URL}`) : "https://natnaelalemseged.com"),
     openGraph: {
-        title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
-        description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
+        title: "Natnael Alemseged – Senior AI Agent Engineer & Forward Deployed Engineer",
+        description: "Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent state machines, system-level evals, and high-performance cross-platform systems.",
         url: "https://natnaelalemseged.com",
         siteName: "Natnael Alemseged",
         type: "website",
     },
     twitter: {
         card: "summary_large_image",
-        title: "Natnael Alemseged – AI Engineer & Full-Stack Developer",
-        description: "AI Engineer and Full-Stack Developer building LLM-powered systems, agent workflows, and scalable applications.",
+        title: "Natnael Alemseged – Senior AI Agent Engineer & Forward Deployed Engineer",
+        description: "Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent state machines, system-level evals, and high-performance cross-platform systems.",
     },
     robots: {
         index: true,
