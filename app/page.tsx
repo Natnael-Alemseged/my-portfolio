@@ -23,7 +23,7 @@ export const generateMetadata = (): Metadata => ({
     openGraph: {
         title: "Natnael Alemseged – Senior AI Agent Engineer | Forward Deployed Engineer",
         description: "Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent state machines, system-level evals, and high-performance cross-platform systems.",
-        url: "https://natnaelalemseged.com",
+        url: "https://natnaelalemseged.com/",
         siteName: "Natnael Alemseged",
         type: "website",
     },
