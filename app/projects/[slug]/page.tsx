@@ -9,6 +9,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 import ProjectImageCarousel from '@/components/ProjectImageCarousel';
 import ProjectMarkdownContent from '@/components/ProjectMarkdownContent';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import { getOptimizedProjectImageUrl } from '@/lib/project-image';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://natnaelalemseged.com';
 
@@ -67,6 +68,20 @@ async function getProjectUncached(slug: string): Promise<ProjectData | null> {
 }
 
 const getProject = cache(getProjectUncached);
+
+function truncateAtWord(value: string, maxLength: number): string {
+    if (value.length <= maxLength) return value;
+
+    const shortened = value.slice(0, maxLength - 1);
+    const lastSpace = shortened.lastIndexOf(' ');
+    const cutIndex = lastSpace > maxLength * 0.7 ? lastSpace : shortened.length;
+    return `${shortened.slice(0, cutIndex).trim()}…`;
+}
+
+function createSeoTitle(projectTitle: string): string {
+    const brandedTitle = `${projectTitle} – Natnael Alemseged`;
+    return truncateAtWord(brandedTitle.length <= 60 ? brandedTitle : projectTitle, 60);
+}
 
 async function getPublicProjectSlugs(): Promise<string[]> {
     try {
@@ -152,21 +167,25 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         };
     }
 
-    const imageUrl = project.images?.[0]?.url;
+    const imageUrl = project.images?.[0]?.url
+        ? getOptimizedProjectImageUrl(project.images[0].url)
+        : '/og-image.jpg';
     const absoluteImageUrl = imageUrl ? (imageUrl.startsWith('http') ? imageUrl : `${BASE_URL}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`) : '';
-    const description = project.summary || '';
+    const description = truncateAtWord(project.summary || '', 155);
+    const canonicalUrl = `/projects/${slug}`;
 
     return {
-        title: `${project.title} – Natnael Alemseged`,
+        title: createSeoTitle(project.title),
         description,
         keywords: [...(project.techStack || []), ...(project.tags || [])],
         authors: [{ name: 'Natnael Alemseged' }],
         alternates: {
-            canonical: `/projects/${slug}`,
+            canonical: canonicalUrl,
         },
         openGraph: {
             title: project.title,
             description,
+            url: canonicalUrl,
             type: 'article',
             images: absoluteImageUrl ? [{ url: absoluteImageUrl, alt: project.images?.[0]?.alt || project.title }] : [],
         },
@@ -193,20 +212,29 @@ export default async function ProjectDetailPage({
 
     const relatedProjects = await getRelatedProjects(slug, project.schemaType, project.tags);
 
-    // Schema.org JSON-LD for SEO
+    const canonicalUrl = `${BASE_URL}/projects/${slug}`;
+    const optimizedImages = project.images?.map((image) => ({
+        ...image,
+        url: getOptimizedProjectImageUrl(image.url),
+    }));
+
+    // Project pages are case studies, so CreativeWork is more accurate than
+    // product markup that would require a real commercial offer or user rating.
     const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': project.schemaType || 'SoftwareApplication',
+        '@type': 'CreativeWork',
+        '@id': `${canonicalUrl}#case-study`,
+        url: canonicalUrl,
         name: project.title,
         description: project.summary,
-        applicationCategory: project.schemaType === 'MobileApplication' ? 'UtilitiesApplication' : 'DeveloperApplication',
-        operatingSystem: project.schemaType === 'MobileApplication' ? 'iOS, Android' : 'Web',
         author: {
             '@type': 'Person',
+            '@id': `${BASE_URL}/#person`,
             name: 'Natnael Alemseged',
         },
         dateCreated: project.createdAt,
-        image: project.images?.map(img => img.url.startsWith('http') ? img.url : `${BASE_URL}${img.url.startsWith('/') ? '' : '/'}${img.url}`),
+        image: optimizedImages?.map(img => img.url.startsWith('http') ? img.url : `${BASE_URL}${img.url.startsWith('/') ? '' : '/'}${img.url}`),
+        keywords: [...(project.techStack || []), ...(project.tags || [])].join(', '),
     };
 
     const hasLinkType = (type: string) => Boolean(project.links?.some((link) => link.type === type));
@@ -240,7 +268,7 @@ export default async function ProjectDetailPage({
                         <p className="text-lg text-gray-200 leading-relaxed">{project.summary}</p>
                         {project.keyTakeaway && (
                             <blockquote className="mt-6 border-l-4 border-[#00ff99] pl-4 italic text-emerald-300 bg-gray-900/40 py-3 rounded-r-lg">
-                                "{project.keyTakeaway}"
+                                “{project.keyTakeaway}”
                             </blockquote>
                         )}
                     </AnimatedSection>
@@ -248,7 +276,7 @@ export default async function ProjectDetailPage({
                     {/* Images Gallery */}
                     {project.images && project.images.length > 0 && (
                         <AnimatedSection className="mb-12">
-                            <ProjectImageCarousel images={project.images} device={deviceFrame} />
+                            <ProjectImageCarousel images={optimizedImages || []} device={deviceFrame} />
                         </AnimatedSection>
                     )}
 
@@ -405,7 +433,7 @@ export default async function ProjectDetailPage({
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                {relatedProjects.map((p: any) => (
+                                {relatedProjects.map((p: Pick<ProjectData, 'slug' | 'title' | 'summary'>) => (
                                     <Link
                                         key={p.slug}
                                         href={`/projects/${p.slug}`}

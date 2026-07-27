@@ -15,9 +15,9 @@ import ChatWidgetWrapper from "@/components/ChatWidgetWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Natnael Alemseged – Senior AI Agent Engineer & Forward Deployed Engineer",
+    title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
     description:
-        "Senior AI Agent Engineer & Forward Deployed Engineer building deterministic multi-agent architectures, enterprise evaluation frameworks (Evals), and high-performance cross-platform systems.",
+        "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluation frameworks, and high-performance software.",
     keywords: [
         "AI Agent Engineer",
         "Forward Deployed Engineer",
@@ -42,16 +42,18 @@ export const metadata: Metadata = {
     ],
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ? (process.env.NEXT_PUBLIC_SITE_URL.startsWith('http') ? process.env.NEXT_PUBLIC_SITE_URL : `https://${process.env.NEXT_PUBLIC_SITE_URL}`) : "https://natnaelalemseged.com"),
     openGraph: {
-        title: "Natnael Alemseged – Senior AI Agent Engineer & Forward Deployed Engineer",
-        description: "Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent state machines, system-level evals, and high-performance cross-platform systems.",
+        title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
+        description: "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluations, and high-performance software.",
         url: "https://natnaelalemseged.com/",
         siteName: "Natnael Alemseged",
         type: "website",
+        images: [{ url: "/og-image.jpg", alt: "Natnael Alemseged" }],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Natnael Alemseged – Senior AI Agent Engineer & Forward Deployed Engineer",
-        description: "Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent state machines, system-level evals, and high-performance cross-platform systems.",
+        title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
+        description: "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluations, and high-performance software.",
+        images: ["/og-image.jpg"],
     },
     robots: {
         index: true,

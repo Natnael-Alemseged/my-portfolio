@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
         hostname: 'natnaelalemseged.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'play-lh.googleusercontent.com',
+        pathname: '/**',
+      },
     ],
   },
 };

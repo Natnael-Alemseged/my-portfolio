@@ -5,9 +5,16 @@ import Project from "@/lib/db/project.model";
 
 export const metadata: Metadata = {
     title: "All Projects | Natnael Alemseged",
-    description: "Full archive of my projects across AI, mobile, and web development.",
+    description: "Explore Natnael Alemseged's engineering case studies across AI agents, full-stack platforms, mobile apps, evaluation systems, and open-source tools.",
     alternates: {
         canonical: "/projects",
+    },
+    openGraph: {
+        title: "Engineering Projects | Natnael Alemseged",
+        description: "Explore engineering case studies across AI agents, full-stack platforms, mobile apps, evaluation systems, and open-source tools.",
+        url: "/projects",
+        type: "website",
+        images: [{ url: "/og-image.jpg", alt: "Natnael Alemseged engineering portfolio" }],
     },
 };
 
@@ -47,7 +54,6 @@ export default async function ProjectsPage() {
                 subtitle="A comprehensive collection of my engineering work, experiments, and open-source contributions."
                 badge="All Work"
                 layout="grid"
-                referrerSource="archive"
                 centerHeader={true}
             />
         </main>

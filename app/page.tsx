@@ -16,21 +16,23 @@ import Project from "@/lib/db/project.model";
 const HOMEPAGE_PROJECT_LIMIT = 6;
 
 export const generateMetadata = (): Metadata => ({
-    title: "Natnael Alemseged – Senior AI Agent Engineer | Forward Deployed Engineer",
+    title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
     description:
-        "Senior AI Agent Engineer & Forward Deployed Engineer building deterministic multi-agent architectures, enterprise evaluation frameworks (Evals), and high-performance cross-platform systems.",
+        "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluation frameworks, and high-performance software.",
     authors: [{ name: "Natnael Alemseged" }],
     openGraph: {
-        title: "Natnael Alemseged – Senior AI Agent Engineer | Forward Deployed Engineer",
-        description: "Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent state machines, system-level evals, and high-performance cross-platform systems.",
+        title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
+        description: "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluations, and high-performance software.",
         url: "https://natnaelalemseged.com/",
         siteName: "Natnael Alemseged",
         type: "website",
+        images: [{ url: "/og-image.jpg", alt: "Natnael Alemseged" }],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Natnael Alemseged – Senior AI Agent Engineer | Forward Deployed Engineer",
-        description: "Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent state machines, system-level evals, and high-performance cross-platform systems.",
+        title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
+        description: "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluations, and high-performance software.",
+        images: ["/og-image.jpg"],
     },
     alternates: {
         canonical: "/",
