@@ -2,6 +2,7 @@
 """Render the portfolio resume JSON into an ATS-friendly PDF."""
 
 import argparse
+import copy
 import json
 import shutil
 from html import escape
@@ -27,6 +28,7 @@ from reportlab.platypus import (
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATA = ROOT / "data" / "resume.json"
+DEFAULT_VARIANTS_DATA = ROOT / "data" / "resume-variants.json"
 DEFAULT_OUTPUT = ROOT / "output" / "pdf" / "natnael-alemseged-resume.pdf"
 PUBLIC_OUTPUT = ROOT / "public" / "resume.pdf"
 
@@ -260,14 +262,41 @@ def validate_data(data):
     )
 
 
-def load_data(path):
+def load_json(path):
     try:
         with path.open(encoding="utf-8") as stream:
-            data = json.load(stream)
+            return json.load(stream)
     except json.JSONDecodeError as error:
         raise ValueError(
             f"{path}:{error.lineno}:{error.colno}: {error.msg}"
         ) from error
+
+
+def merge_data(base, override):
+    """Recursively merge objects while replacing arrays and scalar values."""
+    result = copy.deepcopy(base)
+    for key, value in override.items():
+        if isinstance(value, dict) and isinstance(result.get(key), dict):
+            result[key] = merge_data(result[key], value)
+        else:
+            result[key] = copy.deepcopy(value)
+    return result
+
+
+def load_data(path, variants_path=None, variant=None):
+    data = load_json(path)
+    if variant:
+        variants = load_json(variants_path)
+        if not isinstance(variants, dict):
+            raise ValueError("resume variants must be a JSON object")
+        if variant not in variants:
+            available = ", ".join(sorted(variants)) or "none"
+            raise ValueError(
+                f"unknown resume variant '{variant}'; available: {available}"
+            )
+        if not isinstance(variants[variant], dict):
+            raise ValueError(f"resume variant '{variant}' must be an object")
+        data = merge_data(data, variants[variant])
     validate_data(data)
     return data
 
@@ -577,9 +606,25 @@ def parse_args():
         help=f"generated PDF path (default: {DEFAULT_OUTPUT})",
     )
     parser.add_argument(
+        "--variant",
+        help="variant key from data/resume-variants.json",
+    )
+    parser.add_argument(
+        "--variants-data",
+        type=Path,
+        default=DEFAULT_VARIANTS_DATA,
+        help=f"resume variant overlays (default: {DEFAULT_VARIANTS_DATA})",
+    )
+    parser.add_argument(
         "--publish",
         action="store_true",
         help="also replace public/resume.pdf after successful generation",
+    )
+    parser.add_argument(
+        "--public-output",
+        type=Path,
+        default=PUBLIC_OUTPUT,
+        help=f"published PDF path (default: {PUBLIC_OUTPUT})",
     )
     return parser.parse_args()
 
@@ -588,13 +633,15 @@ def main():
     args = parse_args()
     data_path = args.data.resolve()
     output_path = args.output.resolve()
-    data = load_data(data_path)
+    variants_path = args.variants_data.resolve()
+    data = load_data(data_path, variants_path, args.variant)
     build(data, output_path)
     print(f"Generated {output_path}")
     if args.publish:
-        PUBLIC_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(output_path, PUBLIC_OUTPUT)
-        print(f"Published {PUBLIC_OUTPUT}")
+        public_output = args.public_output.resolve()
+        public_output.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(output_path, public_output)
+        print(f"Published {public_output}")
 
 
 if __name__ == "__main__":

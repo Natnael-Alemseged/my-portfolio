@@ -1,0 +1,223 @@
+{
+  "mobile": {
+    "metadata": {
+      "title": "Natnael Alemseged Astaw - Mobile App Engineer Resume",
+      "subject": "Senior Mobile App Engineer resume focused on Flutter, React Native, and Expo"
+    },
+    "person": {
+      "headline": "Senior Mobile App Engineer | Flutter, React Native & Expo"
+    },
+    "profile": "Mobile app engineer with 4+ years of experience shipping production iOS and Android products. Led the delivery of 10+ cross-platform applications using Flutter, React Native, Expo, and Ionic, with hands-on ownership of architecture, state management, real-time features, push notifications, deep linking, OTA updates, analytics, and backend integration. Combines polished mobile UX with reliable APIs, cloud delivery, and measurable performance improvements.",
+    "experience": {
+      "primary": [
+        {
+          "title": "Senior Mobile Developer",
+          "company": "Qemer Software Technology PLC",
+          "dates": "Aug 2024 - Sep 2025",
+          "location": "Addis Ababa, Ethiopia (On-site)",
+          "bullets": [
+            "Led development and launch of 10+ Flutter and Ionic applications across consumer and business use cases, accelerating release cycles by 40%.",
+            "Established reusable app architecture and state-management patterns using BLoC, GetX, and layered feature modules.",
+            "Improved startup, navigation, and data-loading performance, cutting application load times by up to 50%.",
+            "Mentored junior mobile engineers and standardized delivery practices, reducing onboarding time by 30%."
+          ]
+        },
+        {
+          "title": "Senior Software Engineer",
+          "company": "Hire Armada",
+          "dates": "Jul 2025 - Present",
+          "location": "United States (Remote)",
+          "bullets": [
+            "Build Flutter product experiences backed by Node.js, FastAPI, Prisma, Firebase, and real-time services.",
+            "Delivered a social discovery platform supporting 10K+ daily active users with real-time matching, messaging, and 99.9% backend uptime.",
+            "Shipped a personalized affirmation app with Gemini chat, home-screen widgets, notifications, and adaptive feeds, increasing retention by 35%.",
+            "Partner with product and backend teams to take mobile features from ambiguous requirements through release, telemetry, and iteration."
+          ]
+        },
+        {
+          "title": "Senior Full-Stack Developer",
+          "company": "Startup Agile",
+          "dates": "Jan 2025 - May 2026",
+          "location": "United States (Remote)",
+          "bullets": [
+            "Led React Native and Expo delivery across mobile products while completing milestones 15% ahead of schedule.",
+            "Implemented OTA updates, deep linking, Firebase push notifications, Google Maps, AI assistants, and product analytics.",
+            "Reduced mobile load time by 35% through bundle optimization, lazy loading, and disciplined client-side data fetching.",
+            "Standardized TypeScript, state management, and Detox testing workflows, contributing to a 65% reduction in production defects."
+          ]
+        },
+        {
+          "title": "AI Engineer",
+          "company": "DataCore Software",
+          "dates": "Jan 2025 - Aug 2025",
+          "location": "United States (Remote, Contract)",
+          "bullets": [
+            "Built low-latency FastAPI services for detection, transcription, summarization, and translation that could be consumed by web and mobile clients.",
+            "Deployed containerized workloads to AWS EKS with sub-200 ms inference and 99.9% uptime at peak load."
+          ]
+        }
+      ]
+    },
+    "independentDelivery": [
+      {
+        "name": "Flutter Inventory Tracker",
+        "description": "Shipped and supported a cross-platform inventory application in 2025; received a verified 5.0 Upwork rating."
+      },
+      {
+        "name": "Social Music Party Game",
+        "description": "Delivered a complete consumer product engagement from Jan-Jun 2026; received a verified 5.0 Upwork rating."
+      },
+      {
+        "name": "Cross-Platform App Portfolio",
+        "description": "Delivered consumer products spanning mobility, music, affirmations, commerce, communication, and productivity."
+      }
+    ],
+    "skills": [
+      {
+        "group": "Mobile Engineering",
+        "items": "Flutter, Dart, React Native, Expo, Ionic, cross-platform architecture, responsive and adaptive UI"
+      },
+      {
+        "group": "Architecture & State",
+        "items": "BLoC, GetX, Stacked Architecture, Redux Toolkit, TanStack Query, TypeScript, modular feature design"
+      },
+      {
+        "group": "Platform Integrations",
+        "items": "Firebase, push notifications, deep linking, OTA updates, Google Maps, home-screen widgets, analytics, real-time messaging"
+      },
+      {
+        "group": "Backend & Data",
+        "items": "FastAPI, Node.js, Express.js, PostgreSQL, MongoDB, Supabase, Firestore, Prisma, REST APIs, GraphQL, Socket.io"
+      },
+      {
+        "group": "Quality & Delivery",
+        "items": "Detox, Playwright, GitHub Actions, CodeMagic, Docker, AWS, release automation, performance profiling"
+      }
+    ],
+    "publications": [],
+    "certifications": [
+      {
+        "name": "AWS Certified Solutions Architect - Associate",
+        "issuer": "AWS",
+        "dates": "Feb 2024 - Feb 2027",
+        "url": "https://www.credly.com/badges/c7124dca-2df4-4c93-abc9-b1c0027d99b4/linked_in_profile"
+      },
+      {
+        "name": "AWS Certified Cloud Practitioner",
+        "issuer": "AWS",
+        "dates": "Oct 2023 - Feb 2027"
+      },
+      {
+        "name": "AI Agent Engineering, AI Evaluation & Forward-Deployed Engineering",
+        "issuer": "10 Academy",
+        "dates": "Issued May 2026"
+      },
+      {
+        "name": "Founders Academy",
+        "issuer": "ALX Africa",
+        "dates": "Issued Jul 2024",
+        "url": "https://intranet.alxswe.com/certificates/eXC3Nyc9TR"
+      },
+      {
+        "name": "CCNA: Introduction to Networks",
+        "issuer": "Cisco",
+        "dates": "Issued Nov 2021"
+      }
+    ]
+  },
+  "ai-fde": {
+    "metadata": {
+      "title": "Natnael Alemseged Astaw - AI and Forward-Deployed Engineer Resume",
+      "subject": "AI Agent, LLM Evaluation, and Forward-Deployed Engineer resume"
+    },
+    "person": {
+      "headline": "AI Agent & Forward-Deployed Engineer | LLM Evaluation"
+    },
+    "profile": "AI and forward-deployed engineer with 4+ years of software delivery experience building production agentic systems, domain evaluations, fine-tuning workflows, RAG pipelines, and LLM-powered APIs. Combines Python and TypeScript engineering with customer-facing discovery, rapid prototyping, deployment, observability, and measurable iteration. Experienced with LangGraph, LLM-as-a-judge, preference optimization, FastAPI, AWS, and full-stack product integration.",
+    "experience": {
+      "primary": [
+        {
+          "title": "Senior Software Engineer",
+          "company": "Hire Armada",
+          "dates": "Jul 2025 - Present",
+          "location": "United States (Remote)",
+          "bullets": [
+            "Engineer production agentic backends and full-stack workflows using FastAPI, Node.js, LangGraph, MCP, Composio, Prisma, and vector memory.",
+            "Delivered an agentic collaboration workspace with real-time events, email automation, semantic search, and tagged agents, improving team productivity by 20%.",
+            "Built a social discovery platform backend supporting 10K+ daily active users, real-time matching and messaging, and 99.9% uptime.",
+            "Shipped Gemini-powered chat and personalization features that increased retention by 35%, translating ambiguous product goals into observable production behavior."
+          ]
+        },
+        {
+          "title": "AI Engineer",
+          "company": "DataCore Software",
+          "dates": "Jan 2025 - Aug 2025",
+          "location": "United States (Remote, Contract)",
+          "bullets": [
+            "Built FastAPI services for real-time detection, recognition, transcription, summarization, and translation using self-hosted LLMs.",
+            "Deployed containerized inference workloads to AWS EKS with sub-200 ms inference and 99.9% uptime at peak load.",
+            "Fine-tuned open models and optimized GPU inference with TensorRT and ECR images, reducing cost by 12%.",
+            "Automated infrastructure and delivery with Terraform and GitHub Actions, including monitoring and rollback paths."
+          ]
+        },
+        {
+          "title": "Senior Full-Stack Developer",
+          "company": "Startup Agile",
+          "dates": "Jan 2025 - May 2026",
+          "location": "United States (Remote)",
+          "bullets": [
+            "Converted product requirements into deployed Next.js, React Native, Expo, and API capabilities while completing milestones 15% ahead of schedule.",
+            "Integrated AI assistants, analytics, notifications, maps, and secure data workflows across web and mobile products.",
+            "Standardized TypeScript, tRPC, Prisma, Playwright, and Detox workflows, reducing production defects by 65%."
+          ]
+        },
+        {
+          "title": "Senior Mobile Developer",
+          "company": "Qemer Software Technology PLC",
+          "dates": "Aug 2024 - Sep 2025",
+          "location": "Addis Ababa, Ethiopia (On-site)",
+          "bullets": [
+            "Led delivery of 10+ production applications, accelerating release cycles by 40% and strengthening direct product ownership.",
+            "Mentored engineers and established reusable architecture patterns, reducing onboarding time by 30%."
+          ]
+        }
+      ]
+    },
+    "independentDelivery": [
+      {
+        "name": "Sales-Domain LLM Evaluation Bench",
+        "description": "Built a 240-task benchmark with deterministic checks, preference data, and a trained judge that achieved a +76.6pp held-out lift."
+      },
+      {
+        "name": "AI Chatbot Engineering",
+        "description": "Completed a focused production chatbot engagement in Jan 2026; received a verified 5.0 Upwork rating."
+      },
+      {
+        "name": "Agentic Codebase Evaluation",
+        "description": "Designed a LangGraph evidence workflow with independent judges, deterministic veto rules, and hallucination auditing."
+      }
+    ],
+    "skills": [
+      {
+        "group": "Agents & Evaluation",
+        "items": "LangGraph, agent orchestration, LLM-as-a-judge, domain benchmarks, deterministic evaluators, preference data, statistical testing"
+      },
+      {
+        "group": "Fine-tuning & Inference",
+        "items": "LoRA, DPO/SimPO, self-hosted LLMs, structured generation, sampling analysis, TensorRT, GPU inference optimization"
+      },
+      {
+        "group": "Retrieval & Tool Use",
+        "items": "RAG, MCP, Composio, vector databases, semantic search, memory systems, prompt engineering"
+      },
+      {
+        "group": "Engineering",
+        "items": "Python, FastAPI, TypeScript, Node.js, Next.js, PostgreSQL, Redis, Supabase, REST APIs, Socket.io"
+      },
+      {
+        "group": "Experimentation & Delivery",
+        "items": "Jupyter Notebook, Google Colab, AWS, Docker, Kubernetes/EKS, Terraform, GitHub Actions, Prometheus, Grafana"
+      }
+    ]
+  }
+}
