@@ -35,7 +35,6 @@ PUBLIC_OUTPUT = ROOT / "public" / "resume.pdf"
 INK = colors.HexColor("#17211F")
 MUTED = colors.HexColor("#52605D")
 ACCENT = colors.HexColor("#176B62")
-PALE = colors.HexColor("#EAF4F1")
 RULE = colors.HexColor("#C9D6D2")
 
 
@@ -138,13 +137,14 @@ def create_styles():
             spaceAfter=2.5,
         ),
         ParagraphStyle(
-            name="Proof",
+            name="ProofInline",
             parent=styles["Normal"],
-            fontName="Helvetica-Bold",
-            fontSize=8.6,
-            leading=11,
-            textColor=ACCENT,
-            alignment=TA_CENTER,
+            fontName="Helvetica",
+            fontSize=8.1,
+            leading=10.5,
+            textColor=MUTED,
+            spaceBefore=2,
+            spaceAfter=1,
         ),
     ]
     for style in definitions:
@@ -460,31 +460,6 @@ def build(data, output):
             Spacer(1, 5),
         ]
     )
-    proof = data["proof"]
-    proof_html = link(escape(proof["label"]), proof["url"])
-    if proof["facts"]:
-        proof_html += " &nbsp;&nbsp;|&nbsp;&nbsp; " + (
-            " &nbsp;&nbsp;|&nbsp;&nbsp; ".join(
-                escape(item) for item in proof["facts"]
-            )
-        )
-    story.append(
-        Table(
-            [[Paragraph(proof_html, STYLES["Proof"])]],
-            colWidths=[178 * mm],
-            style=TableStyle(
-                [
-                    ("BACKGROUND", (0, 0), (-1, -1), PALE),
-                    ("BOX", (0, 0), (-1, -1), 0.5, RULE),
-                    ("TOPPADDING", (0, 0), (-1, -1), 5),
-                    ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
-                    ("LEFTPADDING", (0, 0), (-1, -1), 5),
-                    ("RIGHTPADDING", (0, 0), (-1, -1), 5),
-                ]
-            ),
-        )
-    )
-
     story.extend(section("Experience"))
     story.extend(role(item) for item in data["experience"]["primary"])
 
@@ -493,11 +468,26 @@ def build(data, output):
     story.extend(role(item) for item in data["experience"]["earlier"])
 
     if data["independentDelivery"]:
-        story.extend(section("Selected Independent Delivery"))
-        story.extend(
+        independent_delivery = section("Selected Independent Delivery")
+        independent_delivery.extend(
             label_value(item["name"], item["description"])
             for item in data["independentDelivery"]
         )
+        proof = data["proof"]
+        proof_html = link(
+            f"<b>{escape(proof['label'])}</b>",
+            proof["url"],
+        )
+        if proof["facts"]:
+            proof_html += " &nbsp;&nbsp;|&nbsp;&nbsp; " + (
+                " &nbsp;&nbsp;|&nbsp;&nbsp; ".join(
+                    escape(item) for item in proof["facts"]
+                )
+            )
+        independent_delivery.append(
+            Paragraph(proof_html, STYLES["ProofInline"])
+        )
+        story.append(KeepTogether(independent_delivery))
 
     story.extend(section("Technical Skills"))
     story.extend(
