@@ -1,171 +1,234 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { 
-    BookOpen, 
-    ArrowUpRight, 
-    ExternalLink, 
-    Binary, 
+import {
+    ArrowUpRight,
+    Binary,
+    BookOpen,
+    Braces,
+    Gauge,
     Sigma,
-    Terminal,
-    Cpu,
-    Workflow
 } from "lucide-react";
 
+const featuredArticles = [
+    {
+        title: "When Generic Benchmarks Fail: Building a Sales-Domain Evaluation Bench from Scratch",
+        date: "May 2, 2026",
+        url: "https://dev.to/natnael_alemseged/when-generic-benchmarks-fail-building-a-sales-domain-evaluation-bench-from-scratch-1kjf",
+        description:
+            "A production case study in turning domain failures into a measurable benchmark: contamination-aware task generation, deterministic checks, human grading, preference data, and a trained judge.",
+        tags: ["Benchmark Design", "LLM-as-a-Judge", "Preference Data"],
+        evidence: [
+            ["240", "evaluation tasks"],
+            ["4", "task-generation sources"],
+            ["+76.6pp", "held-out judge lift"],
+        ],
+        icon: Gauge,
+        accent: "text-[#00ff99]",
+    },
+    {
+        title: "Why Pairing Your Bootstrap Is Necessary, And When It Stops Helping",
+        date: "May 8, 2026",
+        url: "https://dev.to/natnael_alemseged/why-pairing-your-bootstrap-is-necessary-and-when-it-stops-helping-2iim",
+        description:
+            "A first-principles explanation of paired versus unpaired bootstrap designs for LLM evaluation, backed by Python simulation and an explicit variance analysis.",
+        tags: ["Statistical Evaluation", "Bootstrap", "Python"],
+        evidence: [
+            ["8.4%", "paired SE reduction"],
+            ["r = 0.167", "observed covariance"],
+            ["2", "sampling designs compared"],
+        ],
+        icon: Sigma,
+        accent: "text-cyan-300",
+    },
+];
+
+const researchNotes = [
+    {
+        title: "DPO vs SimPO: What Your Preference Trainer Is Actually Optimizing",
+        date: "May 7, 2026",
+        url: "https://dev.to/natnael_alemseged/dpo-vs-simpo-what-your-preference-trainer-is-actually-optimizing-42b4",
+        description:
+            "Objective functions, length bias, reference-free optimization, gradient behavior, and VRAM tradeoffs for preference tuning.",
+        tags: ["Fine-tuning", "DPO", "SimPO"],
+        icon: Binary,
+    },
+    {
+        title: "\"Return JSON only\" Doesn't Force JSON. Here's What Actually Forces It.",
+        date: "May 6, 2026",
+        url: "https://dev.to/natnael_alemseged/return-json-only-doesnt-force-json-heres-what-actually-forces-it-9pn",
+        description:
+            "Why prompt instructions are weaker than constrained decoding, schema enforcement, and token-level generation controls.",
+        tags: ["Structured Output", "Logits", "Constrained Decoding"],
+        icon: Braces,
+    },
+    {
+        title: "Why Merged LoRA Barely Changes Inference Time",
+        date: "May 5, 2026",
+        url: "https://dev.to/natnael_alemseged/why-merged-lora-barely-changes-inference-time-2mhj",
+        description:
+            "A systems-level explanation of adapter merging, parameter updates, runtime graph shape, and where LoRA inference overhead actually appears.",
+        tags: ["LoRA", "Inference", "Fine-tuning"],
+        icon: Gauge,
+    },
+];
+
 export default function Publications() {
-    const articles = [
-        {
-            title: "Why Pairing Your Bootstrap Is Necessary — And When It Stops Helping",
-            date: "May 8, 2026",
-            url: "https://dev.to/natnael_alemseged/why-pairing-your-bootstrap-is-necessary-and-when-it-stops-helping-2iim",
-            desc: "A mathematical first-principles exploration of paired vs. unpaired bootstrap sampling distributions for LLM evaluation. Maps why pairing is correct by experimental design in within-subject setups, explains the variance-reduction mechanism, and details empirical simulation results in Python.",
-            tags: ["LLM Evaluation", "Statistics", "Bootstrap Simulation", "ML Evals"],
-            category: "Statistical Evaluation",
-            badge: "Latest Release",
-            mathHeader: "VARIANCE_REDUCTION_MATH",
-            mathContent: `// 1. Paired Standard Error (Within-Subject Design)
-SE_paired = sqrt( (Var(A) + Var(B) - 2 · Cov(A, B)) / n )
-
-// 2. Unpaired Standard Error (Independent Samples)
-SE_unpaired = sqrt( (Var(A) + Var(B)) / n )
-
-// Covariance r(A, B) = 0.167 reduces paired SE by 8.4%`,
-            mathNote: "Pairing is correct by experimental design; however, near-zero covariance limits its statistical efficiency advantage.",
-            icon: <Sigma className="text-[#00ff99] h-3.5 w-3.5" />
-        },
-        {
-            title: "DPO vs SimPO: What Your Preference Trainer Is Actually Optimizing",
-            date: "May 7, 2026",
-            url: "https://dev.to/natnael_alemseged/dpo-vs-simpo-what-your-preference-trainer-is-actually-optimizing-42b4",
-            desc: "Direct Preference Optimization (DPO) bypassed complex reward models, but SimPO introduces a length-normalized, reference-free objective that mitigates length bias. This deep dive maps their objective functions, gradient deviations, and VRAM footprints under LoRA configurations.",
-            tags: ["Preference Tuning", "RLHF Bounds", "Loss Functions", "VRAM Optimization"],
-            category: "Preference Alignment",
-            badge: "Featured Publication",
-            mathHeader: "OBJECTIVE_LOSS_FUNCTIONS",
-            mathContent: `// 1. DPO Reference-Relative Loss Objective
-L_DPO = -E[log σ ( β log(π_θ(y_w|x)/π_ref(y_w|x)) 
-               - β log(π_θ(y_l|x)/π_ref(y_l|x)) )]
-
-// 2. SimPO Reference-Free Length-Normalized Loss
-L_SimPO = -E[log σ ( β/|y_w| log π_θ(y_w|x) 
-                 - β/|y_l| log π_θ(y_l|x) - γ )]`,
-            mathNote: "SimPO eliminates the reference model requirement, saving 50%+ VRAM during preference alignment runs.",
-            icon: <Binary className="text-teal-400 h-3.5 w-3.5" />
-        }
-    ];
-
     return (
-        <section id="publications" className="relative py-20 px-6 md:px-12 lg:px-16 bg-black overflow-hidden">
-            {/* Elegant boundary gradients */}
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
+        <section
+            id="publications"
+            aria-labelledby="publications-heading"
+            className="relative overflow-hidden border-y border-white/[0.07] bg-[#050706] px-6 py-24 md:px-12 lg:px-16"
+        >
+            <div className="pointer-events-none absolute right-[-12rem] top-[-10rem] h-[28rem] w-[28rem] rounded-full bg-[#00ff99]/[0.035] blur-[120px]" />
 
-            {/* Glowing meshes */}
-            <div className="absolute top-[30%] right-[-10%] w-[550px] h-[550px] rounded-full bg-blue-500/[0.01] blur-[140px] pointer-events-none" />
-            <div className="absolute bottom-[20%] left-[-10%] w-[450px] h-[450px] rounded-full bg-[#00ff99]/[0.008] blur-[120px] pointer-events-none" />
-
-            <div className="max-w-7xl mx-auto space-y-12">
-                
-                {/* Section Header */}
-                <div className="text-center mb-16 space-y-4">
-                    <span className="inline-flex items-center gap-2 text-[10px] font-mono text-[#00ff99] uppercase tracking-[0.4em]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#00ff99] animate-pulse" />
-                        systems_alignment_research
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight tracking-tight">
-                        Thought Leadership & Publications
-                    </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base font-sans leading-relaxed">
-                        Deep-dives analyzing core statistical boundaries, machine learning objectives, and mathematical formulations in production AI systems.
-                    </p>
-                </div>
-
-                {/* Publications Stack */}
-                <div className="space-y-8">
-                    {articles.map((article, idx) => (
-                        <motion.div
-                            key={idx}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.1 }}
-                            transition={{ duration: 0.6, delay: idx * 0.15 }}
-                            className="grid lg:grid-cols-12 gap-8 items-center bg-gradient-to-br from-[#060606] via-[#090909] to-[#040404] border border-white/[0.06] hover:border-[#00ff99]/30 rounded-3xl p-6 md:p-8 lg:p-10 shadow-[0_25px_60px_rgba(0,0,0,0.85)] relative group transition-all duration-300"
+            <div className="relative mx-auto max-w-7xl">
+                <header className="mb-12 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
+                    <div className="max-w-3xl">
+                        <div className="mb-5 flex items-center gap-3 text-[#00ff99]">
+                            <BookOpen size={18} aria-hidden="true" />
+                            <span className="font-mono text-xs">5 published research notes</span>
+                        </div>
+                        <h2
+                            id="publications-heading"
+                            className="text-balance text-3xl font-extrabold tracking-[-0.03em] text-white md:text-5xl"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00ff99]/[0.005] to-transparent pointer-events-none rounded-3xl" />
-                            
-                            {/* Left Column: Article Details */}
-                            <div className="lg:col-span-7 space-y-5">
-                                <div className="flex items-center gap-3">
-                                    <span className="bg-[#00ff99]/[0.06] text-[#00ff99] border border-[#00ff99]/20 font-mono text-[9px] px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1.5">
-                                        {article.icon}
-                                        {article.badge}
-                                    </span>
-                                    <span className="text-gray-500 font-mono text-[9px]">{article.date} • {article.category}</span>
+                            Technical Writing &amp; AI Research
+                        </h2>
+                    </div>
+                    <p className="max-w-[65ch] text-pretty text-sm leading-7 text-gray-300">
+                        Reproducible explanations of the evaluation, alignment, and
+                        inference decisions behind production LLM systems—not a glossary
+                        of AI terminology.
+                    </p>
+                </header>
+
+                <div className="grid gap-5 lg:grid-cols-2">
+                    {featuredArticles.map((article) => {
+                        const Icon = article.icon;
+
+                        return (
+                            <article
+                                key={article.url}
+                                className="group flex min-h-full flex-col border border-white/[0.09] bg-black/60 p-6 transition-colors duration-300 hover:border-[#00ff99]/35 md:p-8"
+                            >
+                                <div className="mb-8 flex items-start justify-between gap-5">
+                                    <div
+                                        className={`flex h-10 w-10 items-center justify-center border border-current/20 ${article.accent}`}
+                                    >
+                                        <Icon size={18} aria-hidden="true" />
+                                    </div>
+                                    <time className="font-mono text-xs text-gray-400">
+                                        {article.date}
+                                    </time>
                                 </div>
 
-                                <div className="space-y-3">
-                                    <h3 className="text-xl md:text-2xl font-extrabold text-white group-hover:text-[#00ff99] transition-colors leading-snug">
-                                        {article.title}
-                                    </h3>
-                                    <p className="text-gray-400 text-[13px] leading-relaxed font-sans font-medium">
-                                        {article.desc}
-                                    </p>
-                                </div>
+                                <h3 className="max-w-[24ch] text-balance text-xl font-bold leading-snug tracking-[-0.02em] text-white md:text-2xl">
+                                    {article.title}
+                                </h3>
+                                <p className="mt-4 max-w-[68ch] text-pretty text-sm leading-7 text-gray-300">
+                                    {article.description}
+                                </p>
 
-                                <div className="flex flex-wrap gap-2 font-mono text-[9px]">
-                                    {article.tags.map((tag) => (
-                                        <span key={tag} className="px-2.5 py-0.5 bg-white/[0.02] border border-white/[0.06] rounded-md text-gray-400">
-                                            {tag}
-                                        </span>
+                                <dl className="my-7 grid grid-cols-3 border-y border-white/[0.08] py-5">
+                                    {article.evidence.map(([value, label]) => (
+                                        <div key={label} className="pr-3">
+                                            <dt className="font-mono text-sm font-bold text-[#00ff99]">
+                                                {value}
+                                            </dt>
+                                            <dd className="mt-1 text-[11px] leading-4 text-gray-400">
+                                                {label}
+                                            </dd>
+                                        </div>
                                     ))}
-                                </div>
+                                </dl>
 
-                                <div className="pt-1">
+                                <div className="mt-auto flex flex-wrap items-center justify-between gap-5">
+                                    <div className="flex flex-wrap gap-2">
+                                        {article.tags.map((tag) => (
+                                            <span
+                                                key={tag}
+                                                className="border border-white/[0.08] px-2.5 py-1 font-mono text-[10px] text-gray-300"
+                                            >
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
                                     <a
                                         href={article.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-black hover:bg-[#00ff99] rounded-xl font-bold font-mono text-[10px] transition-all duration-200 uppercase"
+                                        className="inline-flex items-center gap-2 text-sm font-semibold text-white underline decoration-[#00ff99]/50 underline-offset-4 transition-colors hover:text-[#00ff99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00ff99]"
                                     >
-                                        Read Full Article
-                                        <ExternalLink size={11} className="stroke-[2.5px]" />
+                                        Read analysis
+                                        <ArrowUpRight size={15} aria-hidden="true" />
                                     </a>
                                 </div>
-                            </div>
-
-                            {/* Right Column: Mathematical Visualizations */}
-                            <div className="lg:col-span-5 bg-[#030303] border border-white/[0.06] rounded-2xl p-5 font-mono text-[10px] leading-normal text-gray-300 relative overflow-hidden shadow-inner">
-                                <div className="absolute top-2 right-3 flex items-center gap-1.5 text-[8px] text-gray-600">
-                                    <Binary size={10} className="text-[#00ff99]/50" />
-                                    <span>{article.mathHeader}</span>
-                                </div>
-                                
-                                <div className="space-y-4">
-                                    <div className="bg-black/40 border border-white/[0.04] p-3 rounded-lg text-gray-400 italic overflow-x-auto whitespace-pre text-[9px] leading-relaxed">
-                                        {article.mathContent}
-                                    </div>
-                                    <div className="text-[9px] text-gray-500 leading-relaxed">
-                                        {article.mathNote}
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
+                            </article>
+                        );
+                    })}
                 </div>
 
-                {/* Dev.to Call to Action */}
-                <div className="pt-6 text-center">
+                <div className="mt-5 border border-white/[0.09] bg-black/40">
+                    {researchNotes.map((article, index) => {
+                        const Icon = article.icon;
+
+                        return (
+                            <article
+                                key={article.url}
+                                className={`group grid gap-5 p-6 transition-colors hover:bg-white/[0.025] md:grid-cols-[2.5rem_minmax(0,1fr)_auto] md:items-center md:p-7 ${
+                                    index > 0 ? "border-t border-white/[0.08]" : ""
+                                }`}
+                            >
+                                <div className="flex h-10 w-10 items-center justify-center text-gray-400 transition-colors group-hover:text-[#00ff99]">
+                                    <Icon size={18} aria-hidden="true" />
+                                </div>
+                                <div>
+                                    <div className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+                                        <h3 className="text-balance text-lg font-bold tracking-[-0.015em] text-white">
+                                            {article.title}
+                                        </h3>
+                                        <time className="font-mono text-[11px] text-gray-500">
+                                            {article.date}
+                                        </time>
+                                    </div>
+                                    <p className="max-w-[75ch] text-pretty text-sm leading-6 text-gray-300">
+                                        {article.description}
+                                    </p>
+                                    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-gray-500">
+                                        {article.tags.map((tag) => (
+                                            <span key={tag}>{tag}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                                <a
+                                    href={article.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`Read ${article.title}`}
+                                    className="inline-flex h-10 w-10 items-center justify-center border border-white/[0.1] text-gray-300 transition-colors hover:border-[#00ff99]/50 hover:text-[#00ff99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00ff99]"
+                                >
+                                    <ArrowUpRight size={16} aria-hidden="true" />
+                                </a>
+                            </article>
+                        );
+                    })}
+                </div>
+
+                <div className="mt-8 flex flex-col gap-4 border-t border-white/[0.08] pt-7 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="max-w-2xl text-sm leading-6 text-gray-400">
+                        Published source material supporting the evaluation and fine-tuning
+                        capabilities listed in my résumé.
+                    </p>
                     <a
                         href="https://dev.to/natnael_alemseged"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/[0.08] hover:border-[#00ff99]/30 bg-white/[0.02] text-gray-400 hover:text-white font-mono text-xs font-bold transition-all duration-300 shadow-md group"
+                        className="inline-flex items-center gap-2 self-start border border-[#00ff99]/35 px-4 py-2.5 font-mono text-xs font-bold text-[#00ff99] transition-colors hover:bg-[#00ff99] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00ff99]"
                     >
-                        Explore More Deep-Dives on Dev.to
-                        <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        View DEV profile
+                        <ArrowUpRight size={14} aria-hidden="true" />
                     </a>
                 </div>
-
             </div>
         </section>
     );

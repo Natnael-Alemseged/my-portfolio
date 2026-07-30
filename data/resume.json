@@ -29,7 +29,7 @@
       }
     ]
   },
-  "profile": "Software engineer with 4+ years of experience shipping production AI, web, and mobile products. Builds agentic systems, RAG and evaluation pipelines, LLM-powered APIs, and polished cross-platform applications using Python, TypeScript, Flutter, and AWS. Experienced in taking ambiguous product requirements from discovery through deployment, observability, and iteration.",
+  "profile": "Software engineer with 4+ years of experience shipping production AI, web, and mobile products. Builds agentic systems, RAG, evaluation and fine-tuning pipelines, LLM-powered APIs, and polished cross-platform applications using Python, TypeScript, Flutter, and AWS. Experienced in taking ambiguous product requirements from discovery through deployment, observability, and iteration.",
   "proof": {
     "label": "UPWORK TOP RATED",
     "url": "https://www.upwork.com/freelancers/~01284b1ed914761198",
@@ -126,7 +126,11 @@
   "skills": [
     {
       "group": "AI & Agents",
-      "items": "LangGraph, LangChain, RAG, agent orchestration, AI evaluation, prompt engineering, MCP, Composio, vector databases, Weaviate, Pinecone, self-hosted LLMs"
+      "items": "LangGraph, RAG, agent orchestration, LLM-as-a-judge, statistical evaluation, fine-tuning, LoRA, DPO/SimPO, structured generation, zero-shot prompting, MCP, vector databases"
+    },
+    {
+      "group": "ML Experimentation",
+      "items": "Jupyter Notebook, Google Colab, reproducible experiments, benchmark design, error analysis, sampling and calibration analysis"
     },
     {
       "group": "Backend & Data",
@@ -139,6 +143,20 @@
     {
       "group": "Cloud & Delivery",
       "items": "AWS, Docker, Kubernetes/EKS, Terraform, GitHub Actions, Prometheus, Grafana, CI/CD, microservices, n8n"
+    }
+  ],
+  "publications": [
+    {
+      "title": "When Generic Benchmarks Fail: Building a Sales-Domain Evaluation Bench from Scratch",
+      "outlet": "DEV Community",
+      "date": "May 2026",
+      "url": "https://dev.to/natnael_alemseged/when-generic-benchmarks-fail-building-a-sales-domain-evaluation-bench-from-scratch-1kjf"
+    },
+    {
+      "title": "Why Pairing Your Bootstrap Is Necessary, And When It Stops Helping",
+      "outlet": "DEV Community",
+      "date": "May 2026",
+      "url": "https://dev.to/natnael_alemseged/why-pairing-your-bootstrap-is-necessary-and-when-it-stops-helping-2iim"
     }
   ],
   "certifications": [

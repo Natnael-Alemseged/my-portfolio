@@ -239,6 +239,13 @@ def validate_data(data):
     )
     validate_items(data.get("skills"), "skills", ("group", "items"))
     validate_items(
+        data.get("publications"),
+        "publications",
+        ("title", "outlet", "date", "url"),
+    )
+    for index, item in enumerate(data["publications"]):
+        require_url(item["url"], f"publications[{index}].url")
+    validate_items(
         data.get("certifications"),
         "certifications",
         ("name", "issuer", "dates"),
@@ -361,6 +368,16 @@ def certification_cell(item):
     )
 
 
+def publication_cell(item):
+    return Paragraph(
+        link(f"<b>{escape(item['title'])}</b>", item["url"])
+        + "<br/>"
+        + f'<font color="#52605D">{escape(item["outlet"])} | '
+        + f'{escape(item["date"])}</font>',
+        STYLES["Compact"],
+    )
+
+
 def two_column_rows(items):
     rows = []
     for index in range(0, len(items), 2):
@@ -458,6 +475,28 @@ def build(data, output):
         label_value(item["group"], item["items"])
         for item in data["skills"]
     )
+
+    if data["publications"]:
+        story.extend(section("Selected Technical Writing"))
+        publications_table = Table(
+            two_column_rows(
+                [publication_cell(item) for item in data["publications"]]
+            ),
+            colWidths=[88 * mm, 88 * mm],
+            hAlign="LEFT",
+        )
+        publications_table.setStyle(
+            TableStyle(
+                [
+                    ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+                    ("TOPPADDING", (0, 0), (-1, -1), 1),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+                ]
+            )
+        )
+        story.append(publications_table)
 
     if data["certifications"]:
         story.extend(section("Certifications"))
