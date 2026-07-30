@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-"""Generate the public, ATS-friendly resume PDF."""
+"""Render the portfolio resume JSON into an ATS-friendly PDF."""
 
+import argparse
+import json
+import shutil
+from html import escape
 from pathlib import Path
+from urllib.parse import urlparse
 
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
@@ -21,154 +26,255 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "output" / "pdf" / "natnael-alemseged-resume.pdf"
+DEFAULT_DATA = ROOT / "data" / "resume.json"
+DEFAULT_OUTPUT = ROOT / "output" / "pdf" / "natnael-alemseged-resume.pdf"
+PUBLIC_OUTPUT = ROOT / "public" / "resume.pdf"
 
 INK = colors.HexColor("#17211F")
 MUTED = colors.HexColor("#52605D")
 ACCENT = colors.HexColor("#176B62")
 PALE = colors.HexColor("#EAF4F1")
 RULE = colors.HexColor("#C9D6D2")
-WHITE = colors.white
 
 
-def link(label: str, url: str, color: str = "#176B62") -> str:
-    return f'<link href="{url}" color="{color}"><u>{label}</u></link>'
+def create_styles():
+    styles = getSampleStyleSheet()
+    definitions = [
+        ParagraphStyle(
+            name="ResumeName",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=23,
+            leading=25,
+            textColor=INK,
+            alignment=TA_CENTER,
+            spaceAfter=2,
+        ),
+        ParagraphStyle(
+            name="ResumeTitle",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=11.5,
+            leading=14,
+            textColor=ACCENT,
+            alignment=TA_CENTER,
+            spaceAfter=5,
+        ),
+        ParagraphStyle(
+            name="Contact",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=8.2,
+            leading=11.2,
+            textColor=MUTED,
+            alignment=TA_CENTER,
+        ),
+        ParagraphStyle(
+            name="Section",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=9.8,
+            leading=12,
+            textColor=ACCENT,
+            spaceBefore=8,
+            spaceAfter=4,
+            keepWithNext=True,
+        ),
+        ParagraphStyle(
+            name="Body",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=8.7,
+            leading=12.1,
+            textColor=INK,
+        ),
+        ParagraphStyle(
+            name="Role",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=9.4,
+            leading=11.5,
+            textColor=INK,
+        ),
+        ParagraphStyle(
+            name="Meta",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=8.1,
+            leading=10.2,
+            textColor=MUTED,
+        ),
+        ParagraphStyle(
+            name="Date",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=8.1,
+            leading=10.2,
+            alignment=TA_LEFT,
+            textColor=ACCENT,
+        ),
+        ParagraphStyle(
+            name="ResumeBullet",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=8.7,
+            leading=12.1,
+            textColor=INK,
+            leftIndent=10,
+            firstLineIndent=-7,
+            bulletIndent=2,
+            spaceBefore=1,
+            spaceAfter=0,
+        ),
+        ParagraphStyle(
+            name="Compact",
+            parent=styles["Normal"],
+            fontName="Helvetica",
+            fontSize=8.4,
+            leading=11.3,
+            textColor=INK,
+            spaceAfter=2.5,
+        ),
+        ParagraphStyle(
+            name="Proof",
+            parent=styles["Normal"],
+            fontName="Helvetica-Bold",
+            fontSize=8.6,
+            leading=11,
+            textColor=ACCENT,
+            alignment=TA_CENTER,
+        ),
+    ]
+    for style in definitions:
+        styles.add(style)
+    return styles
 
 
-styles = getSampleStyleSheet()
-styles.add(
-    ParagraphStyle(
-        name="ResumeName",
-        parent=styles["Normal"],
-        fontName="Helvetica-Bold",
-        fontSize=23,
-        leading=25,
-        textColor=INK,
-        alignment=TA_CENTER,
-        spaceAfter=2,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="ResumeTitle",
-        parent=styles["Normal"],
-        fontName="Helvetica",
-        fontSize=11.5,
-        leading=14,
-        textColor=ACCENT,
-        alignment=TA_CENTER,
-        spaceAfter=5,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="Contact",
-        parent=styles["Normal"],
-        fontName="Helvetica",
-        fontSize=8.2,
-        leading=11.2,
-        textColor=MUTED,
-        alignment=TA_CENTER,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="Section",
-        parent=styles["Normal"],
-        fontName="Helvetica-Bold",
-        fontSize=9.8,
-        leading=12,
-        textColor=ACCENT,
-        spaceBefore=8,
-        spaceAfter=4,
-        keepWithNext=True,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="Body",
-        parent=styles["Normal"],
-        fontName="Helvetica",
-        fontSize=8.7,
-        leading=12.1,
-        textColor=INK,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="Role",
-        parent=styles["Normal"],
-        fontName="Helvetica-Bold",
-        fontSize=9.4,
-        leading=11.5,
-        textColor=INK,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="Meta",
-        parent=styles["Normal"],
-        fontName="Helvetica",
-        fontSize=8.1,
-        leading=10.2,
-        textColor=MUTED,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="Date",
-        parent=styles["Meta"],
-        alignment=TA_LEFT,
-        fontName="Helvetica-Bold",
-        textColor=ACCENT,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="ResumeBullet",
-        parent=styles["Body"],
-        leftIndent=10,
-        firstLineIndent=-7,
-        bulletIndent=2,
-        spaceBefore=1,
-        spaceAfter=0,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="Compact",
-        parent=styles["Body"],
-        fontSize=8.4,
-        leading=11.3,
-        spaceAfter=2.5,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="Proof",
-        parent=styles["Body"],
-        fontName="Helvetica-Bold",
-        fontSize=8.6,
-        leading=11,
-        textColor=ACCENT,
-        alignment=TA_CENTER,
-    )
-)
-styles.add(
-    ParagraphStyle(
-        name="Footer",
-        parent=styles["Normal"],
-        fontName="Helvetica",
-        fontSize=7.5,
-        textColor=MUTED,
-        alignment=TA_CENTER,
-    )
-)
+STYLES = create_styles()
 
 
-def section(title: str):
+def require_string(value, path):
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{path} must be a non-empty string")
+
+
+def require_url(value, path):
+    require_string(value, path)
+    parsed = urlparse(value)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise ValueError(f"{path} must be an absolute HTTP(S) URL")
+
+
+def validate_items(items, path, fields):
+    if not isinstance(items, list):
+        raise ValueError(f"{path} must be an array")
+    for index, item in enumerate(items):
+        item_path = f"{path}[{index}]"
+        if not isinstance(item, dict):
+            raise ValueError(f"{item_path} must be an object")
+        for field in fields:
+            require_string(item.get(field), f"{item_path}.{field}")
+
+
+def validate_data(data):
+    """Fail fast with actionable paths before the public PDF is touched."""
+    if not isinstance(data, dict):
+        raise ValueError("resume data must be a JSON object")
+
+    metadata = data.get("metadata")
+    person = data.get("person")
+    experience = data.get("experience")
+    proof = data.get("proof")
+    if not isinstance(metadata, dict):
+        raise ValueError("metadata must be an object")
+    if not isinstance(person, dict):
+        raise ValueError("person must be an object")
+    if not isinstance(experience, dict):
+        raise ValueError("experience must be an object")
+    if not isinstance(proof, dict):
+        raise ValueError("proof must be an object")
+
+    for field in ("title", "subject"):
+        require_string(metadata.get(field), f"metadata.{field}")
+    for field in ("name", "headline", "location", "phone", "email"):
+        require_string(person.get(field), f"person.{field}")
+    require_string(data.get("profile"), "profile")
+    require_string(proof.get("label"), "proof.label")
+    require_url(proof.get("url"), "proof.url")
+
+    validate_items(person.get("links"), "person.links", ("label", "url"))
+    for index, item in enumerate(person["links"]):
+        require_url(item["url"], f"person.links[{index}].url")
+
+    facts = proof.get("facts")
+    if not isinstance(facts, list) or not facts:
+        raise ValueError("proof.facts must be a non-empty array")
+    for index, fact in enumerate(facts):
+        require_string(fact, f"proof.facts[{index}]")
+
+    for group in ("primary", "earlier"):
+        roles = experience.get(group)
+        validate_items(
+            roles,
+            f"experience.{group}",
+            ("title", "company", "dates", "location"),
+        )
+        for index, item in enumerate(roles):
+            bullets = item.get("bullets")
+            if not isinstance(bullets, list) or not bullets:
+                raise ValueError(
+                    f"experience.{group}[{index}].bullets "
+                    "must be a non-empty array"
+                )
+            for bullet_index, bullet in enumerate(bullets):
+                require_string(
+                    bullet,
+                    f"experience.{group}[{index}].bullets[{bullet_index}]",
+                )
+
+    validate_items(
+        data.get("independentDelivery"),
+        "independentDelivery",
+        ("name", "description"),
+    )
+    validate_items(data.get("skills"), "skills", ("group", "items"))
+    validate_items(
+        data.get("certifications"),
+        "certifications",
+        ("name", "issuer", "dates"),
+    )
+    for index, item in enumerate(data["certifications"]):
+        if "url" in item:
+            require_url(item["url"], f"certifications[{index}].url")
+    validate_items(
+        data.get("education"),
+        "education",
+        ("degree", "institution", "dates", "details"),
+    )
+
+
+def load_data(path):
+    try:
+        with path.open(encoding="utf-8") as stream:
+            data = json.load(stream)
+    except json.JSONDecodeError as error:
+        raise ValueError(
+            f"{path}:{error.lineno}:{error.colno}: {error.msg}"
+        ) from error
+    validate_data(data)
+    return data
+
+
+def link(label, url, color="#176B62"):
+    return (
+        f'<link href="{escape(url, quote=True)}" color="{color}">'
+        f"<u>{label}</u></link>"
+    )
+
+
+def section(title):
     return [
-        Paragraph(title.upper(), styles["Section"]),
+        Paragraph(escape(title.upper()), STYLES["Section"]),
         HRFlowable(
             width="100%",
             thickness=0.55,
@@ -179,21 +285,18 @@ def section(title: str):
     ]
 
 
-def role(
-    title: str,
-    company: str,
-    dates: str,
-    location: str,
-    bullets: list[str],
-):
+def role(item):
     heading = Table(
         [
             [
-                Paragraph(title, styles["Role"]),
-                Paragraph(dates, styles["Date"]),
+                Paragraph(escape(item["title"]), STYLES["Role"]),
+                Paragraph(escape(item["dates"]), STYLES["Date"]),
             ],
             [
-                Paragraph(f"{company} | {location}", styles["Meta"]),
+                Paragraph(
+                    f'{escape(item["company"])} | {escape(item["location"])}',
+                    STYLES["Meta"],
+                ),
                 "",
             ],
         ],
@@ -214,28 +317,29 @@ def role(
     )
     items = [heading, Spacer(1, 1)]
     items.extend(
-        Paragraph(f"- {bullet}", styles["ResumeBullet"])
-        for bullet in bullets
+        Paragraph(f"- {escape(bullet)}", STYLES["ResumeBullet"])
+        for bullet in item["bullets"]
     )
     items.append(Spacer(1, 5))
     return KeepTogether(items)
 
 
-def label_value(label: str, value: str):
+def label_value(label, value):
     return Paragraph(
-        f'<font name="Helvetica-Bold" color="#17211F">{label}:</font> {value}',
-        styles["Compact"],
+        f'<font name="Helvetica-Bold" color="#17211F">'
+        f"{escape(label)}:</font> {escape(value)}",
+        STYLES["Compact"],
     )
 
 
-def page_footer(canvas, doc):
+def page_footer(canvas, doc, name):
     canvas.saveState()
     canvas.setStrokeColor(RULE)
     canvas.setLineWidth(0.45)
     canvas.line(doc.leftMargin, 14 * mm, A4[0] - doc.rightMargin, 14 * mm)
     canvas.setFont("Helvetica", 7.4)
     canvas.setFillColor(MUTED)
-    canvas.drawString(doc.leftMargin, 9.5 * mm, "Natnael Alemseged Astaw")
+    canvas.drawString(doc.leftMargin, 9.5 * mm, name)
     canvas.drawRightString(
         A4[0] - doc.rightMargin,
         9.5 * mm,
@@ -244,324 +348,166 @@ def page_footer(canvas, doc):
     canvas.restoreState()
 
 
-def build():
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+def certification_cell(item):
+    title = f"<b>{escape(item['name'])}</b>"
+    if item.get("url"):
+        title = link(title, item["url"])
+    return Paragraph(
+        title
+        + "<br/>"
+        + f'<font color="#52605D">{escape(item["issuer"])} | '
+        + f'{escape(item["dates"])}</font>',
+        STYLES["Compact"],
+    )
+
+
+def two_column_rows(items):
+    rows = []
+    for index in range(0, len(items), 2):
+        left = items[index]
+        right = items[index + 1] if index + 1 < len(items) else ""
+        rows.append([left, right])
+    return rows
+
+
+def build(data, output):
+    output.parent.mkdir(parents=True, exist_ok=True)
+    metadata = data["metadata"]
+    person = data["person"]
     doc = SimpleDocTemplate(
-        str(OUTPUT),
+        str(output),
         pagesize=A4,
         rightMargin=16 * mm,
         leftMargin=16 * mm,
         topMargin=13 * mm,
         bottomMargin=18 * mm,
-        title="Natnael Alemseged Astaw - Resume",
-        author="Natnael Alemseged Astaw",
-        subject="AI Agent and Forward-Deployed Engineer resume",
-        creator="Natnael Alemseged Astaw",
+        title=metadata["title"],
+        author=person["name"],
+        subject=metadata["subject"],
+        creator=person["name"],
     )
 
+    contact_line = (
+        f'{escape(person["location"])} &nbsp;&nbsp;|&nbsp;&nbsp; '
+        f'{escape(person["phone"])} &nbsp;&nbsp;|&nbsp;&nbsp; '
+        + link(
+            escape(person["email"]),
+            f'mailto:{person["email"]}',
+        )
+    )
+    links_line = " &nbsp;&nbsp;|&nbsp;&nbsp; ".join(
+        link(escape(item["label"]), item["url"])
+        for item in person["links"]
+    )
     story = [
-        Paragraph("Natnael Alemseged Astaw", styles["ResumeName"]),
-        Paragraph(
-            "AI Agent &amp; Forward-Deployed Engineer | Senior Full-Stack Developer",
-            styles["ResumeTitle"],
-        ),
-        Paragraph(
-            "Addis Ababa, Ethiopia &nbsp;&nbsp;|&nbsp;&nbsp; +251 961 261 683 "
-            "&nbsp;&nbsp;|&nbsp;&nbsp; "
-            + link("natiaabaydam@gmail.com", "mailto:natiaabaydam@gmail.com"),
-            styles["Contact"],
-        ),
-        Paragraph(
-            link("Portfolio", "https://natnaelalemseged.com")
-            + " &nbsp;&nbsp;|&nbsp;&nbsp; "
-            + link(
-                "LinkedIn",
-                "https://www.linkedin.com/in/natnael-alemseged",
-            )
-            + " &nbsp;&nbsp;|&nbsp;&nbsp; "
-            + link(
-                "GitHub",
-                "https://github.com/Natnael-Alemseged",
-            )
-            + " &nbsp;&nbsp;|&nbsp;&nbsp; "
-            + link(
-                "Upwork",
-                "https://www.upwork.com/freelancers/~01284b1ed914761198",
-            ),
-            styles["Contact"],
-        ),
+        Paragraph(escape(person["name"]), STYLES["ResumeName"]),
+        Paragraph(escape(person["headline"]), STYLES["ResumeTitle"]),
+        Paragraph(contact_line, STYLES["Contact"]),
+        Paragraph(links_line, STYLES["Contact"]),
         Spacer(1, 7),
     ]
 
     story.extend(section("Profile"))
     story.extend(
         [
-            Paragraph(
-                "Software engineer with 4+ years of experience shipping production AI, "
-                "web, and mobile products. Builds agentic systems, RAG and evaluation "
-                "pipelines, LLM-powered APIs, and polished cross-platform applications "
-                "using Python, TypeScript, Flutter, and AWS. Experienced in taking "
-                "ambiguous product requirements from discovery through deployment, "
-                "observability, and iteration.",
-                styles["Body"],
-            ),
+            Paragraph(escape(data["profile"]), STYLES["Body"]),
             Spacer(1, 5),
-            Table(
-                [
-                    [
-                        Paragraph(
-                            link(
-                                "UPWORK TOP RATED",
-                                "https://www.upwork.com/freelancers/~01284b1ed914761198",
-                                "#176B62",
-                            )
-                            + " &nbsp;&nbsp;|&nbsp;&nbsp; 100% Job Success "
-                            "&nbsp;&nbsp;|&nbsp;&nbsp; $7K+ earned "
-                            "&nbsp;&nbsp;|&nbsp;&nbsp; 3 completed engagements",
-                            styles["Proof"],
-                        )
-                    ]
-                ],
-                colWidths=[178 * mm],
-                style=TableStyle(
-                    [
-                        ("BACKGROUND", (0, 0), (-1, -1), PALE),
-                        ("BOX", (0, 0), (-1, -1), 0.5, RULE),
-                        ("TOPPADDING", (0, 0), (-1, -1), 5),
-                        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
-                        ("LEFTPADDING", (0, 0), (-1, -1), 5),
-                        ("RIGHTPADDING", (0, 0), (-1, -1), 5),
-                    ]
-                ),
-            ),
         ]
+    )
+    proof = data["proof"]
+    proof_html = link(escape(proof["label"]), proof["url"])
+    if proof["facts"]:
+        proof_html += " &nbsp;&nbsp;|&nbsp;&nbsp; " + (
+            " &nbsp;&nbsp;|&nbsp;&nbsp; ".join(
+                escape(item) for item in proof["facts"]
+            )
+        )
+    story.append(
+        Table(
+            [[Paragraph(proof_html, STYLES["Proof"])]],
+            colWidths=[178 * mm],
+            style=TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, -1), PALE),
+                    ("BOX", (0, 0), (-1, -1), 0.5, RULE),
+                    ("TOPPADDING", (0, 0), (-1, -1), 5),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 5),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 5),
+                ]
+            ),
+        )
     )
 
     story.extend(section("Experience"))
-    story.append(
-        role(
-            "Senior Software Engineer",
-            "Hire Armada",
-            "Jul 2025 - Present",
-            "United States (Remote)",
-            [
-                "Engineer AI-driven backends and product features with Node.js, "
-                "FastAPI, Next.js, Flutter, Prisma, LangGraph, MCP, Composio, and "
-                "vector memory.",
-                "Built a social discovery platform backend supporting 10K+ daily "
-                "active users, real-time matching and messaging, and 99.9% uptime.",
-                "Shipped a personalized affirmation product with Gemini chat, "
-                "home-screen widgets, and adaptive feeds, increasing retention by 35%.",
-                "Delivered an agentic collaboration workspace with real-time events, "
-                "email automation, semantic search, and tagged agents, improving "
-                "team productivity by 20%.",
-            ],
-        )
-    )
-    story.append(
-        role(
-            "Senior Full-Stack Developer",
-            "Startup Agile",
-            "Jan 2025 - May 2026",
-            "United States (Remote)",
-            [
-                "Led Next.js, React, React Native, and Expo delivery across web and "
-                "mobile products; completed milestones 15% ahead of schedule.",
-                "Implemented OTA updates, deep linking, Firebase notifications, "
-                "Google Maps, AI assistants, and product analytics while reducing "
-                "mobile load time by 35%.",
-                "Improved Next.js rendering, SEO, and Core Web Vitals, contributing "
-                "to 50%+ web traffic growth and a 30% performance improvement.",
-                "Standardized TypeScript, tRPC, Prisma, Playwright, and Detox workflows, "
-                "reducing production defects by 65%.",
-            ],
-        )
-    )
-    story.append(
-        role(
-            "AI Engineer",
-            "DataCore Software",
-            "Jan 2025 - Aug 2025",
-            "United States (Remote, Contract)",
-            [
-                "Built FastAPI services for real-time detection, recognition, "
-                "transcription, summarization, and translation using self-hosted LLMs.",
-                "Deployed containerized inference workloads to AWS EKS with sub-200 ms "
-                "inference and 99.9% uptime at peak load.",
-                "Fine-tuned open models and optimized GPU inference with TensorRT and "
-                "ECR images, reducing cost by 12%; automated delivery with Terraform "
-                "and GitHub Actions.",
-            ],
-        )
-    )
-    story.append(
-        role(
-            "Senior Mobile Developer",
-            "Qemer Software Technology PLC",
-            "Aug 2024 - Sep 2025",
-            "Addis Ababa, Ethiopia (On-site)",
-            [
-                "Led delivery of 10+ Flutter and Ionic applications, accelerating "
-                "release cycles by 40%.",
-                "Improved application architecture and runtime performance, cutting "
-                "load times by up to 50%.",
-                "Mentored junior engineers and established reusable delivery patterns, "
-                "reducing onboarding time by 30%.",
-            ],
-        )
-    )
+    story.extend(role(item) for item in data["experience"]["primary"])
 
     story.append(PageBreak())
     story.extend(section("Earlier Experience"))
-    story.append(
-        role(
-            "ERP Functional Consultant",
-            "Red Cloud ICT Solutions",
-            "Mar 2023 - Sep 2024",
-            "Addis Ababa, Ethiopia",
-            [
-                "Progressed from Junior Consultant to Functional Consultant Assistant, "
-                "supporting ERP discovery, configuration, testing, user enablement, "
-                "and implementation delivery.",
-            ],
-        )
-    )
-    story.append(
-        role(
-            "Freelance Web Developer",
-            "Independent",
-            "Aug 2022 - Mar 2023",
-            "Remote",
-            [
-                "Designed, built, and delivered responsive web solutions directly "
-                "with clients from requirements through launch.",
-            ],
-        )
-    )
+    story.extend(role(item) for item in data["experience"]["earlier"])
 
-    story.extend(section("Selected Independent Delivery"))
-    story.extend(
-        [
-            label_value(
-                "Social Music Party Game",
-                "Delivered a complete client product engagement from Jan-Jun 2026; "
-                "received a verified 5.0 Upwork rating.",
-            ),
-            label_value(
-                "AI Chatbot Engineering",
-                "Completed a focused AI chatbot engagement in Jan 2026; received a "
-                "verified 5.0 Upwork rating.",
-            ),
-            label_value(
-                "Flutter Inventory Tracker",
-                "Shipped and supported a cross-platform inventory application in "
-                "2025; received a verified 5.0 Upwork rating.",
-            ),
-        ]
-    )
+    if data["independentDelivery"]:
+        story.extend(section("Selected Independent Delivery"))
+        story.extend(
+            label_value(item["name"], item["description"])
+            for item in data["independentDelivery"]
+        )
 
     story.extend(section("Technical Skills"))
     story.extend(
-        [
-            label_value(
-                "AI & Agents",
-                "LangGraph, LangChain, RAG, agent orchestration, AI evaluation, "
-                "prompt engineering, MCP, Composio, vector databases, Weaviate, "
-                "Pinecone, self-hosted LLMs",
-            ),
-            label_value(
-                "Backend & Data",
-                "Python, FastAPI, Node.js, Express.js, TypeScript, PostgreSQL, "
-                "MongoDB, Redis, Supabase, Firebase, Prisma, GraphQL, REST APIs, "
-                "Socket.io",
-            ),
-            label_value(
-                "Web & Mobile",
-                "Next.js, React, React Native, Expo, Flutter, Dart, Ionic, "
-                "Redux Toolkit, TanStack Query, BLoC",
-            ),
-            label_value(
-                "Cloud & Delivery",
-                "AWS, Docker, Kubernetes/EKS, Terraform, GitHub Actions, "
-                "Prometheus, Grafana, CI/CD, microservices, n8n",
-            ),
-        ]
+        label_value(item["group"], item["items"])
+        for item in data["skills"]
     )
 
-    story.extend(section("Certifications"))
-    certs = [
-        [
-            Paragraph(
-                "<b>AI Agent Engineering, AI Evaluation &amp; "
-                "Forward-Deployed Engineering</b><br/>"
-                '<font color="#52605D">10 Academy | Issued May 2026</font>',
-                styles["Compact"],
+    if data["certifications"]:
+        story.extend(section("Certifications"))
+        cert_table = Table(
+            two_column_rows(
+                [
+                    certification_cell(item)
+                    for item in data["certifications"]
+                ]
             ),
-            Paragraph(
-                link(
-                    "<b>AWS Certified Solutions Architect - Associate</b>",
-                    "https://www.credly.com/badges/c7124dca-2df4-4c93-abc9-b1c0027d99b4/linked_in_profile",
-                )
-                + '<br/><font color="#52605D">AWS | Feb 2024 - Feb 2027</font>',
-                styles["Compact"],
-            ),
-        ],
-        [
-            Paragraph(
-                "<b>AWS Certified Cloud Practitioner</b><br/>"
-                '<font color="#52605D">AWS | Oct 2023 - Feb 2027</font>',
-                styles["Compact"],
-            ),
-            Paragraph(
-                link(
-                    "<b>Founders Academy</b>",
-                    "https://intranet.alxswe.com/certificates/eXC3Nyc9TR",
-                )
-                + '<br/><font color="#52605D">ALX Africa | Issued Jul 2024</font>',
-                styles["Compact"],
-            ),
-        ],
-        [
-            Paragraph(
-                "<b>CCNA: Introduction to Networks</b><br/>"
-                '<font color="#52605D">Cisco | Issued Nov 2021</font>',
-                styles["Compact"],
-            ),
-            "",
-        ],
-    ]
-    cert_table = Table(certs, colWidths=[88 * mm, 88 * mm], hAlign="LEFT")
-    cert_table.setStyle(
-        TableStyle(
-            [
-                ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                ("RIGHTPADDING", (0, 0), (-1, -1), 7),
-                ("TOPPADDING", (0, 0), (-1, -1), 1),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-            ]
+            colWidths=[88 * mm, 88 * mm],
+            hAlign="LEFT",
         )
-    )
-    story.append(cert_table)
+        cert_table.setStyle(
+            TableStyle(
+                [
+                    ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+                    ("TOPPADDING", (0, 0), (-1, -1), 1),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+                ]
+            )
+        )
+        story.append(cert_table)
 
     story.extend(section("Education"))
+    education_rows = []
+    for item in data["education"]:
+        details = escape(item["institution"])
+        if item["details"]:
+            details += f' | {escape(item["details"])}'
+        education_rows.append(
+            [
+                Paragraph(
+                    f'<b>{escape(item["degree"])}</b><br/>'
+                    f'<font color="#52605D">{details}</font>',
+                    STYLES["Compact"],
+                ),
+                Paragraph(escape(item["dates"]), STYLES["Date"]),
+            ]
+        )
     story.append(
         Table(
-            [
-                [
-                    Paragraph(
-                        "<b>Bachelor of Science in Information Systems</b><br/>"
-                        '<font color="#52605D">Hawassa University | GPA: 3.57</font>',
-                        styles["Compact"],
-                    ),
-                    Paragraph("Jan 2018 - Dec 2022", styles["Date"]),
-                ]
-            ],
+            education_rows,
             colWidths=[139 * mm, 39 * mm],
             style=TableStyle(
                 [
                     ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                    ("ALIGN", (1, 0), (1, 0), "RIGHT"),
+                    ("ALIGN", (1, 0), (1, -1), "RIGHT"),
                     ("LEFTPADDING", (0, 0), (-1, -1), 0),
                     ("RIGHTPADDING", (0, 0), (-1, -1), 0),
                     ("TOPPADDING", (0, 0), (-1, -1), 0),
@@ -571,9 +517,46 @@ def build():
         )
     )
 
-    doc.build(story, onFirstPage=page_footer, onLaterPages=page_footer)
-    print(OUTPUT)
+    footer = lambda canvas, doc: page_footer(canvas, doc, person["name"])
+    doc.build(story, onFirstPage=footer, onLaterPages=footer)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Render data/resume.json into the portfolio resume PDF."
+    )
+    parser.add_argument(
+        "--data",
+        type=Path,
+        default=DEFAULT_DATA,
+        help=f"resume JSON path (default: {DEFAULT_DATA})",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=DEFAULT_OUTPUT,
+        help=f"generated PDF path (default: {DEFAULT_OUTPUT})",
+    )
+    parser.add_argument(
+        "--publish",
+        action="store_true",
+        help="also replace public/resume.pdf after successful generation",
+    )
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    data_path = args.data.resolve()
+    output_path = args.output.resolve()
+    data = load_data(data_path)
+    build(data, output_path)
+    print(f"Generated {output_path}")
+    if args.publish:
+        PUBLIC_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(output_path, PUBLIC_OUTPUT)
+        print(f"Published {PUBLIC_OUTPUT}")
 
 
 if __name__ == "__main__":
-    build()
+    main()

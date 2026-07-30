@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "resume:build": "uv run --with reportlab==4.4.3 python scripts/generate-resume.py --publish",
     "migrate:positions": "tsx scripts/migrate-positions.ts",
     "add-positions": "tsx scripts/add-position-to-projects.ts"
   },
