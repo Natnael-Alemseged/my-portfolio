@@ -36,6 +36,33 @@ interface Project {
     schemaType?: string;
 }
 
+type ProjectTypeFilter = "all" | "mobile" | "web" | "systems" | "research";
+
+const PROJECT_TYPE_FILTERS: Array<{
+    id: ProjectTypeFilter;
+    label: string;
+}> = [
+    { id: "all", label: "All projects" },
+    { id: "mobile", label: "Mobile apps" },
+    { id: "web", label: "Web platforms" },
+    { id: "systems", label: "Systems & tools" },
+    { id: "research", label: "Research & creative" },
+];
+
+const getProjectType = (project: Project): Exclude<ProjectTypeFilter, "all"> => {
+    switch (project.schemaType) {
+        case "MobileApplication":
+            return "mobile";
+        case "WebApplication":
+            return "web";
+        case "CreativeWork":
+            return "research";
+        case "SoftwareApplication":
+        default:
+            return "systems";
+    }
+};
+
 const getPrimaryImage = (images?: ProjectImage[]): ProjectImage | undefined => {
     if (!images || images.length === 0) {
         return undefined;
@@ -302,11 +329,38 @@ export default function Projects({
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
+    const [activeType, setActiveType] = useState<ProjectTypeFilter>("all");
     const rafIdRef = useRef<number | null>(null);
 
     const displayedProjects = useMemo(
         () => (limit ? initialProjects.slice(0, limit) : initialProjects),
         [initialProjects, limit]
+    );
+    const projectTypeCounts = useMemo(() => {
+        const counts: Record<ProjectTypeFilter, number> = {
+            all: displayedProjects.length,
+            mobile: 0,
+            web: 0,
+            systems: 0,
+            research: 0,
+        };
+
+        for (const project of displayedProjects) {
+            counts[getProjectType(project)] += 1;
+        }
+
+        return counts;
+    }, [displayedProjects]);
+    const availableTypeFilters = useMemo(
+        () => PROJECT_TYPE_FILTERS.filter(({ id }) => id === "all" || projectTypeCounts[id] > 0),
+        [projectTypeCounts]
+    );
+    const filteredProjects = useMemo(
+        () =>
+            activeType === "all"
+                ? displayedProjects
+                : displayedProjects.filter((project) => getProjectType(project) === activeType),
+        [activeType, displayedProjects]
     );
     const archiveCount = totalProjectCount ?? initialProjects.length;
 
@@ -428,6 +482,55 @@ export default function Projects({
                     )}
                 </div>
 
+                {layout === "grid" && displayedProjects.length > 0 && (
+                    <div className="mb-10 flex flex-col gap-4 border-b border-white/[0.06] pb-6 lg:flex-row lg:items-center lg:justify-between">
+                        <div
+                            role="group"
+                            aria-label="Filter projects by type"
+                            className="-mx-1 flex max-w-full gap-2 overflow-x-auto px-1 pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0"
+                        >
+                            {availableTypeFilters.map(({ id, label }) => {
+                                const isActive = activeType === id;
+
+                                return (
+                                    <button
+                                        key={id}
+                                        type="button"
+                                        aria-pressed={isActive}
+                                        onClick={() => setActiveType(id)}
+                                        className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00ff99] focus-visible:ring-offset-2 focus-visible:ring-offset-[#030303] ${
+                                            isActive
+                                                ? "bg-[#00ff99] text-black"
+                                                : "border border-white/[0.1] bg-white/[0.02] text-gray-300 hover:border-[#00ff99]/45 hover:bg-[#00ff99]/[0.07] hover:text-white"
+                                        }`}
+                                    >
+                                        <span>{label}</span>
+                                        <span
+                                            className={`min-w-5 rounded-full px-1.5 py-0.5 text-center text-[11px] leading-none ${
+                                                isActive
+                                                    ? "bg-black/15 text-black"
+                                                    : "bg-white/[0.06] text-gray-400"
+                                            }`}
+                                            aria-hidden="true"
+                                        >
+                                            {projectTypeCounts[id]}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        <p
+                            className="shrink-0 text-sm text-gray-400"
+                            role="status"
+                            aria-live="polite"
+                        >
+                            Showing <span className="font-semibold text-white">{filteredProjects.length}</span>{" "}
+                            of {displayedProjects.length} projects
+                        </p>
+                    </div>
+                )}
+
                 <div className="relative group/carousel">
                     {/* Navigation Buttons - Only show in carousel layout */}
                     {layout === "carousel" && canScrollLeft && (
@@ -460,7 +563,7 @@ export default function Projects({
                         }
                         style={layout === "carousel" ? { scrollbarWidth: 'none', msOverflowStyle: 'none' } : {}}
                     >
-                        {displayedProjects.map((project, index) => (
+                        {filteredProjects.map((project, index) => (
                             <ProjectCard
                                 key={project._id}
                                 project={project}
