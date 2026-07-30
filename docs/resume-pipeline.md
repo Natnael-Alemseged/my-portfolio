@@ -10,8 +10,8 @@ The resume content and its presentation are separate:
 - `scripts/generate-resume.py` validates the content and renders the current
   two-page visual design.
 - `public/resume.pdf` is the file served at `/resume.pdf`.
-- `public/resume-mobile.pdf` and `public/resume-ai-fde.pdf` are the tailored
-  application versions.
+- `public/resume-mobile.pdf`, `public/resume-ai-fde.pdf`, and
+  `public/resume-full-stack.pdf` are the tailored application versions.
 
 ## Requirements
 
@@ -78,6 +78,7 @@ Or generate one target:
 ```bash
 npm run resume:mobile
 npm run resume:ai-fde
+npm run resume:full-stack
 ```
 
 The variants inherit contact details, credentials, education, earlier
@@ -90,3 +91,4 @@ experience order and bullets, selected delivery, skills, and publications.
 | General | `/resume.pdf` |
 | Mobile app engineering | `/resume-mobile.pdf` |
 | AI / forward-deployed engineering | `/resume-ai-fde.pdf` |
+| Full-stack / backend engineering | `/resume-full-stack.pdf` |

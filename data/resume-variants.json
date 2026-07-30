@@ -219,5 +219,132 @@
         "items": "Jupyter Notebook, Google Colab, AWS, Docker, Kubernetes/EKS, Terraform, GitHub Actions, Prometheus, Grafana"
       }
     ]
+  },
+  "full-stack-backend": {
+    "metadata": {
+      "title": "Natnael Alemseged Astaw - Full-Stack and Backend Engineer Resume",
+      "subject": "Senior Full-Stack and Backend Product Engineer resume focused on Python, TypeScript, and AWS"
+    },
+    "person": {
+      "headline": "Senior Full-Stack & Backend Engineer | Python, TypeScript & AWS"
+    },
+    "profile": "Full-stack and backend product engineer with 4+ years of experience delivering reliable web, mobile, and AI-enabled systems. Builds scalable APIs, real-time services, data workflows, and responsive product experiences using Python, FastAPI, Node.js, TypeScript, Next.js, PostgreSQL, and AWS. Experienced in owning ambiguous requirements from architecture through testing, deployment, observability, and iteration, including systems supporting 10K+ daily active users.",
+    "experience": {
+      "primary": [
+        {
+          "title": "Senior Software Engineer",
+          "company": "Hire Armada",
+          "dates": "Jul 2025 - Present",
+          "location": "United States (Remote)",
+          "bullets": [
+            "Engineer production backends and full-stack product features using Node.js, FastAPI, Next.js, Flutter, Prisma, PostgreSQL, Socket.io, and AWS.",
+            "Built a social discovery platform backend supporting 10K+ daily active users with real-time matching, messaging, and 99.9% uptime.",
+            "Developed a bonus-based project management system with goal tracking, approval workflows, and automated payouts, reducing processing time by 50%.",
+            "Delivered a real-time collaboration workspace with email automation, semantic search, and tagged assistants, improving team productivity by 20%."
+          ]
+        },
+        {
+          "title": "Senior Full-Stack Developer",
+          "company": "Startup Agile",
+          "dates": "Jan 2025 - May 2026",
+          "location": "United States (Remote)",
+          "bullets": [
+            "Led Next.js, React, React Native, Expo, and API delivery across web and mobile products; completed milestones 15% ahead of schedule.",
+            "Improved server-side rendering, SEO, caching, and Core Web Vitals, contributing to 50%+ web traffic growth and a 30% performance improvement.",
+            "Implemented secure product integrations spanning notifications, deep linking, maps, analytics, AI assistants, and remote data workflows.",
+            "Standardized TypeScript, tRPC, Prisma, Playwright, and Detox workflows, reducing production defects by 65%."
+          ]
+        },
+        {
+          "title": "AI Engineer",
+          "company": "DataCore Software",
+          "dates": "Jan 2025 - Aug 2025",
+          "location": "United States (Remote, Contract)",
+          "bullets": [
+            "Built containerized FastAPI services for real-time detection, transcription, summarization, and translation.",
+            "Deployed workloads to AWS EKS with sub-200 ms inference and 99.9% uptime at peak load.",
+            "Implemented CI/CD, Terraform infrastructure, monitoring, and automated rollback paths, reducing deployment failures by 60%.",
+            "Optimized GPU-backed services and container images, reducing operating cost by 12%."
+          ]
+        },
+        {
+          "title": "Senior Mobile Developer",
+          "company": "Qemer Software Technology PLC",
+          "dates": "Aug 2024 - Sep 2025",
+          "location": "Addis Ababa, Ethiopia (On-site)",
+          "bullets": [
+            "Led delivery of 10+ cross-platform products with Flutter and Ionic, accelerating release cycles by 40%.",
+            "Integrated mobile clients with REST APIs, Firebase, authentication, real-time data, notifications, and analytics.",
+            "Mentored engineers and established reusable architecture patterns, reducing onboarding time by 30%."
+          ]
+        }
+      ]
+    },
+    "independentDelivery": [
+      {
+        "name": "Social Music Party Game",
+        "description": "Delivered a complete client product engagement from Jan-Jun 2026; received a verified 5.0 Upwork rating."
+      },
+      {
+        "name": "Flutter Inventory Tracker",
+        "description": "Shipped and supported a cross-platform inventory application in 2025; received a verified 5.0 Upwork rating."
+      },
+      {
+        "name": "Full-Stack Product Portfolio",
+        "description": "Delivered products spanning social discovery, commerce, mobility, communication, productivity, and AI-enabled workflows."
+      }
+    ],
+    "skills": [
+      {
+        "group": "Backend Engineering",
+        "items": "Python, FastAPI, Node.js, Express.js, TypeScript, REST APIs, GraphQL, Socket.io, background jobs, real-time systems"
+      },
+      {
+        "group": "Frontend & Product",
+        "items": "Next.js, React, React Native, Expo, Flutter, responsive UI, server-side rendering, caching, SEO, analytics"
+      },
+      {
+        "group": "Data & Integration",
+        "items": "PostgreSQL, MongoDB, Redis, Supabase, Firebase, Prisma, tRPC, authentication, third-party integrations"
+      },
+      {
+        "group": "Cloud & DevOps",
+        "items": "AWS, Docker, Kubernetes/EKS, Terraform, GitHub Actions, CI/CD, Prometheus, Grafana, infrastructure as code"
+      },
+      {
+        "group": "Architecture & Quality",
+        "items": "System design, microservices, API architecture, observability, Playwright, Detox, performance optimization, automated rollbacks"
+      }
+    ],
+    "publications": [],
+    "certifications": [
+      {
+        "name": "AWS Certified Solutions Architect - Associate",
+        "issuer": "AWS",
+        "dates": "Feb 2024 - Feb 2027",
+        "url": "https://www.credly.com/badges/c7124dca-2df4-4c93-abc9-b1c0027d99b4/linked_in_profile"
+      },
+      {
+        "name": "AWS Certified Cloud Practitioner",
+        "issuer": "AWS",
+        "dates": "Oct 2023 - Feb 2027"
+      },
+      {
+        "name": "AI Agent Engineering, AI Evaluation & Forward-Deployed Engineering",
+        "issuer": "10 Academy",
+        "dates": "Issued May 2026"
+      },
+      {
+        "name": "Founders Academy",
+        "issuer": "ALX Africa",
+        "dates": "Issued Jul 2024",
+        "url": "https://intranet.alxswe.com/certificates/eXC3Nyc9TR"
+      },
+      {
+        "name": "CCNA: Introduction to Networks",
+        "issuer": "Cisco",
+        "dates": "Issued Nov 2021"
+      }
+    ]
   }
 }

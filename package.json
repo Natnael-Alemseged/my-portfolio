@@ -10,7 +10,8 @@
     "resume:build": "uv run --with reportlab==4.4.3 python scripts/generate-resume.py --publish",
     "resume:mobile": "uv run --with reportlab==4.4.3 python scripts/generate-resume.py --variant mobile --output output/pdf/natnael-alemseged-mobile-resume.pdf --publish --public-output public/resume-mobile.pdf",
     "resume:ai-fde": "uv run --with reportlab==4.4.3 python scripts/generate-resume.py --variant ai-fde --output output/pdf/natnael-alemseged-ai-fde-resume.pdf --publish --public-output public/resume-ai-fde.pdf",
-    "resume:all": "npm run resume:build && npm run resume:mobile && npm run resume:ai-fde",
+    "resume:full-stack": "uv run --with reportlab==4.4.3 python scripts/generate-resume.py --variant full-stack-backend --output output/pdf/natnael-alemseged-full-stack-backend-resume.pdf --publish --public-output public/resume-full-stack.pdf",
+    "resume:all": "npm run resume:build && npm run resume:mobile && npm run resume:ai-fde && npm run resume:full-stack",
     "migrate:positions": "tsx scripts/migrate-positions.ts",
     "add-positions": "tsx scripts/add-position-to-projects.ts"
   },
