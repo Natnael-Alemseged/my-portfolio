@@ -81,6 +81,14 @@ export async function POST(req: NextRequest) {
             baseURL: 'https://api.groq.com/openai/v1',
         });
 
+        // Keep the model configurable so provider deprecations do not silently
+        // break the chat route. The existing env value omits the provider
+        // namespace, while Groq's API expects the fully-qualified model ID.
+        const configuredModel = process.env.GROQ_MODEL?.trim() || 'openai/gpt-oss-120b';
+        const model = configuredModel === 'gpt-oss-120b'
+            ? 'openai/gpt-oss-120b'
+            : configuredModel;
+
         // Parse request body safely
         let body;
         try {
@@ -248,7 +256,7 @@ ${context}`.trimEnd();
 
         // Stream response from Groq
         const stream = await openai.chat.completions.create({
-            model: 'llama-3.3-70b-versatile',
+            model,
             messages,
             stream: true,
             temperature: 0.7,
