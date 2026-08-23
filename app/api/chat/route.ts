@@ -134,12 +134,13 @@ export async function POST(req: NextRequest) {
             Array.isArray(rawHistory) ? rawHistory : []
         )
             .filter((msg: { role: string; content: string }) => ALLOWED_ROLES.has(msg.role))
-            .slice(-10)
+            // Keep the full prompt below Groq's developer-tier token limit.
+            .slice(-6)
             .map((msg: { role: string; content: string }) => ({
                 role: msg.role as 'user' | 'assistant',
                 content: typeof msg.content === 'string'
-                    ? msg.content.slice(0, 2000)
-                    : String(msg.content ?? '').slice(0, 2000),
+                    ? msg.content.slice(0, 1200)
+                    : String(msg.content ?? '').slice(0, 1200),
             }));
 
         // 2. Follow-up heuristic query enrichment
@@ -158,8 +159,9 @@ export async function POST(req: NextRequest) {
         // 3. Search memories with enriched query, handle MemoryResult[]
         let memoryResults: MemoryResult[] = [];
         try {
-            // Fetch 10 candidates, score threshold in searchMemories trims to best matches
-            memoryResults = await searchMemories(searchQuery, 10);
+            // Fetch a small, bounded context so the model request stays within
+            // Groq's developer-tier token-per-minute limit.
+            memoryResults = await searchMemories(searchQuery, 5);
         } catch (smError) {
             console.error('Qdrant search error:', smError);
             memoryResults = [];
@@ -177,7 +179,7 @@ export async function POST(req: NextRequest) {
                         `Slug: ${r.slug}`,
                         `Relevance Score: ${r.score.toFixed(2)}`,
                         `Content:`,
-                        r.content,
+                        r.content.slice(0, 1200),
                     ].join('\n');
                 })
                 .join('\n\n');
