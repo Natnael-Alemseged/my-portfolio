@@ -7,6 +7,7 @@ import {
     syncProjectToQdrant,
     deleteProjectFromQdrant,
 } from '@/lib/qdrant-sync';
+import { bumpChatKnowledgeVersion } from '@/lib/chat-cache';
 
 // Helper for Admin Auth (shared across methods)
 function isAdmin(req: NextRequest): boolean {
@@ -65,6 +66,7 @@ export async function PUT(
 
         // === Sync to Qdrant ===
         await syncProjectToQdrant(updatedProject);
+        await bumpChatKnowledgeVersion();
 
         return NextResponse.json(updatedProject);
     } catch (error) {
@@ -92,6 +94,7 @@ export async function DELETE(
 
         // === Clean removal from Qdrant ===
         await deleteProjectFromQdrant(id);
+        await bumpChatKnowledgeVersion();
 
         return NextResponse.json({ message: 'Project deleted successfully' });
     } catch (error) {

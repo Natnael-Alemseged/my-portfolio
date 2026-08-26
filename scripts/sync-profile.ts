@@ -5,6 +5,7 @@
 import 'dotenv/config';
 import { QdrantClient } from '@qdrant/js-client-rest';
 import { generateEmbedding } from '../lib/qdrant-sync';
+import { bumpChatKnowledgeVersion } from '../lib/chat-cache';
 
 const QDRANT_URL = process.env.QDRANT_URL!;
 const QDRANT_API_KEY = process.env.QDRANT_API_KEY!;
@@ -200,6 +201,8 @@ async function syncProfile() {
       console.log(`❌ ${err}`);
     }
   }
+
+  await bumpChatKnowledgeVersion();
 
   console.log('\n✅ Profile sync complete.\n');
 }

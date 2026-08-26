@@ -3,6 +3,7 @@ import 'dotenv/config';
 import connectToDatabase from '../lib/db/mongoose';
 import Project from '../lib/db/project.model';
 import { syncProjectToQdrant } from '../lib/qdrant-sync';
+import { bumpChatKnowledgeVersion } from '../lib/chat-cache';
 
 
 async function syncAll() {
@@ -22,6 +23,8 @@ async function syncAll() {
             console.log(`Syncing project: ${project.title} (${project._id})`);
             await syncProjectToQdrant(project);
         }
+
+        await bumpChatKnowledgeVersion();
 
         console.log('✅ Full sync completed!');
         process.exit(0);

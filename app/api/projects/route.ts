@@ -6,6 +6,7 @@ import Project from '@/lib/db/project.model';
 import {
     syncProjectToQdrant,
 } from '@/lib/qdrant-sync';
+import { bumpChatKnowledgeVersion } from '@/lib/chat-cache';
 
 export async function GET(req: NextRequest) {
     // Your existing GET logic is fine — keep it as-is
@@ -59,6 +60,7 @@ export async function POST(req: NextRequest) {
 
         // === Sync to Qdrant ===
         await syncProjectToQdrant(project);
+        await bumpChatKnowledgeVersion();
 
         // === Return the created project ===
         return NextResponse.json(project, { status: 201 });

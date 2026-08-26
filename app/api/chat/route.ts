@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { searchMemories, MemoryResult } from '@/lib/qdrant-sync';
+import {
+    cacheChatAnswer,
+    checkChatRateLimit,
+    getCachedChatAnswer,
+    isCacheEligible,
+} from '@/lib/chat-cache';
 
 // Force dynamic evaluation
 export const dynamic = 'force-dynamic';
@@ -58,6 +64,34 @@ const INJECTION_PATTERNS = [
 
 const INJECTION_RESPONSE = "I'm here to answer questions about Natnael's work, projects, and experience. How can I help?";
 
+function getVisitorIdentifier(req: NextRequest) {
+    const forwardedFor = req.headers.get('x-forwarded-for');
+    const ip = forwardedFor?.split(',')[0]?.trim()
+        || req.headers.get('x-real-ip')
+        || 'unknown';
+    return `ip:${ip}`;
+}
+
+function createSseResponse(content: string, cacheStatus: 'HIT' | 'BYPASS' = 'BYPASS') {
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+        start(controller) {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
+            controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+            controller.close();
+        },
+    });
+
+    return new NextResponse(stream, {
+        headers: {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-store',
+            'Connection': 'keep-alive',
+            'X-Chat-Cache': cacheStatus,
+        },
+    });
+}
+
 // Follow-up trigger phrases
 const FOLLOW_UP_TRIGGERS = [
     ' that', ' those', ' it', 'the project',
@@ -100,33 +134,51 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const { message, conversationHistory: rawHistory = [] } = body;
+        const { message: rawMessage, conversationHistory: rawHistory = [] } = body;
 
-        if (!message) {
+        if (typeof rawMessage !== 'string' || !rawMessage.trim()) {
             return NextResponse.json(
                 { error: 'Message is required' },
                 { status: 400 }
+            );
+        }
+        const message = rawMessage.trim();
+        if (message.length > 1000) {
+            return NextResponse.json(
+                { error: 'Message must be 1,000 characters or fewer' },
+                { status: 400 }
+            );
+        }
+
+        // Count every request, including cache hits, so a public endpoint cannot
+        // be used to exhaust database or function resources for free.
+        let rateLimit;
+        try {
+            rateLimit = await checkChatRateLimit(getVisitorIdentifier(req));
+        } catch (rateLimitError) {
+            console.error('Chat rate-limit error:', rateLimitError);
+            return NextResponse.json(
+                { error: 'Chat is temporarily unavailable. Please try again shortly.' },
+                { status: 503 }
+            );
+        }
+        if (!rateLimit.allowed) {
+            return NextResponse.json(
+                { error: 'Too many chat requests. Please try again later.' },
+                {
+                    status: 429,
+                    headers: {
+                        'Retry-After': String(rateLimit.retryAfterSeconds ?? 60),
+                        'X-RateLimit-Remaining': '0',
+                    },
+                }
             );
         }
 
         // 0. Injection guard — short-circuit before any LLM call
         const messageLower0 = message.toLowerCase();
         if (INJECTION_PATTERNS.some(p => messageLower0.includes(p))) {
-            const encoder0 = new TextEncoder();
-            const safeStream = new ReadableStream({
-                start(controller) {
-                    controller.enqueue(encoder0.encode(`data: ${JSON.stringify({ content: INJECTION_RESPONSE })}\n\n`));
-                    controller.enqueue(encoder0.encode('data: [DONE]\n\n'));
-                    controller.close();
-                },
-            });
-            return new NextResponse(safeStream, {
-                headers: {
-                    'Content-Type': 'text/event-stream',
-                    'Cache-Control': 'no-cache',
-                    'Connection': 'keep-alive',
-                },
-            });
+            return createSseResponse(INJECTION_RESPONSE);
         }
 
         // 1. Sanitize conversationHistory
@@ -142,6 +194,25 @@ export async function POST(req: NextRequest) {
                     ? msg.content.slice(0, 1200)
                     : String(msg.content ?? '').slice(0, 1200),
             }));
+
+        // The widget sends its local greeting as an assistant message before the
+        // first question. A prior user turn, not that greeting, means this is a
+        // conversational follow-up and must not reuse a standalone answer.
+        const cacheEligible = isCacheEligible(
+            message,
+            conversationHistory.some((entry) => entry.role === 'user')
+        );
+        if (cacheEligible) {
+            try {
+                const cachedAnswer = await getCachedChatAnswer(model, message);
+                if (cachedAnswer) {
+                    return createSseResponse(cachedAnswer, 'HIT');
+                }
+            } catch (cacheError) {
+                // A cache outage must not prevent a visitor from using chat.
+                console.error('Chat cache read error:', cacheError);
+            }
+        }
 
         // 2. Follow-up heuristic query enrichment
         const messageLower = message.toLowerCase();
@@ -268,14 +339,23 @@ ${context}`.trimEnd();
         const encoder = new TextEncoder();
         const readableStream = new ReadableStream({
             async start(controller) {
+                let fullResponse = '';
                 try {
                     for await (const chunk of stream) {
                         const content = chunk.choices[0]?.delta?.content || '';
                         if (content) {
+                            fullResponse += content;
                             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
                         }
                     }
                     controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+                    if (cacheEligible) {
+                        try {
+                            await cacheChatAnswer(model, message, fullResponse);
+                        } catch (cacheError) {
+                            console.error('Chat cache write error:', cacheError);
+                        }
+                    }
                     controller.close();
                 } catch (error) {
                     controller.error(error);
@@ -286,8 +366,10 @@ ${context}`.trimEnd();
         return new NextResponse(readableStream, {
             headers: {
                 'Content-Type': 'text/event-stream',
-                'Cache-Control': 'no-cache',
+                'Cache-Control': 'no-store',
                 'Connection': 'keep-alive',
+                'X-Chat-Cache': 'MISS',
+                'X-RateLimit-Remaining': String(rateLimit.remaining),
             },
         });
     } catch (error) {
