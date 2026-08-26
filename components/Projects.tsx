@@ -393,6 +393,18 @@ export default function Projects({
     }, [checkScroll]);
 
     useEffect(() => {
+        const requested = new URLSearchParams(window.location.search).get("type");
+        if (!requested) return;
+        const isValidType = PROJECT_TYPE_FILTERS.some(({ id }) => id === requested);
+        if (
+            isValidType &&
+            projectTypeCounts[requested as ProjectTypeFilter] > 0
+        ) {
+            setActiveType(requested as ProjectTypeFilter);
+        }
+    }, [displayedProjects, projectTypeCounts]);
+
+    useEffect(() => {
         scheduleCheckScroll();
         window.addEventListener('resize', scheduleCheckScroll);
         return () => {
