@@ -60,26 +60,27 @@
     },
     "independentDelivery": [
       {
-        "name": "Flutter Inventory Tracker",
-        "description": "Shipped and supported a cross-platform inventory application in 2025; received a verified 5.0 Upwork rating."
+        "name": "Boingo AI - Property & Lifestyle Discovery",
+        "description": "Shipped a production React Native/Expo app on the App Store with preference-aware search, map discovery, Apple/Google sign-in, and Stripe payments."
       },
       {
         "name": "Social Music Party Game",
         "description": "Delivered a complete consumer product engagement from Jan-Jun 2026; received a verified 5.0 Upwork rating."
       },
       {
-        "name": "Cross-Platform App Portfolio",
-        "description": "Delivered consumer products spanning mobility, music, affirmations, commerce, communication, and productivity."
+        "name": "Cross-Platform Consumer Portfolio",
+        "description": "Shipped HolyChat (AI scripture study & devotionals), Hulubeje (booking, payments & QR parking), Africkiko (music streaming), Moteregna (courier delivery), and affirmation and commerce apps for iOS and Android.",
+        "url": "https://natnaelalemseged.com/projects?type=mobile"
       }
     ],
     "skills": [
       {
         "group": "Mobile Engineering",
-        "items": "Flutter, Dart, React Native, Expo, Ionic, cross-platform architecture, responsive and adaptive UI"
+        "items": "Flutter, Dart, Swift,  React Native, Expo, Ionic, cross-platform architecture, responsive and adaptive UI"
       },
       {
         "group": "Architecture & State",
-        "items": "BLoC, GetX, Stacked Architecture, Redux Toolkit, TanStack Query, TypeScript, modular feature design"
+        "items": "BLoC, GetX, TCA (architecture), Stacked Architecture, Redux Toolkit, TanStack Query, TypeScript, modular feature design"
       },
       {
         "group": "Platform Integrations",

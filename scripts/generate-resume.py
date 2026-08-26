@@ -239,6 +239,9 @@ def validate_data(data):
         "independentDelivery",
         ("name", "description"),
     )
+    for index, item in enumerate(data["independentDelivery"]):
+        if item.get("url"):
+            require_url(item["url"], f"independentDelivery[{index}].url")
     validate_items(data.get("skills"), "skills", ("group", "items"))
     validate_items(
         data.get("publications"),
@@ -368,6 +371,17 @@ def label_value(label, value):
     )
 
 
+def delivery_item(item):
+    label = escape(item["name"])
+    if item.get("url"):
+        label = link(label, item["url"])
+    return Paragraph(
+        f'<font name="Helvetica-Bold" color="#17211F">{label}:</font> '
+        f'{escape(item["description"])}',
+        STYLES["Compact"],
+    )
+
+
 def page_footer(canvas, doc, name):
     canvas.saveState()
     canvas.setStrokeColor(RULE)
@@ -470,8 +484,7 @@ def build(data, output):
     if data["independentDelivery"]:
         independent_delivery = section("Selected Independent Delivery")
         independent_delivery.extend(
-            label_value(item["name"], item["description"])
-            for item in data["independentDelivery"]
+            delivery_item(item) for item in data["independentDelivery"]
         )
         proof = data["proof"]
         proof_html = link(
