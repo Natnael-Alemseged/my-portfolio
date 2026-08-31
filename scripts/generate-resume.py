@@ -4,7 +4,6 @@
 import argparse
 import copy
 import json
-import shutil
 from html import escape
 from pathlib import Path
 from urllib.parse import urlparse
@@ -30,7 +29,6 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATA = ROOT / "data" / "resume.json"
 DEFAULT_VARIANTS_DATA = ROOT / "data" / "resume-variants.json"
 DEFAULT_OUTPUT = ROOT / "output" / "pdf" / "natnael-alemseged-resume.pdf"
-PUBLIC_OUTPUT = ROOT / "public" / "resume.pdf"
 
 INK = colors.HexColor("#17211F")
 MUTED = colors.HexColor("#52605D")
@@ -242,6 +240,23 @@ def validate_data(data):
     for index, item in enumerate(data["independentDelivery"]):
         if item.get("url"):
             require_url(item["url"], f"independentDelivery[{index}].url")
+        links = item.get("links", [])
+        if not isinstance(links, list):
+            raise ValueError(f"independentDelivery[{index}].links must be an array")
+        for link_index, item_link in enumerate(links):
+            if not isinstance(item_link, dict):
+                raise ValueError(
+                    f"independentDelivery[{index}].links[{link_index}] "
+                    "must be an object"
+                )
+            require_string(
+                item_link.get("label"),
+                f"independentDelivery[{index}].links[{link_index}].label",
+            )
+            require_url(
+                item_link.get("url"),
+                f"independentDelivery[{index}].links[{link_index}].url",
+            )
     validate_items(data.get("skills"), "skills", ("group", "items"))
     validate_items(
         data.get("publications"),
@@ -375,8 +390,16 @@ def delivery_item(item):
     label = escape(item["name"])
     if item.get("url"):
         label = link(label, item["url"])
+    item_links = item.get("links", [])
+    links_html = ""
+    if item_links:
+        links_html = " &nbsp;[" + " &nbsp;|&nbsp; ".join(
+            link(escape(item_link["label"]), item_link["url"])
+            for item_link in item_links
+        ) + "]"
     return Paragraph(
-        f'<font name="Helvetica-Bold" color="#17211F">{label}:</font> '
+        f'<font name="Helvetica-Bold" color="#17211F">{label}</font>'
+        f'{links_html}: '
         f'{escape(item["description"])}',
         STYLES["Compact"],
     )
@@ -618,17 +641,6 @@ def parse_args():
         default=DEFAULT_VARIANTS_DATA,
         help=f"resume variant overlays (default: {DEFAULT_VARIANTS_DATA})",
     )
-    parser.add_argument(
-        "--publish",
-        action="store_true",
-        help="also replace public/resume.pdf after successful generation",
-    )
-    parser.add_argument(
-        "--public-output",
-        type=Path,
-        default=PUBLIC_OUTPUT,
-        help=f"published PDF path (default: {PUBLIC_OUTPUT})",
-    )
     return parser.parse_args()
 
 
@@ -640,11 +652,6 @@ def main():
     data = load_data(data_path, variants_path, args.variant)
     build(data, output_path)
     print(f"Generated {output_path}")
-    if args.publish:
-        public_output = args.public_output.resolve()
-        public_output.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(output_path, public_output)
-        print(f"Published {public_output}")
 
 
 if __name__ == "__main__":

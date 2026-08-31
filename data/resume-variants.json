@@ -7,26 +7,14 @@
     "person": {
       "headline": "Senior Mobile App Engineer | Flutter, React Native & Expo"
     },
-    "profile": "Mobile app engineer with 4+ years of experience shipping production iOS and Android products. Led the delivery of 10+ cross-platform applications using Flutter, React Native, Expo, and Ionic, with hands-on ownership of architecture, state management, real-time features, push notifications, deep linking, OTA updates, analytics, and backend integration. Combines polished mobile UX with reliable APIs, cloud delivery, and measurable performance improvements.",
+    "profile": "Mobile app engineer with 4+ years of experience shipping production iOS and Android products. Led the delivery of 10+ applications using Flutter, React Native, Expo, Ionic, and native Swift and Kotlin integrations, with hands-on ownership of architecture, state management, real-time features, push notifications, deep linking, OTA updates, analytics, and backend integration. Combines polished mobile UX with reliable APIs, cloud delivery, and measurable performance improvements.",
     "experience": {
       "primary": [
-        {
-          "title": "Senior Mobile Developer",
-          "company": "Qemer Software Technology PLC",
-          "dates": "Aug 2024 - Sep 2025",
-          "location": "Addis Ababa, Ethiopia (On-site)",
-          "bullets": [
-            "Led development and launch of 10+ Flutter and Ionic applications across consumer and business use cases, accelerating release cycles by 40%.",
-            "Established reusable app architecture and state-management patterns using BLoC, GetX, and layered feature modules.",
-            "Improved startup, navigation, and data-loading performance, cutting application load times by up to 50%.",
-            "Mentored junior mobile engineers and standardized delivery practices, reducing onboarding time by 30%."
-          ]
-        },
         {
           "title": "Senior Software Engineer",
           "company": "Hire Armada",
           "dates": "Jul 2025 - Present",
-          "location": "United States (Remote)",
+          "location": "United States (Remote, Full-time)",
           "bullets": [
             "Build Flutter product experiences backed by Node.js, FastAPI, Prisma, Firebase, and real-time services.",
             "Delivered a social discovery platform supporting 10K+ daily active users with real-time matching, messaging, and 99.9% backend uptime.",
@@ -38,53 +26,108 @@
           "title": "Senior Full-Stack Developer",
           "company": "Startup Agile",
           "dates": "Jan 2025 - May 2026",
-          "location": "United States (Remote)",
+          "location": "United States (Remote, Full-time)",
           "bullets": [
             "Led React Native and Expo delivery across mobile products while completing milestones 15% ahead of schedule.",
-            "Implemented OTA updates, deep linking, Firebase push notifications, Google Maps, AI assistants, and product analytics.",
-            "Reduced mobile load time by 35% through bundle optimization, lazy loading, and disciplined client-side data fetching.",
-            "Standardized TypeScript, state management, and Detox testing workflows, contributing to a 65% reduction in production defects."
+            "Implemented OTA updates, deep linking, Firebase push notifications, Google Maps, AI assistants, Mixpanel analytics, and Sentry error tracking.",
+            "Reduced mobile load time by 35% through React Native profiling, bundle optimization, lazy loading, and disciplined client-side data fetching.",
+            "Enforced PR-gated TypeScript and Detox checks, and automated signed TestFlight and Play Store releases through CodeMagic with both EAS and non-EAS workflows, contributing to a 65% reduction in production defects."
+          ]
+        },
+        {
+          "title": "Senior Mobile Developer",
+          "company": "Qemer Software Technology PLC",
+          "dates": "Aug 2024 - Sep 2025",
+          "location": "Addis Ababa, Ethiopia (On-site, Full-time)",
+          "bullets": [
+            "Led development and launch of 10+ Flutter and Ionic applications across consumer and business use cases, accelerating release cycles by 40%.",
+            "Delivered native Swift features for the HolyChat and You Are iOS apps, and built Kotlin plugins plus Flutter platform-channel integrations for payment and DRM SDKs on Android.",
+            "Established reusable app architecture and state-management patterns using BLoC, GetX, and layered feature modules.",
+            "Used Flutter DevTools, Android Logcat, and Xcode profiling to diagnose startup, navigation, and data-loading bottlenecks, cutting application load times by up to 50%."
           ]
         },
         {
           "title": "AI Engineer",
           "company": "DataCore Software",
           "dates": "Jan 2025 - Aug 2025",
-          "location": "United States (Remote, Contract)",
+          "location": "United States (Remote, Part-time Contract, 20 hrs/week)",
           "bullets": [
             "Built low-latency FastAPI services for detection, transcription, summarization, and translation that could be consumed by web and mobile clients.",
-            "Deployed containerized workloads to AWS EKS with sub-200 ms inference and 99.9% uptime at peak load."
+            "Automated containerized AWS EKS infrastructure with Terraform and Ansible, sustaining sub-200 ms inference and 99.9% uptime at peak load."
           ]
         }
       ]
     },
     "independentDelivery": [
       {
-        "name": "Boingo AI - Property & Lifestyle Discovery",
-        "description": "Shipped a production React Native/Expo app on the App Store with preference-aware search, map discovery, Apple/Google sign-in, and Stripe payments."
+        "name": "Mood Ride - Production Ride-Hailing Platform",
+        "description": "Built and shipped passenger and driver apps for iOS and Android, reaching 6K+ combined Google Play downloads with NFC boarding verification, resilient background tracking, and real-time ride coordination.",
+        "links": [
+          {
+            "label": "iOS Passenger",
+            "url": "https://apps.apple.com/us/app/mood-passanger/id6745983091"
+          },
+          {
+            "label": "Android Passenger",
+            "url": "https://play.google.com/store/apps/details?id=com.qemertech.moodrideuser"
+          },
+          {
+            "label": "Android Driver",
+            "url": "https://play.google.com/store/apps/details?id=com.qemertech.mood_ride_driver"
+          }
+        ]
       },
       {
-        "name": "Social Music Party Game",
-        "description": "Delivered a complete consumer product engagement from Jan-Jun 2026; received a verified 5.0 Upwork rating."
+        "name": "Moteregna - Real-Time Courier Platform",
+        "description": "Shipped user and driver apps for iOS and Android, reaching 11K+ combined Google Play downloads with automated courier matching, live tracking, Socket.io updates, wallet features, and payment integrations.",
+        "links": [
+          {
+            "label": "iOS User",
+            "url": "https://apps.apple.com/us/app/moteregna/id6751728583"
+          },
+          {
+            "label": "Android User",
+            "url": "https://play.google.com/store/apps/details?id=com.qemertech.moteregnauser.moteregna_user"
+          },
+          {
+            "label": "Android Driver",
+            "url": "https://play.google.com/store/apps/details?id=com.qemertech.moteregnadriver"
+          }
+        ]
       },
       {
-        "name": "Cross-Platform Consumer Portfolio",
-        "description": "Shipped HolyChat (AI scripture study & devotionals), Hulubeje (booking, payments & QR parking), Africkiko (music streaming), Moteregna (courier delivery), and affirmation and commerce apps for iOS and Android. Case studies: natnaelalemseged.com/projects?type=mobile",
-        "url": "https://natnaelalemseged.com/projects?type=mobile"
+        "name": "Mindflix - Affirmations, Goals & Habit App",
+        "description": "Built and shipped a Flutter and Riverpod iOS app combining personalized affirmations, goal and task management, reminders, and an Express.js API.",
+        "links": [
+          {
+            "label": "iOS",
+            "url": "https://apps.apple.com/us/app/mindflix-app/id6747105435"
+          }
+        ]
+      },
+      {
+        "name": "Africkiko - Open-Source Flutter Music App",
+        "description": "Published an MIT-licensed Flutter codebase demonstrating Stacked MVVM, offline Hive storage, audio services, Firebase messaging, and native iOS and Android targets.",
+        "links": [
+          {
+            "label": "Source",
+            "url": "https://github.com/Natnael-Alemseged/Music_App"
+          }
+        ]
       }
     ],
     "skills": [
       {
         "group": "Mobile Engineering",
-        "items": "Flutter, Dart, Swift,  React Native, Expo, Ionic, cross-platform architecture, responsive and adaptive UI"
+        "items": "Flutter, Dart, React Native, Expo, Ionic, Swift, Kotlin, native iOS features, native Android plugins, Flutter platform channels, responsive and adaptive UI"
       },
       {
         "group": "Architecture & State",
-        "items": "BLoC, GetX, TCA (architecture), Stacked Architecture, Redux Toolkit, TanStack Query, TypeScript, modular feature design"
+        "items": "BLoC, GetX, Riverpod, Stacked Architecture, Redux Toolkit, TanStack Query, TypeScript, modular feature design"
       },
       {
         "group": "Platform Integrations",
-        "items": "Firebase, push notifications, deep linking, OTA updates, Google Maps, home-screen widgets, analytics, real-time messaging"
+        "items": "Firebase, push notifications, deep linking, OTA updates, Google Maps, NFC, background location, payment SDKs, DRM, analytics, real-time messaging"
       },
       {
         "group": "Backend & Data",
@@ -92,10 +135,23 @@
       },
       {
         "group": "Quality & Delivery",
-        "items": "Detox, Playwright, GitHub Actions, CodeMagic, Docker, AWS, release automation, performance profiling"
+        "items": "Detox, Playwright, PR quality gates, CodeMagic, EAS and non-EAS delivery, TestFlight, Play Store automation, GitHub Actions, Terraform, Ansible, Docker, AWS, performance profiling"
       }
     ],
-    "publications": [],
+    "publications": [
+      {
+        "title": "Return JSON Only Doesn't Force JSON: What Actually Forces It",
+        "outlet": "DEV Community",
+        "date": "May 2026",
+        "url": "https://dev.to/natnael_alemseged/return-json-only-doesnt-force-json-heres-what-actually-forces-it-9pn"
+      },
+      {
+        "title": "When Generic Benchmarks Fail: Building a Sales-Domain Evaluation Bench from Scratch",
+        "outlet": "DEV Community",
+        "date": "May 2026",
+        "url": "https://dev.to/natnael_alemseged/when-generic-benchmarks-fail-building-a-sales-domain-evaluation-bench-from-scratch-1kjf"
+      }
+    ],
     "certifications": [
       {
         "name": "AWS Certified Solutions Architect - Associate",
