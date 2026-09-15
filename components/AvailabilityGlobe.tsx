@@ -15,7 +15,7 @@ export default function AvailabilityGlobe() {
                 transition={{ duration: 0.8 }}
                 className="text-3xl md:text-4xl font-bold mb-8 text-[#00ff99]"
             >
-                Availability & Remote Work
+                Availability & Global Mobility
             </motion.h2>
 
             <motion.div
@@ -49,7 +49,7 @@ export default function AvailabilityGlobe() {
                     Based in Addis Ababa, Ethiopia
                 </p>
                 <p className="text-center text-gray-400 max-w-md">
-                    I’m flexible with time zones and open to remote work worldwide. Let’s
+                    I’m open to remote work worldwide and willing to relocate for the right onsite or hybrid Applied AI role. Let’s
                     connect and build something great together.
                 </p>
             </motion.div>

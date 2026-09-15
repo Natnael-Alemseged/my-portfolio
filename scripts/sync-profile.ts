@@ -49,8 +49,8 @@ Portfolio: https://natnaelalemseged.com
 Primary positioning:
 Natnael is an Applied AI Engineer focused on agent systems, evaluation, RAG, AI backends, and production AI products. His full-stack and mobile experience supports end-to-end AI delivery rather than serving as a separate professional identity.
 
-Availability:
-Natnael is currently open to Applied AI engineering roles and engagements, including full-time roles, contract work, and focused consulting. Visitors can reach out via email or the contact form on his portfolio website.`,
+Availability and mobility:
+Natnael is currently open to Applied AI engineering roles and engagements. He is available for remote roles worldwide and willing to relocate for the right onsite or hybrid opportunity, particularly with established AI startups and leading AI product or research companies. He is also open to contract work and focused consulting. Visitors can reach out via email or the contact form on his portfolio website.`,
   },
 
   {
@@ -147,7 +147,7 @@ Primary roles and services:
 - Technical discovery, system architecture, rapid prototyping, deployment, and measurable iteration
 
 Engagement types accepted:
-- Full-time employment (remote or hybrid)
+- Full-time employment: remote worldwide, onsite, or hybrid with relocation
 - Contract and freelance projects
 - Technical consulting and advisory
 

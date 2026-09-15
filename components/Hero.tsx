@@ -541,7 +541,7 @@ export default function Hero() {
                     >
                         I build reliable agentic systems, evaluation-driven RAG pipelines, and production AI products—taking them from ambiguous requirements through deployment, observability, and measurable iteration.
                         <span className="block mt-4 text-xs font-semibold text-gray-500 font-mono uppercase tracking-wider">
-                            📍 Addis Ababa (EAT / UTC+3) — Available for global remote engineering roles.
+                            📍 Based in Addis Ababa (EAT / UTC+3) — Open to remote roles worldwide and relocation for onsite Applied AI opportunities.
                         </span>
                     </motion.p>
 
