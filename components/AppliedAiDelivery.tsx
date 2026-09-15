@@ -18,34 +18,34 @@ interface DiagnosticStep {
 
 const diagnosticSteps: DiagnosticStep[] = [
     {
-        command: "applied-ai discover --scope product-and-system",
+        command: "applied-ai frame --target user-outcome",
         output: [
-            "Mapping the product, users, data, and system constraints...",
-            "✅ Stakeholder context mapped directly with project vision",
-            "✅ Technical requirements extracted directly from high-level roadmap",
-            "🚀 Communication latency: ~0ms (Immediate feedback loop)"
+            "Mapping users, decisions, data, and operating constraints...",
+            "✅ Target behavior and non-goals documented",
+            "✅ Representative examples converted into an evaluation set",
+            "✅ Quality, latency, and cost thresholds agreed"
         ],
         status: "success",
         duration: "0.14s"
     },
     {
-        command: "applied-ai build --scope full-stack --autonomy active",
+        command: "applied-ai build --workflow agent-and-retrieval",
         output: [
-            "Parsing active backend & UI repositories...",
-            "✅ Native bridging layers compiled (NestJS + RabbitMQ + React Native)",
-            "✅ AST code map and system dependency graph generated",
-            "⚡ Autonomy metric: 1.0 (Zero training or hand-holding required)"
+            "Connecting models, retrieval, tools, and product surfaces...",
+            "✅ Typed contracts added at model and API boundaries",
+            "✅ Traces capture retrieval, tool calls, and state transitions",
+            "✅ Explicit fallbacks cover expected failure modes"
         ],
         status: "success",
         duration: "0.42s"
     },
     {
-        command: "applied-ai evaluate --systems agentic-state-machines",
+        command: "applied-ai evaluate --dataset production-like",
         output: [
-            "Running deterministic test assertions...",
-            "⚠️ Stochastic variation flagged in LLM schema outputs",
-            "🔧 Enforcing strict graph transition limits and retry rules",
-            "✅ Protocol validation passed (100% strict contract conformity)"
+            "Running deterministic checks and model-based quality review...",
+            "⚠️ Weak retrieval and schema failures isolated",
+            "🔧 Refining prompts, context, routing, and recovery behavior",
+            "✅ Release gates passed with production monitoring enabled"
         ],
         status: "warning",
         duration: "0.89s"
@@ -71,7 +71,7 @@ export default function AppliedAiDelivery() {
                 <div className="text-center mb-16 space-y-4">
                     <span className="inline-flex items-center gap-2 text-[10px] font-mono text-[#00ff99] uppercase tracking-[0.4em]">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#00ff99] animate-pulse" />
-                        operational_autonomy
+                        applied_ai_method
                     </span>
                     <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight tracking-tight">
                         How I Build Applied AI, End to End
@@ -184,18 +184,18 @@ export default function AppliedAiDelivery() {
                     >
                         {[
                             {
-                                title: "Fast Context, Low Overhead",
-                                desc: "I get productive in complex codebases quickly, reconstruct system behavior, clarify the real constraint, and move from discovery to useful delivery without slowing the core team.",
+                                title: "Frame the Decision, Not Just the Demo",
+                                desc: "I translate user needs and business constraints into a testable AI behavior, an evaluation set, and a clear definition of useful before implementation expands.",
                                 icon: <UserCheck className="text-[#00ff99]" size={18} />
                             },
                             {
-                                title: "Reliable, Evaluation-Driven Design",
+                                title: "Build with Evidence Loops",
                                 desc: "I combine strict Pydantic and TypeScript contracts with targeted evaluations, observable workflows, and explicit failure handling so AI behavior can be measured and improved.",
                                 icon: <Shield className="text-[#00ff99]" size={18} />
                             },
                             {
-                                title: "End-to-End Product Delivery",
-                                desc: "I own the full delivery loop—from model and retrieval behavior to backend services, data flows, interfaces, deployment, and production feedback.",
+                                title: "Ship the Whole Product System",
+                                desc: "I connect model and retrieval behavior to backend services, data flows, interfaces, deployment, and production feedback so the AI capability survives contact with users.",
                                 icon: <Zap className="text-[#00ff99]" size={18} />
                             }
                         ].map((card, idx) => (

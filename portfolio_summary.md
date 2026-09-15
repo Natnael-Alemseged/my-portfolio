@@ -1,35 +1,35 @@
 # Natnael Alemseged — Portfolio Summary & Brand Architecture
 
-This document provides a highly structured, premium breakdown of the modernized developer portfolio for **Natnael Alemseged**. The portfolio has been re-architected to position him as an **Elite Senior AI Systems and Forward Deployed Engineer (FDE)**.
+This document summarizes the modernized developer portfolio for **Natnael Alemseged**. The portfolio positions him as an **Applied AI Engineer focused on agent systems, evaluation, RAG, and production AI products**.
 
-Importantly, the modernization is **additive**: it integrates his world-class AI agentic systems and high-performance backend capabilities without discarding his robust, production-grade mobile (Flutter/Dart, React Native), web (Next.js), and database/message queue experience.
+The positioning is intentionally additive: his full-stack, mobile, backend, and cloud experience explains how he carries AI capabilities from prototype through a complete production experience.
 
 ---
 
 ## 1. Core Brand Positioning & Thesis
 
-The portfolio moves completely away from standard full-stack generalities to paint a portrait of an elite, autonomous engineering partner:
+The portfolio leads with one clear identity and supports it with specific delivery evidence:
 
-*   **Elite AI Systems Focus:** Emphasizes high-performance backend architectures, multi-agent state machines, guardrails, and deterministic evaluation frameworks (Evals) to mitigate stochastic LLM behavior.
-*   **The Forward Deployed Engineer (FDE) Advantage:** Framed with high-conviction, first-person operational narratives. Natnael is presented as a high-agency engineer who drops into complex legacy codebases, extracts business requirements, designs enterprise systems, and delivers end-to-end solutions with zero hand-holding.
-*   **Additive Cross-Platform Depth:** Shows complete full-stack mastery—leveraging React Native (Expo), Flutter, NestJS/Express, and robust databases (MongoDB, PostgreSQL, Qdrant, RabbitMQ) to build production systems.
+*   **Applied AI Focus:** Emphasizes agent behavior, evaluation frameworks, retrieval quality, structured outputs, fine-tuning, and observable production systems.
+*   **Product Delivery Strength:** Shows how Natnael turns ambiguous user and business needs into testable AI behavior, ships the surrounding system, and iterates from production evidence.
+*   **Supporting Engineering Depth:** Uses React Native, Flutter, Next.js, FastAPI, Node.js, cloud infrastructure, and data systems as the delivery foundation for AI-powered products.
 
 ---
 
 ## 2. Dynamic Sections & Component Architecture
 
 ### A. Hero Section (Decluttered & Laser-Focused)
-*   **Main Headline:** *Natnael Alemseged — Senior AI Agent Engineer | Forward Deployed Engineer*.
-*   **Core Thesis:** *"I build deterministic, production-grade multi-agent architectures and enterprise-level evaluation systems. Bridging high-scale async backends with complex LLM state orchestration to eliminate stochastic drift and cascading tool failures."*
+*   **Main Headline:** *Natnael Alemseged — Applied AI Engineer | Agent Systems, Evaluation & Production AI*.
+*   **Core Thesis:** *"I build reliable agentic systems, evaluation-driven RAG pipelines, and production AI products—taking them from ambiguous requirements through deployment, observability, and measurable iteration."*
 *   **Visual Refinements:** Cleaned up the distracting floating terminal simulation to focus visual attention on the premium left-hand layout. Replaced the generic floating `Supabase` badge with `Qdrant` to firmly anchor his specialized AI/vector infrastructure identity.
 *   **Operational Context:** Explicitly states remote availability, UTC+3 / EAT timezone positioning, and active contact pathways.
 
-### B. "No-BS" Tech Stack & Cognitive Map (`Technologies`)
-Fully updated to showcase a curated, elite engineering arsenal across three visual themes (`modern`, `terminal`, `standard`):
-1.  **AI & Agentic Systems:** LangGraph, LangFlow, MCP Architectures, Vector Databases (Qdrant), LLM Workflows & Evals, and RAG Pipelines.
-2.  **Backend & APIs:** NestJS, Express.js, Async Python (FastAPI), Node.js, WebSockets, Asyncio, RESTful & GraphQL.
-3.  **Cross-Platform & Mobile:** React Native (Expo), Flutter (Native Bridge), Dart, Next.js, TypeScript.
-4.  **Infrastructure & Databases:** MongoDB, RabbitMQ, PostgreSQL/Prisma, Redis, Docker/Kubernetes, CI/CD (GitHub Actions), Observability (Grafana/Prometheus).
+### B. Applied AI Capability Map (`Technologies`)
+The stack is organized around the production AI lifecycle rather than a flat inventory:
+1.  **Agents & Evaluation:** LangGraph, multi-agent workflows, benchmark design, LLM-as-a-judge, preference data, fine-tuning, and MCP tool use.
+2.  **Retrieval & AI Backends:** RAG, vector databases, FastAPI, structured outputs, real-time workflows, PostgreSQL, and Redis.
+3.  **Product Engineering:** Next.js, TypeScript, React Native, Flutter, NestJS, and product-facing API design.
+4.  **Cloud & ML Delivery:** Docker/Kubernetes, Terraform, CI/CD, observability, messaging, and optimized inference.
 
 ### C. Flagship AI & Classic Projects (`Projects`)
 A dynamic project database loaded from MongoDB that cleanly splits his work:
@@ -42,11 +42,11 @@ A dynamic project database loaded from MongoDB that cleanly splits his work:
 *   **6 Classic Engineering Projects (Additive Proof):** Ride-hailing, Flutter compiler utilities, e-book platforms, and cross-platform mobile apps to showcase broad shipping experience.
 *   **UI Polish:** Removed the redundant bottom Call-to-Action to prevent layout duplicates, keeping a crisp, professional project archive flow.
 
-### D. The Forward Deployed Edge (`FdeEdge`)
-An interactive, high-conviction tabbed terminal displaying Natnael's operational advantages:
-*   *Phase 1: Autonomous Onboarding* (parsing AST, reading git history, compiling NestJS/FastAPI without hand-holding).
-*   *Phase 2: High-Velocity Architectural Scaffolding* (establishing type-safe data contracts, vector indexing, message queuing).
-*   *Phase 3: Stakeholder Bridging & Direct Shipping* (translating high-level requirements into reliable systems).
+### D. Applied AI Delivery Method (`AppliedAiDelivery`)
+An interactive terminal explains the complete delivery loop:
+*   *Phase 1: Frame* the user outcome, constraints, evaluation set, and release thresholds.
+*   *Phase 2: Build* the model, retrieval, tool, API, data, and product workflows with explicit contracts and traces.
+*   *Phase 3: Evaluate and ship* by isolating failures, refining the system, enforcing release gates, and monitoring production behavior.
 
 ### E. Thought Leadership & Mathematical Deep-Dives (`Publications`)
 Rather than generic placeholders, this section displays real articles pulled from Natnael's Dev.to feed (`https://dev.to/natnael_alemseged`):

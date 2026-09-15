@@ -36,13 +36,14 @@ interface Project {
     schemaType?: string;
 }
 
-type ProjectTypeFilter = "all" | "mobile" | "web" | "systems" | "research";
+type ProjectTypeFilter = "all" | "ai" | "mobile" | "web" | "systems" | "research";
 
 const PROJECT_TYPE_FILTERS: Array<{
     id: ProjectTypeFilter;
     label: string;
 }> = [
     { id: "all", label: "All projects" },
+    { id: "ai", label: "Applied AI" },
     { id: "mobile", label: "Mobile apps" },
     { id: "web", label: "Web platforms" },
     { id: "systems", label: "Systems & tools" },
@@ -50,6 +51,11 @@ const PROJECT_TYPE_FILTERS: Array<{
 ];
 
 const getProjectType = (project: Project): Exclude<ProjectTypeFilter, "all"> => {
+    const searchableText = [project.title, project.summary, ...(project.tags ?? [])].join(" ");
+    if (/\b(ai|llm|agent|agents|agentic|rag|model|models|inference|benchmark|generative|langgraph|mcp|vector)\b/i.test(searchableText)) {
+        return "ai";
+    }
+
     switch (project.schemaType) {
         case "MobileApplication":
             return "mobile";
@@ -309,9 +315,9 @@ export default function Projects({
     totalProjectCount,
     limit,
     showViewAll = false,
-    title = "Product Engineering Case Studies",
-    subtitle = "Real-world projects spanning AI copilots, mobile ride-hailing, platform infrastructure, and high-impact experiments.",
-    badge = "Selected Work",
+    title = "Applied AI & Product Systems",
+    subtitle = "Case studies showing how I turn models, data, evaluations, and full-stack engineering into production systems with measurable behavior.",
+    badge = "Selected Applied AI Work",
     layout = "carousel",
     centerHeader = false
 }: {
@@ -339,6 +345,7 @@ export default function Projects({
     const projectTypeCounts = useMemo(() => {
         const counts: Record<ProjectTypeFilter, number> = {
             all: displayedProjects.length,
+            ai: 0,
             mobile: 0,
             web: 0,
             systems: 0,

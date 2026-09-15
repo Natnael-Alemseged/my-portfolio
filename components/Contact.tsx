@@ -200,9 +200,10 @@ export default function Contact() {
       } else {
         throw new Error(result.message || "Form submission failed");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Form submission error:", error);
-      toast.error(error.message || "Failed to send message. Please try again or email me directly.", {
+      const errorMessage = error instanceof Error ? error.message : "Failed to send message. Please try again or email me directly.";
+      toast.error(errorMessage, {
         duration: 5000,
         position: "bottom-center",
         style: {
@@ -301,10 +302,10 @@ export default function Contact() {
                     Connect
                   </span>
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
-                    Let's build something <br className="hidden sm:block" /> remarkable together
+                    Need an AI system that works <br className="hidden sm:block" /> beyond the prototype?
                   </h2>
                   <p className="text-base md:text-lg text-gray-400">
-                    Book a quick call to discuss your project, timeline, or any challenges. I usually respond within a few hours.
+                    Tell me about the users, workflow, data, and quality bar. I can help frame the problem, build the system, and create the evaluation loop around it.
                   </p>
 
                   <div className="flex flex-wrap gap-3 md:gap-4">
@@ -325,7 +326,7 @@ export default function Contact() {
                       Send a Message
                     </h3>
                     <p className="text-sm text-gray-400 mb-6">
-                      Fill out the form below and I'll get back to you soon
+                      Share the problem, current system, and what a successful outcome looks like.
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -451,7 +452,7 @@ export default function Contact() {
                         Schedule a Call
                       </h3>
                       <p className="text-sm text-gray-400 mt-1">
-                        Pick a time that works for you — 10 minute discovery call
+                        Pick a time that works for a focused 10-minute discovery call.
                       </p>
                     </div>
                     <button

@@ -4,14 +4,14 @@ import connectToDatabase from "@/lib/db/mongoose";
 import Project from "@/lib/db/project.model";
 
 export const metadata: Metadata = {
-    title: "All Projects | Natnael Alemseged",
-    description: "Explore Natnael Alemseged's engineering case studies across AI agents, full-stack platforms, mobile apps, evaluation systems, and open-source tools.",
+    title: "Applied AI Projects | Natnael Alemseged",
+    description: "Explore Natnael Alemseged's case studies across AI agents, evaluation systems, RAG, production backends, and AI-powered products.",
     alternates: {
         canonical: "/projects",
     },
     openGraph: {
-        title: "Engineering Projects | Natnael Alemseged",
-        description: "Explore engineering case studies across AI agents, full-stack platforms, mobile apps, evaluation systems, and open-source tools.",
+        title: "Applied AI Projects | Natnael Alemseged",
+        description: "Explore case studies across AI agents, evaluation systems, RAG, production backends, and AI-powered products.",
         url: "/projects",
         type: "website",
         images: [{ url: "/og-image.jpg", alt: "Natnael Alemseged engineering portfolio" }],
@@ -50,9 +50,9 @@ export default async function ProjectsPage() {
 
             <Projects
                 initialProjects={projects}
-                title="Full Project Archive"
-                subtitle="A comprehensive collection of my engineering work, experiments, and open-source contributions."
-                badge="All Work"
+                title="Applied AI & Engineering Archive"
+                subtitle="Production AI systems, evaluation work, product platforms, mobile applications, and open-source tools—each documented as an engineering case study."
+                badge="Project Archive"
                 layout="grid"
                 centerHeader={true}
             />

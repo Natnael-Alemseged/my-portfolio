@@ -43,18 +43,18 @@ export const generateMetadata = (): Metadata => ({
 async function getProjects() {
     try {
         await connectToDatabase();
-        const query = {
+        const publicQuery = {
             visibility: 'public',
-            status: { $ne: 'archived' }
+            status: { $ne: 'archived' },
         };
         const [projects, totalCount] = await Promise.all([
-            Project.find(query)
+            Project.find({ ...publicQuery, featured: true })
                 .select("_id slug title summary keyTakeaway images logo_image techStack tags links featured schemaType")
                 .sort({ position: 1, createdAt: -1 })
                 .limit(HOMEPAGE_PROJECT_LIMIT)
                 .maxTimeMS(3000)
                 .lean(),
-            Project.countDocuments(query).maxTimeMS(3000),
+            Project.countDocuments(publicQuery).maxTimeMS(3000),
         ]);
         return {
             projects: JSON.parse(JSON.stringify(projects)),
@@ -97,7 +97,7 @@ export default async function Home() {
             {/* Publications & Alignment Section */}
             <Publications />
 
-            {/* Testimonials */}
+            {/* Verified client outcomes */}
             <Testimonials />
 
             {/* Work Experience Section */}

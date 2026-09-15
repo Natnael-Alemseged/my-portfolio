@@ -1,6 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Briefcase, Calendar, ChevronDown } from "lucide-react";
+import { Briefcase, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 interface Experience {
@@ -15,8 +15,8 @@ const experiences: Experience[] = [
     {
         id: 1,
         title: 'Senior Software Engineer',
-        company: 'HireArmada – Atlanta, GA - Remote',
-        period: 'Aug 2025 – Present',
+        company: 'Hire Armada – United States - Remote',
+        period: 'Jul 2025 – Present',
         highlights: [
             "Shipped AI-driven backends and full-stack features using Node.js, FastAPI, Flutter, Next.js, Prisma, Composio, MCP, and Langflow.",
             "Built social discovery backend supporting 10K+ DAU with 99.9% uptime, real-time matching, and messaging.",
@@ -29,8 +29,8 @@ const experiences: Experience[] = [
     {
         id: 2,
         title: 'Senior Full-Stack Developer',
-        company: 'Startup Agile – Atlanta, GA - Remote',
-        period: 'Jan 2025 – Present',
+        company: 'Startup Agile – United States - Remote',
+        period: 'Jan 2025 – May 2026',
         highlights: [
             "Led React/Next.js web + React Native (Expo) mobile delivery; hit milestones 15% ahead of schedule.",
             "Built OTA-enabled RN apps w/ deep linking, Firebase push, Google Maps, analytics, and AI assistants; cut load 35%.",
@@ -41,8 +41,8 @@ const experiences: Experience[] = [
     {
         id: 3,
         title: 'AI Engineer',
-        company: 'DataCore Softwares – Fort Lauderdale, FL - Remote',
-        period: 'Jan 2025 – Jul 2025',
+        company: 'DataCore Software – United States - Remote, Contract',
+        period: 'Jan 2025 – Aug 2025',
         highlights: [
             "Built AI-powered storage services w/ Python, FastAPI, Docker, self-hosted LLMs for detection, transcription, translation.",
             "Delivered <200ms inference and 99.9% uptime via AWS EKS, TensorRT optimizations, and containerized deployments.",
@@ -53,8 +53,8 @@ const experiences: Experience[] = [
     {
         id: 4,
         title: 'Senior Mobile Developer',
-        company: 'Qemer Software Technologies – Addis Ababa,ET - Onsite',
-        period: 'Jan 2024 – Jun 2025',
+        company: 'Qemer Software Technology PLC – Addis Ababa, Ethiopia - On-site',
+        period: 'Aug 2024 – Sep 2025',
         highlights: [
             "Led delivery of 10+ cross-platform Flutter/Ionic apps; execution velocity improved 40%.",
             "Optimized app performance (load times -50%) and instituted mentoring program reducing onboarding 30%.",
@@ -197,14 +197,14 @@ export default function WorkExperience() {
                     className="text-center mb-20"
                 >
                     <p className="text-xs uppercase tracking-[0.5em] text-[#00ff99] mb-4">
-                        Career Path
+                        Production Experience
                     </p>
                     <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
                         Experience<span className="text-[#00ff99]">.</span>
                     </h2>
                     <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#00ff99] to-transparent mx-auto rounded-full"></div>
                     <p className="text-gray-400 mt-8 max-w-2xl mx-auto text-lg">
-                        Building the future of AI and mobile through years of dedicated engineering and product vision.
+                        A progression from product and platform engineering into production AI—combining model integration, backend reliability, and end-to-end delivery.
                     </p>
                 </motion.div>
 

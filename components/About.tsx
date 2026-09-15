@@ -2,17 +2,12 @@
 
 import { motion } from "framer-motion";
 import { 
-    Cpu, 
     Bot, 
     Layers, 
-    Activity, 
     Terminal, 
     TrendingUp, 
     ShieldCheck, 
-    Zap,
-    Maximize2,
-    Database,
-    PhoneCall
+    Zap
 } from "lucide-react";
 
 // ==========================================
@@ -22,28 +17,28 @@ const highlights = [
     { 
         label: "Projects Shipped", 
         value: "30+", 
-        description: "Production web & mobile platforms",
+        description: "AI, web, and mobile products delivered",
         icon: <Layers size={18} className="text-[#00ff99]" />,
         sparklinePoints: "5,35 15,25 30,30 45,15 60,20 75,5 90,8 100,2"
     },
     { 
         label: "Users Reached", 
         value: "10K+", 
-        description: "Active digital platform consumers",
+        description: "People served by production systems",
         icon: <TrendingUp size={18} className="text-[#00ff99]" />,
         sparklinePoints: "5,32 20,28 35,22 50,25 65,12 80,15 90,4 100,2"
     },
     { 
         label: "Bug Reduction", 
         value: "65%", 
-        description: "Post-migration type-safety standard",
+        description: "Production defects reduced through typed workflows",
         icon: <ShieldCheck size={18} className="text-[#00ff99]" />,
         sparklinePoints: "5,30 15,28 30,22 45,24 60,14 75,10 90,6 100,1"
     },
     { 
         label: "Efficiency Gain", 
         value: "30%", 
-        description: "Agent automation pipelines benefit",
+        description: "Team productivity gained from agent workflows",
         icon: <Zap size={18} className="text-[#00ff99]" />,
         sparklinePoints: "5,33 15,28 30,26 45,18 60,19 75,8 90,6 100,2"
     },
@@ -74,21 +69,21 @@ const CoreCommitmentsCard = () => {
             <div className="space-y-5 relative z-20">
                 {[
                     {
-                        title: "Autonomous AI Orchestration",
-                        what: "Architecting multi-agent frameworks, prompt workflows, and custom MCP integrations.",
-                        why: "Transforms static models into active, task-solving business tools with guarded execution limits.",
+                        title: "Problem Framing & Evaluation",
+                        what: "Defining user outcomes, representative eval sets, quality thresholds, and failure categories before scaling a solution.",
+                        why: "Turns subjective AI demos into measurable product behavior and clear release decisions.",
                         icon: <Bot size={16} className="text-[#00ff99]" />
                     },
                     {
-                        title: "End-to-End Full-Stack Systems",
-                        what: "Linking secure Python/FastAPI and Node.js backends to performant Next.js & Flutter frontends.",
-                        why: "Provides compile-time type safety across the network layer, eliminating standard runtime crashes.",
+                        title: "Production AI Systems",
+                        what: "Combining agents, retrieval, structured generation, and model integrations with dependable Python and TypeScript services.",
+                        why: "Keeps model behavior observable, bounded, and useful under real product constraints.",
                         icon: <Layers size={16} className="text-[#00ff99]" />
                     },
                     {
-                        title: "Performance & Scaling Targets",
-                        what: "Refining backend request lifecycles and frontend Core Web Vitals (LCP, INP, CLS).",
-                        why: "Slashes computing overhead while delivering sub-100ms UI responsiveness for immediate user conversion.",
+                        title: "End-to-End Product Delivery",
+                        what: "Shipping the interface, APIs, data flows, cloud infrastructure, monitoring, and feedback loops around the AI capability.",
+                        why: "Moves the work from a promising prototype to a product people can adopt and improve.",
                         icon: <Zap size={16} className="text-[#00ff99]" />
                     }
                 ].map((item, idx) => (
@@ -266,7 +261,7 @@ export default function About() {
                 {/* Highlight Stats Dashboard with sparkline charts */}
                 <div className="pt-8 border-t border-white/[0.05] relative z-10">
                     <span className="text-[10px] font-mono text-gray-400 uppercase tracking-[0.3em] block mb-6">
-                        OPERATIONAL_HIGHLIGHTS
+                        DELIVERY_EVIDENCE
                     </span>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

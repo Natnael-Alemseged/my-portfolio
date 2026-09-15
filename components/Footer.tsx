@@ -2,8 +2,6 @@
 
 import { FaDev, FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
-import Link from "next/link";
-
 const socials = [
     {
         label: "LinkedIn",
@@ -70,7 +68,7 @@ export default function Footer() {
                             © {new Date().getFullYear()} Natnael Alemseged. All Rights Reserved.
                         </div>
                         <div className="text-[8px] font-mono tracking-[0.3em] text-[#00ff99]/40 uppercase">
-                            Secure Agent Protocol // Latency Critical // Addis Ababa
+                            Applied AI // Evaluation-Driven // Built in Addis Ababa
                         </div>
                     </div>
                 </div>

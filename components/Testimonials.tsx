@@ -1,17 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
-import Image from "next/image";
+import { ArrowUpRight, CheckCircle2, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-type Testimonial = {
+type DeliveryOutcome = {
     id: number;
-    name: string;
-    role: string;
-    quote: string;
-    avatar: string;
+    label: string;
+    timeframe: string;
+    summary: string;
     project: string;
     impact: string;
 };
@@ -21,60 +19,30 @@ type ProofMetric = {
     label: string;
 };
 
-const testimonials: Testimonial[] = [
+const deliveryOutcomes: DeliveryOutcome[] = [
     {
         id: 1,
-        name: "Kate Rogers",
-        role: "Product Designer @ ABC Corp",
-        quote: "Natnael transformed our customer support tooling in record time. The experience was seamless, collaborative, and the end result exceeded expectations.",
-        avatar: "/testimonials/kate.png",
-        project: "Support tooling rebuild",
-        impact: "faster internal handoffs",
+        label: "Verified client engagement",
+        timeframe: "January–June 2026",
+        summary: "Delivered a complete social music party-game product engagement from implementation through client handoff.",
+        project: "Social Music Party Game",
+        impact: "Verified 5.0 Upwork rating",
     },
     {
         id: 2,
-        name: "Samuel Bekele",
-        role: "Startup Founder",
-        quote: "We needed a developer who could move fast without compromising quality. Every deliverable was pixel-perfect, performant, and thoughtfully engineered.",
-        avatar: "/testimonials/samuel.png",
-        project: "Founder-led MVP",
-        impact: "launch-ready product system",
+        label: "Verified client engagement",
+        timeframe: "January 2026",
+        summary: "Completed a focused production chatbot engagement with the integration, product behavior, and delivery quality verified by the client.",
+        project: "AI Chatbot Engineering",
+        impact: "Verified 5.0 Upwork rating",
     },
     {
         id: 3,
-        name: "Marta Alvarez",
-        role: "Product Lead @ TechFlow",
-        quote: "From ideation to launch, Natnael owned the build and communication. The attention to detail and empathy for our users were remarkable.",
-        avatar: "/testimonials/marta.png",
-        project: "Product delivery sprint",
-        impact: "clear release momentum",
-    },
-    {
-        id: 4,
-        name: "Lula Abebe",
-        role: "AI Researcher",
-        quote: "We trusted Natnael with complex AI integrations. He delivered maintainable code, clear documentation, and creative solutions to tough problems.",
-        avatar: "/testimonials/lula.png",
-        project: "AI workflow integration",
-        impact: "maintainable agent flows",
-    },
-    {
-        id: 5,
-        name: "David Chen",
-        role: "Senior Architect",
-        quote: "The ability to translate complex requirements into elegant, high-performance code is Natnael's superpower. A genuine pleasure to work with.",
-        avatar: "/testimonials/samuel.png",
-        project: "Platform architecture",
-        impact: "cleaner technical direction",
-    },
-    {
-        id: 6,
-        name: "Elena K.",
-        role: "Operations Manager",
-        quote: "Our workflow efficiency improved dramatically after the tools Natnael built were rolled out. Technical depth matched by sharp business intuition.",
-        avatar: "/testimonials/marta.png",
-        project: "Operations automation",
-        impact: "leaner team workflows",
+        label: "Verified client engagement",
+        timeframe: "2025",
+        summary: "Shipped and supported a cross-platform inventory application through a completed client engagement.",
+        project: "Flutter Inventory Tracker",
+        impact: "Verified 5.0 Upwork rating",
     },
 ];
 
@@ -100,7 +68,7 @@ export default function Testimonials() {
 
         const interval = window.setInterval(() => {
             setDirection(1);
-            setActiveIndex((prev) => (prev + 1) % testimonials.length);
+            setActiveIndex((prev) => (prev + 1) % deliveryOutcomes.length);
         }, 7000);
 
         return () => window.clearInterval(interval);
@@ -108,7 +76,7 @@ export default function Testimonials() {
 
     const navigate = (dir: number) => {
         setDirection(dir);
-        setActiveIndex((prev) => (prev + dir + testimonials.length) % testimonials.length);
+        setActiveIndex((prev) => (prev + dir + deliveryOutcomes.length) % deliveryOutcomes.length);
     };
 
     const goTo = (index: number) => {
@@ -117,7 +85,7 @@ export default function Testimonials() {
         setActiveIndex(index);
     };
 
-    const t = testimonials[activeIndex];
+    const outcome = deliveryOutcomes[activeIndex];
 
     return (
         <section
@@ -141,10 +109,10 @@ export default function Testimonials() {
                         className="max-w-2xl mx-auto text-center"
                     >
                         <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.42em] text-[#00ff99]">
-                            Client Testimonials
+                            Verified Delivery
                         </p>
                         <h2 className="text-3xl font-black tracking-tight text-white md:text-5xl">
-                            Engineered for Outcomes<span className="text-[#00ff99]">.</span>
+                            Evidence from shipped work<span className="text-[#00ff99]">.</span>
                         </h2>
                     </motion.div>
                 </div>
@@ -166,14 +134,14 @@ export default function Testimonials() {
                                 <div className="mb-6 flex items-start justify-between gap-6">
                                     <div className="inline-flex items-center gap-1.5 border border-[#00ff99]/20 bg-[#00ff99]/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-[#00ff99]">
                                         <Star className="h-3 w-3 fill-[#00ff99] stroke-[#00ff99]" />
-                                        Client verification
+                                        Verified Upwork delivery
                                     </div>
-                                    <Quote className="h-8 w-8 text-[#00ff99]/10" aria-hidden />
+                                    <CheckCircle2 className="h-8 w-8 text-[#00ff99]/20" aria-hidden />
                                 </div>
 
                                 <AnimatePresence mode="wait" custom={direction}>
                                     <motion.div
-                                        key={t.id}
+                                        key={outcome.id}
                                         custom={direction}
                                         variants={slideVariants}
                                         initial="enter"
@@ -182,26 +150,19 @@ export default function Testimonials() {
                                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                                         className="flex flex-1 flex-col justify-between"
                                     >
-                                        <blockquote className="text-lg md:text-xl font-semibold leading-relaxed text-gray-100 italic">
-                                            "{t.quote}"
-                                        </blockquote>
+                                        <p className="text-lg md:text-xl font-semibold leading-relaxed text-gray-100">
+                                            {outcome.summary}
+                                        </p>
 
                                         <div className="mt-6 pt-4 border-t border-white/[0.05]">
                                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-white/[0.1] bg-white/[0.03]">
-                                                        <Image
-                                                            src={t.avatar}
-                                                            alt={t.name}
-                                                            width={44}
-                                                            height={44}
-                                                            className="h-full w-full object-cover"
-                                                            priority={activeIndex === 0}
-                                                        />
+                                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#00ff99]/20 bg-[#00ff99]/[0.04]">
+                                                        <CheckCircle2 className="h-5 w-5 text-[#00ff99]" aria-hidden />
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="truncate text-base font-bold text-white leading-tight">{t.name}</p>
-                                                        <p className="truncate text-xs text-gray-400">{t.role}</p>
+                                                        <p className="truncate text-base font-bold text-white leading-tight">{outcome.label}</p>
+                                                        <p className="truncate text-xs text-gray-400">{outcome.timeframe}</p>
                                                     </div>
                                                 </div>
 
@@ -210,13 +171,13 @@ export default function Testimonials() {
                                                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-gray-500">
                                                             Project
                                                         </p>
-                                                        <p className="mt-0.5 text-sm font-semibold text-gray-300">{t.project}</p>
+                                                        <p className="mt-0.5 text-sm font-semibold text-gray-300">{outcome.project}</p>
                                                     </div>
                                                     <div>
                                                         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-gray-500">
                                                             Impact
                                                         </p>
-                                                        <p className="mt-0.5 text-sm font-semibold text-[#00ff99]">{t.impact}</p>
+                                                        <p className="mt-0.5 text-sm font-semibold text-[#00ff99]">{outcome.impact}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -231,19 +192,19 @@ export default function Testimonials() {
                             <button
                                 onClick={() => navigate(-1)}
                                 type="button"
-                                aria-label="Previous testimonial"
+                                aria-label="Previous delivery outcome"
                                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.08] text-gray-400 bg-black/40 transition-all duration-200 hover:border-[#00ff99]/30 hover:bg-[#00ff99]/[0.03] hover:text-[#00ff99] focus:outline-none"
                             >
                                 <ChevronLeft className="h-5 w-5" />
                             </button>
 
                             <div className="flex items-center gap-2 px-3 py-2 bg-black/20 rounded-full border border-white/[0.05]">
-                                {testimonials.map((item, i) => (
+                                {deliveryOutcomes.map((item, i) => (
                                     <button
                                         key={item.id}
                                         onClick={() => goTo(i)}
                                         type="button"
-                                        aria-label={`Go to testimonial ${i + 1}`}
+                                        aria-label={`Go to delivery outcome ${i + 1}`}
                                         className="grid place-items-center h-6 w-6 -mx-1.5 rounded-full"
                                     >
                                         <span
@@ -258,7 +219,7 @@ export default function Testimonials() {
                             <button
                                 onClick={() => navigate(1)}
                                 type="button"
-                                aria-label="Next testimonial"
+                                aria-label="Next delivery outcome"
                                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.08] text-gray-400 bg-black/40 transition-all duration-200 hover:border-[#00ff99]/30 hover:bg-[#00ff99]/[0.03] hover:text-[#00ff99] focus:outline-none"
                             >
                                 <ChevronRight className="h-5 w-5" />
@@ -292,7 +253,7 @@ export default function Testimonials() {
                             href="#contact"
                             className="group flex w-full min-h-[42px] items-center justify-center gap-1.5 rounded-xl border border-[#00ff99]/30 bg-[#00ff99]/[0.03] px-3 py-2.5 text-[10px] md:text-[11px] font-bold text-white transition-all duration-300 hover:border-[#00ff99] hover:bg-[#00ff99] hover:text-black shadow-[0_0_15px_rgba(0,255,153,0.05)] hover:shadow-[0_0_25px_rgba(0,255,153,0.25)] text-center"
                         >
-                            <span>Initiate AI Protocol</span>
+                            <span>Discuss an AI project</span>
                             <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 shrink-0" />
                         </Link>
                     </div>

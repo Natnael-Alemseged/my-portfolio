@@ -3,6 +3,16 @@ import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
 import { PROFILE_DESCRIPTION, PROFILE_ROLE } from '@/lib/brand';
 
+interface ProjectSummary {
+    slug: string;
+    title: string;
+    summary: string;
+    keyTakeaway?: string;
+    tags?: string[];
+    techStack?: string[];
+    schemaType?: string;
+}
+
 export async function GET() {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://natnaelalemseged.com';
 
@@ -13,7 +23,7 @@ export async function GET() {
             status: { $ne: 'archived' }
         })
             .sort({ position: 1, createdAt: -1 })
-            .lean();
+            .lean<ProjectSummary[]>();
 
         let content = `# Natnael Alemseged - ${PROFILE_ROLE}\n\n`;
         content += `> ${PROFILE_DESCRIPTION}\n\n`;
@@ -23,9 +33,15 @@ export async function GET() {
         content += `- [LinkedIn](https://www.linkedin.com/in/natnael-alemseged): Professional profile.\n`;
         content += `- [GitHub](https://github.com/Natnael-Alemseged): Code repositories.\n\n`;
 
+        content += `## Applied AI Focus\n\n`;
+        content += `- Agent systems and tool use: LangGraph, multi-agent workflows, MCP, structured generation, and explicit recovery paths.\n`;
+        content += `- Evaluation and experimentation: domain benchmarks, deterministic checks, LLM-as-a-judge, preference data, statistical testing, and fine-tuning.\n`;
+        content += `- Retrieval and AI backends: RAG, vector databases, semantic search, FastAPI, Node.js, PostgreSQL, Redis, and real-time workflows.\n`;
+        content += `- Product delivery: discovery, rapid prototyping, full-stack integration, cloud deployment, observability, and measurable iteration.\n\n`;
+
         content += `## Key Projects (human-readable)\n\n`;
 
-        projects.forEach((project: any) => {
+        projects.forEach((project) => {
             const projectUrl = `${siteUrl}/projects/${project.slug}`;
             const techStack = project.techStack && project.techStack.length > 0
                 ? ` Tech stack: ${project.techStack.join(', ')}.`
@@ -39,7 +55,7 @@ export async function GET() {
         });
 
         // Machine-readable JSON index for LLMs
-        const jsonIndex = projects.map((project: any) => ({
+        const jsonIndex = projects.map((project) => ({
             slug: project.slug,
             title: project.title,
             url: `${siteUrl}/projects/${project.slug}`,

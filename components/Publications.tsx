@@ -216,8 +216,8 @@ export default function Publications() {
 
                 <div className="mt-8 flex flex-col gap-4 border-t border-white/[0.08] pt-7 sm:flex-row sm:items-center sm:justify-between">
                     <p className="max-w-2xl text-sm leading-6 text-gray-400">
-                        Published source material supporting the evaluation and fine-tuning
-                        capabilities listed in my résumé.
+                        The research layer of my Applied AI practice: methods I can explain,
+                        reproduce, test, and carry into production systems.
                     </p>
                     <a
                         href="https://dev.to/natnael_alemseged"
