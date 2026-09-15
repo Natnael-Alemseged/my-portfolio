@@ -7,22 +7,22 @@ import Testimonials from "@/components/Testimonials";
 import WorkExperience from "@/components/WorkExperience.modern";
 // import Technologies from "@/components/Technologies";
 import Technologies from "@/components/Technologies.modern";
-import FdeEdge from "@/components/FdeEdge";
+import AppliedAiDelivery from "@/components/AppliedAiDelivery";
 import Publications from "@/components/Publications";
 import Contact from "@/components/Contact";
 import connectToDatabase from "@/lib/db/mongoose";
 import Project from "@/lib/db/project.model";
+import { PROFILE_DESCRIPTION, PROFILE_TITLE } from "@/lib/brand";
 
 const HOMEPAGE_PROJECT_LIMIT = 6;
 
 export const generateMetadata = (): Metadata => ({
-    title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
-    description:
-        "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluation frameworks, and high-performance software.",
+    title: PROFILE_TITLE,
+    description: PROFILE_DESCRIPTION,
     authors: [{ name: "Natnael Alemseged" }],
     openGraph: {
-        title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
-        description: "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluations, and high-performance software.",
+        title: PROFILE_TITLE,
+        description: PROFILE_DESCRIPTION,
         url: "https://natnaelalemseged.com/",
         siteName: "Natnael Alemseged",
         type: "website",
@@ -30,8 +30,8 @@ export const generateMetadata = (): Metadata => ({
     },
     twitter: {
         card: "summary_large_image",
-        title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
-        description: "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluations, and high-performance software.",
+        title: PROFILE_TITLE,
+        description: PROFILE_DESCRIPTION,
         images: ["/og-image.jpg"],
     },
     alternates: {
@@ -83,8 +83,8 @@ export default async function Home() {
 
             <Technologies />
 
-            {/* FDE Edge (Why Hire Me) Section */}
-            <FdeEdge />
+            {/* Applied AI delivery (Why Hire Me) Section */}
+            <AppliedAiDelivery />
 
             {/* Projects Section */}
             <Projects

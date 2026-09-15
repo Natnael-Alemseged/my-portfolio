@@ -184,13 +184,13 @@
   },
   "ai-fde": {
     "metadata": {
-      "title": "Natnael Alemseged Astaw - AI and Forward-Deployed Engineer Resume",
-      "subject": "AI Agent, LLM Evaluation, and Forward-Deployed Engineer resume"
+      "title": "Natnael Alemseged Astaw - Applied AI Engineer Resume",
+      "subject": "Applied AI engineering, agent systems, and LLM evaluation resume"
     },
     "person": {
-      "headline": "AI Agent & Forward-Deployed Engineer | LLM Evaluation"
+      "headline": "Applied AI Engineer | Agent Systems & LLM Evaluation"
     },
-    "profile": "AI and forward-deployed engineer with 4+ years of software delivery experience building production agentic systems, domain evaluations, fine-tuning workflows, RAG pipelines, and LLM-powered APIs. Combines Python and TypeScript engineering with customer-facing discovery, rapid prototyping, deployment, observability, and measurable iteration. Experienced with LangGraph, LLM-as-a-judge, preference optimization, FastAPI, AWS, and full-stack product integration.",
+    "profile": "Applied AI engineer with 4+ years of software delivery experience building production agentic systems, domain evaluations, fine-tuning workflows, RAG pipelines, and LLM-powered APIs. Combines Python and TypeScript engineering with customer discovery, rapid prototyping, deployment, observability, and measurable iteration. Experienced with LangGraph, LLM-as-a-judge, preference optimization, FastAPI, AWS, and full-stack product integration.",
     "experience": {
       "primary": [
         {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
+import { PROFILE_DESCRIPTION, PROFILE_ROLE } from '@/lib/brand';
 
 export async function GET() {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://natnaelalemseged.com';
@@ -14,8 +15,8 @@ export async function GET() {
             .sort({ position: 1, createdAt: -1 })
             .lean();
 
-        let content = `# Natnael Alemseged - Senior AI Agent Engineer & Forward Deployed Engineer\n\n`;
-        content += `> Senior AI Agent Engineer and Forward Deployed Engineer building deterministic multi-agent architectures, enterprise evaluation frameworks (Evals), LangGraph agents, FastAPI backends, vector databases, Next.js, and Flutter.\n\n`;
+        let content = `# Natnael Alemseged - ${PROFILE_ROLE}\n\n`;
+        content += `> ${PROFILE_DESCRIPTION}\n\n`;
 
         content += `## Contact & Socials\n\n`;
         content += `- [Website](${siteUrl}): Portfolio website.\n`;

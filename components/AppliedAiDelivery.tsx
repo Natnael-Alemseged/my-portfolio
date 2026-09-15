@@ -5,12 +5,7 @@ import {
     Terminal, 
     Zap, 
     Shield, 
-    Send, 
-    Sparkles, 
-    CheckCircle,
-    UserCheck,
-    Lock,
-    Eye
+    UserCheck
 } from "lucide-react";
 import { useState } from "react";
 
@@ -23,9 +18,9 @@ interface DiagnosticStep {
 
 const diagnosticSteps: DiagnosticStep[] = [
     {
-        command: "fde init --mode fractional --allocation high-bandwidth",
+        command: "applied-ai discover --scope product-and-system",
         output: [
-            "Initializing FDE operational interface...",
+            "Mapping the product, users, data, and system constraints...",
             "✅ Stakeholder context mapped directly with project vision",
             "✅ Technical requirements extracted directly from high-level roadmap",
             "🚀 Communication latency: ~0ms (Immediate feedback loop)"
@@ -34,7 +29,7 @@ const diagnosticSteps: DiagnosticStep[] = [
         duration: "0.14s"
     },
     {
-        command: "fde execute --scope full-stack --autonomy active",
+        command: "applied-ai build --scope full-stack --autonomy active",
         output: [
             "Parsing active backend & UI repositories...",
             "✅ Native bridging layers compiled (NestJS + RabbitMQ + React Native)",
@@ -45,7 +40,7 @@ const diagnosticSteps: DiagnosticStep[] = [
         duration: "0.42s"
     },
     {
-        command: "fde evaluate --systems agentic-state-machines",
+        command: "applied-ai evaluate --systems agentic-state-machines",
         output: [
             "Running deterministic test assertions...",
             "⚠️ Stochastic variation flagged in LLM schema outputs",
@@ -57,11 +52,11 @@ const diagnosticSteps: DiagnosticStep[] = [
     }
 ];
 
-export default function FdeEdge() {
+export default function AppliedAiDelivery() {
     const [activeTerminalTab, setActiveTerminalTab] = useState<number>(0);
 
     return (
-        <section id="fde-edge" className="relative py-20 px-6 md:px-12 lg:px-16 bg-black overflow-hidden">
+        <section id="applied-ai-delivery" className="relative py-20 px-6 md:px-12 lg:px-16 bg-black overflow-hidden">
             {/* Elegant boundary gradients */}
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
             <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
@@ -79,10 +74,10 @@ export default function FdeEdge() {
                         operational_autonomy
                     </span>
                     <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight tracking-tight">
-                        How I Execute: The Forward-Deployed Edge
+                        How I Build Applied AI, End to End
                     </h2>
                     <p className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base font-sans leading-relaxed">
-                        I do not wait for a backlog or granular specifications. I operate directly at the intersection of systems architecture, customer alignment, and product vision—autonomously delivering production-grade backend systems and full-stack integrations.
+                        I turn ambiguous product goals into measurable AI behavior—aligning with users, designing the system, validating model quality, and shipping the complete production experience.
                     </p>
                 </div>
 
@@ -105,7 +100,7 @@ export default function FdeEdge() {
                                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-[#00ff99]/70" />
-                                    <span className="text-[10px] font-mono text-gray-400 ml-2">fde-engine@natnael: ~ (autonomous_env)</span>
+                                    <span className="text-[10px] font-mono text-gray-400 ml-2">applied-ai@natnael: ~ (production_env)</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-[9px] font-mono text-gray-600 bg-black/40 px-2 py-0.5 rounded border border-white/[0.04]">
                                     <Terminal size={10} className="text-[#00ff99]/60" />
@@ -189,18 +184,18 @@ export default function FdeEdge() {
                     >
                         {[
                             {
-                                title: "Zero Hand-Holding Integration",
-                                desc: "I drop straight into complex, distributed codebases, reconstruct accurate system models via AST parsing, and start resolving business bottlenecks immediately without disrupting your core team.",
+                                title: "Fast Context, Low Overhead",
+                                desc: "I get productive in complex codebases quickly, reconstruct system behavior, clarify the real constraint, and move from discovery to useful delivery without slowing the core team.",
                                 icon: <UserCheck className="text-[#00ff99]" size={18} />
                             },
                             {
-                                title: "Cynical & Deterministic Systems Design",
-                                desc: "Uncertain systems break under real-world traffic. I enforce strict Pydantic/TypeScript schemas at the API boundary, guard AI outputs with comprehensive evaluation graphs, and treat latency as a core metric.",
+                                title: "Reliable, Evaluation-Driven Design",
+                                desc: "I combine strict Pydantic and TypeScript contracts with targeted evaluations, observable workflows, and explicit failure handling so AI behavior can be measured and improved.",
                                 icon: <Shield className="text-[#00ff99]" size={18} />
                             },
                             {
-                                title: "Full-Stack Operational Domain",
-                                desc: "I own the entire delivery loop—from writing high-throughput NestJS microservices and configuring RabbitMQ channels to compiling custom React Native/Flutter layouts and database indexing.",
+                                title: "End-to-End Product Delivery",
+                                desc: "I own the full delivery loop—from model and retrieval behavior to backend services, data flows, interfaces, deployment, and production feedback.",
                                 icon: <Zap className="text-[#00ff99]" size={18} />
                             }
                         ].map((card, idx) => (

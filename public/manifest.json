@@ -5,7 +5,7 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#111827",
-  "description": "Portfolio site of Natnael Alemseged, full-stack and AI developer.",
+  "description": "Portfolio of Natnael Alemseged, an Applied AI Engineer building agent systems, evaluation frameworks, RAG pipelines, and production AI products.",
   "icons": [
     {
       "src": "/favicon.ico",

@@ -11,16 +11,16 @@ import StructuredData from "@/components/StructuredData";
 import Header from "@/components/header";
 import Footer from "@/components/Footer";
 import ChatWidgetWrapper from "@/components/ChatWidgetWrapper";
+import { PROFILE_DESCRIPTION, PROFILE_TITLE } from "@/lib/brand";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
-    description:
-        "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluation frameworks, and high-performance software.",
+    title: PROFILE_TITLE,
+    description: PROFILE_DESCRIPTION,
     keywords: [
-        "AI Agent Engineer",
-        "Forward Deployed Engineer",
+        "Applied AI Engineer",
+        "AI Systems Engineer",
         "AI Engineer",
         "Multi-agent systems",
         "LLM Evals",
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
     ],
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ? (process.env.NEXT_PUBLIC_SITE_URL.startsWith('http') ? process.env.NEXT_PUBLIC_SITE_URL : `https://${process.env.NEXT_PUBLIC_SITE_URL}`) : "https://natnaelalemseged.com"),
     openGraph: {
-        title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
-        description: "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluations, and high-performance software.",
+        title: PROFILE_TITLE,
+        description: PROFILE_DESCRIPTION,
         url: "https://natnaelalemseged.com/",
         siteName: "Natnael Alemseged",
         type: "website",
@@ -51,8 +51,8 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Natnael Alemseged | AI Agent & Forward Deployed Engineer",
-        description: "AI Agent and Forward Deployed Engineer building deterministic multi-agent systems, enterprise evaluations, and high-performance software.",
+        title: PROFILE_TITLE,
+        description: PROFILE_DESCRIPTION,
         images: ["/og-image.jpg"],
     },
     robots: {

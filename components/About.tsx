@@ -232,19 +232,19 @@ export default function About() {
                                 VALUE_PROPOSITION
                             </span>
                             <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-[1.1] tracking-tight">
-                                Building AI-native workflows with measurable developer output.
+                                Turning AI capabilities into reliable product outcomes.
                             </h2>
                         </div>
 
                         <div className="space-y-5 text-gray-400 text-sm md:text-[14.5px] leading-relaxed font-sans max-w-2xl">
                             <p>
-                                I&apos;m a software engineer specializing in autonomous LLM workflows and full-stack development. My technical focus revolves around bridging advanced intelligence models with high-throughput API architectures and beautiful responsive user interfaces.
+                                I&apos;m an Applied AI Engineer specializing in agentic systems, evaluation, RAG, and full-stack product delivery. I connect modern models to dependable APIs and thoughtful user experiences that solve concrete business problems.
                             </p>
                             <p>
-                                Whether implementing custom Model Context Protocol (MCP) integrations, designing secure database routing layers, or executing precise visual experiences, I engineer for system longevity, strict type-safety, and real-world outcomes.
+                                Whether I&apos;m shaping an ambiguous requirement, implementing an MCP integration, designing a retrieval pipeline, or shipping the final interface, I engineer for reliability, measurable quality, and real-world use.
                             </p>
                             <p className="border-l-2 border-[#00ff99]/20 pl-4 italic text-gray-500 text-[13.5px] font-mono">
-                                "The difference between static code and dynamic utility lies in architectural intent. I build interfaces that think."
+                                &ldquo;Useful AI is more than a model call—it is a system that can be measured, trusted, and improved.&rdquo;
                             </p>
                         </div>
                     </motion.div>

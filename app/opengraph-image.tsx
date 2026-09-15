@@ -1,9 +1,10 @@
 import { ImageResponse } from 'next/og';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { PROFILE_ROLE, PROFILE_SPECIALTY } from '@/lib/brand';
 
 // Image metadata
-export const alt = 'Natnael Alemseged – Senior AI Agent Engineer & Forward Deployed Engineer';
+export const alt = `Natnael Alemseged – ${PROFILE_ROLE}`;
 export const size = {
     width: 1200,
     height: 630,
@@ -51,7 +52,7 @@ export default async function Image() {
                         Natnael Alemseged
                     </div>
                     <div style={{ display: 'flex', fontSize: 28, color: '#cbd5e1', marginBottom: 40 }}>
-                        Senior AI Agent Engineer & Forward Deployed Engineer
+                        {PROFILE_ROLE} — {PROFILE_SPECIALTY}
                     </div>
                     <div style={{ display: 'flex', gap: 24 }}>
                         <img style={{ display: 'flex' }} src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width="48" height="48" />

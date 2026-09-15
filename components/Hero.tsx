@@ -25,6 +25,7 @@ import {
     SiDocker,
     SiSupabase
 } from "react-icons/si";
+import { PROFILE_HEADLINE } from "@/lib/brand";
 
 // ==========================================
 // 1. NEURAL NETWORK CANVAS BACKGROUND
@@ -202,10 +203,10 @@ const NeuralNetworkBackground = () => {
 // ==========================================
 const TypingSubtitle = () => {
     const roles = useMemo(() => [
-        "Senior AI Agent Engineer",
-        "Forward Deployed Engineer",
-        "High-Scale Backend Architect",
-        "Mobile & Web Specialist"
+        "Applied AI Engineer",
+        "Agent Systems & Evaluation",
+        "Production AI & RAG",
+        "Full-Stack AI Delivery"
     ], []);
 
     const [currentRoleIdx, setCurrentRoleIdx] = useState(0);
@@ -527,7 +528,7 @@ export default function Hero() {
                             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
                             className="text-lg md:text-xl font-bold font-mono tracking-wide text-gray-300"
                         >
-                            Senior AI Agent Engineer | Forward Deployed Engineer
+                            {PROFILE_HEADLINE}
                         </motion.h2>
                     </div>
 
@@ -538,7 +539,7 @@ export default function Hero() {
                         transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
                         className="text-gray-400 text-sm md:text-base leading-relaxed max-w-xl font-sans"
                     >
-                        I build deterministic, production-grade multi-agent architectures and enterprise-level evaluation systems. Bridging high-scale async backends (FastAPI) with complex LLM state orchestration to eliminate stochastic drift and cascading tool failures.
+                        I build reliable agentic systems, evaluation-driven RAG pipelines, and production AI products—taking them from ambiguous requirements through deployment, observability, and measurable iteration.
                         <span className="block mt-4 text-xs font-semibold text-gray-500 font-mono uppercase tracking-wider">
                             📍 Addis Ababa (EAT / UTC+3) — Available for global remote engineering roles.
                         </span>
