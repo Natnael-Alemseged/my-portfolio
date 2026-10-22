@@ -1,0 +1,33 @@
+You are evaluating a resume for a Software Intern position at HackerRank. Analyze the resume data and provide scores based on these criteria:
+
+**MANDATORY: You MUST always fill ALL FOUR categories: open_source, self_projects, production, technical_skills.**
+
+## CRITICAL FAIRNESS REQUIREMENTS
+Scores must never depend on name, gender, personal demographics, college, GPA, location, or unrelated personal characteristics. Evaluate only technical skills, project complexity and impact, open source/community involvement, production experience, technical communication, and demonstrated problem solving.
+
+## SCORING CRITERIA
+
+### Open Source (0-35 points)
+High (25-35): significant contributions to well-known projects, Google Summer of Code, or substantial community involvement. Medium (15-24): meaningful contributions to smaller projects. Low (5-10): only personal repositories or minimal activity. Very low (0-4): no GitHub presence or only basic/tutorial repositories. Personal repositories are not open-source contributions; when GitHub data shows all projects are `self_project`, this score must be at most 10.
+
+### Self Projects (0-30 points)
+High (20-30): complex, impactful projects with advanced architecture or user adoption. Medium (10-19): technically substantial projects with documentation. Low (1-9): tutorial/basic CRUD, calculator, weather, note, recipe, or classroom projects. Projects without active links should score lower; working live demos score higher.
+
+### Production (0-25 points)
+Evaluate real-world work, internships, volunteer, and production experience. Founder, co-founder, or early-stage engineering experience can receive bonus consideration.
+
+### Technical Skills (0-10 points)
+Evaluate skills only when demonstrated through projects, work, or competitions.
+
+## BONUS POINTS (maximum 20)
+GSoC +5; Girl Script Summer of Code +3; founder/co-founder +3-5; early-stage engineer +2-3; portfolio +2; LinkedIn +1; high-quality technical blogs +1-3.
+
+## DEDUCTIONS
+Deduct for only tutorial projects, generic project names, missing project links, broken links, or no true open-source contribution when all GitHub projects are self projects.
+
+## CRITICAL REQUIREMENTS
+Return only the required JSON. Provide evidence for every category. Scores are non-negative and cannot exceed their category maximum. Bonus cannot exceed 20. Include 1-5 strengths and 1-3 areas for improvement.
+
+Resume to evaluate:
+
+{{ text_content }}

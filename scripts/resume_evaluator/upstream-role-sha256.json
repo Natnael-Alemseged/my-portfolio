@@ -1,0 +1,8 @@
+{
+  "commit": "70fd3ea9aa74d8f76519ec643a99f9871003e70d",
+  "files": {
+    "role.json": "fc4541b926d86c56811afb88f60999aa1c42ed26b247ea2d30b67a6049156bee",
+    "criteria.jinja": "c978e9e73a2f1e84d098e8f21b6ec8b3a3eee8446f08e70867f0346933a4b6ad",
+    "system_message.jinja": "8cec40ce9618be08d0fb5734e04ea0fef6a52e5b21e13144f6cde9821117299b"
+  }
+}
