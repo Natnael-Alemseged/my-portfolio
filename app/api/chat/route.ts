@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
+import { createGroq } from '@ai-sdk/groq';
+import {
+    createUIMessageStream,
+    createUIMessageStreamResponse,
+    isStepCount,
+    streamText,
+    toUIMessageStream,
+    type ModelMessage,
+} from 'ai';
 import { searchMemories, MemoryResult } from '@/lib/qdrant-sync';
 import {
     cacheChatAnswer,
@@ -8,6 +16,7 @@ import {
     isCacheEligible,
 } from '@/lib/chat-cache';
 import { UPWORK_PROFILE_URL } from '@/lib/brand';
+import { chatTools, type ChatUIMessage } from '@/lib/chat-tools';
 
 // Force dynamic evaluation
 export const dynamic = 'force-dynamic';
@@ -73,21 +82,23 @@ function getVisitorIdentifier(req: NextRequest) {
     return `ip:${ip}`;
 }
 
-function createSseResponse(content: string, cacheStatus: 'HIT' | 'BYPASS' = 'BYPASS') {
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-        start(controller) {
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
-            controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-            controller.close();
+// Replies with a fixed answer in the same UI message stream format that
+// useChat expects from a live model response.
+function createTextResponse(content: string, cacheStatus: 'HIT' | 'BYPASS' = 'BYPASS') {
+    const stream = createUIMessageStream<ChatUIMessage>({
+        execute({ writer }) {
+            writer.write({ type: 'start' });
+            writer.write({ type: 'text-start', id: 'text' });
+            writer.write({ type: 'text-delta', id: 'text', delta: content });
+            writer.write({ type: 'text-end', id: 'text' });
+            writer.write({ type: 'finish' });
         },
     });
 
-    return new NextResponse(stream, {
+    return createUIMessageStreamResponse({
+        stream,
         headers: {
-            'Content-Type': 'text/event-stream',
             'Cache-Control': 'no-store',
-            'Connection': 'keep-alive',
             'X-Chat-Cache': cacheStatus,
         },
     });
@@ -102,7 +113,7 @@ const FOLLOW_UP_TRIGGERS = [
 
 export async function POST(req: NextRequest) {
     try {
-        // Initialize OpenAI (Groq) inside the handler to avoid top-level issues
+        // Initialize Groq inside the handler to avoid top-level issues
         const GROQ_API_KEY = process.env.GROQ_API_KEY;
         if (!GROQ_API_KEY) {
             return NextResponse.json(
@@ -111,10 +122,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const openai = new OpenAI({
-            apiKey: GROQ_API_KEY,
-            baseURL: 'https://api.groq.com/openai/v1',
-        });
+        const groq = createGroq({ apiKey: GROQ_API_KEY });
 
         // Keep the model configurable so provider deprecations do not silently
         // break the chat route. The existing env value omits the provider
@@ -179,7 +187,7 @@ export async function POST(req: NextRequest) {
         // 0. Injection guard — short-circuit before any LLM call
         const messageLower0 = message.toLowerCase();
         if (INJECTION_PATTERNS.some(p => messageLower0.includes(p))) {
-            return createSseResponse(INJECTION_RESPONSE);
+            return createTextResponse(INJECTION_RESPONSE);
         }
 
         // 1. Sanitize conversationHistory
@@ -207,7 +215,7 @@ export async function POST(req: NextRequest) {
             try {
                 const cachedAnswer = await getCachedChatAnswer(model, message);
                 if (cachedAnswer) {
-                    return createSseResponse(cachedAnswer, 'HIT');
+                    return createTextResponse(cachedAnswer, 'HIT');
                 }
             } catch (cacheError) {
                 // A cache outage must not prevent a visitor from using chat.
@@ -310,6 +318,17 @@ export async function POST(req: NextRequest) {
 - LinkedIn: https://www.linkedin.com/in/natnael-alemseged
 - Upwork (for contract/freelance work): ${UPWORK_PROFILE_URL}
 
+**Visual tools:**
+- When the visitor asks for a resume or CV, call \`showResume\`. Pick \`recommended\` from the whole conversation, not just the latest message: a role they mention wins; otherwise match what they have been asking about:
+  - mobile apps, Flutter, iOS, Android → "mobile"
+  - backend, APIs, REST, Node.js, FastAPI, databases, full-stack or web apps → "full-stack"
+  - AI agents, RAG, LLMs, evaluation, forward deployed or solutions work → "ai-fde"
+  - no earlier questions, or a mix of several areas → "general" Do not write resume links in text.
+- After \`showResume\`, say in one short sentence which version you highlighted and why (e.g. "I've highlighted the mobile resume since you asked about his apps.").
+- When the visitor asks to see, list, or compare projects, or what Natnael has built, call \`showProjects\` with up to 4 slugs taken exactly from the retrieved context. Never guess a slug.
+- The visitor already sees each card's title, summary, tech stack, and link. After a tool call, reply with ONE short sentence of framing (e.g. what ties the projects together) and nothing else: no lists, no per-project descriptions, no links.
+- Only use a tool when it directly answers the question; plain questions get plain text.
+
 **When no context is available:**
 - Say you do not have specific details about that topic.
 - Suggest the user contact Natnael directly when appropriate.
@@ -317,11 +336,9 @@ export async function POST(req: NextRequest) {
 
 ${context}`.trimEnd();
 
-        const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
-            {
-                role: 'system',
-                content: systemPrompt,
-            },
+        // History is rebuilt as plain text from the sanitized client copy, so a
+        // client cannot inject fabricated tool calls or tool results.
+        const messages: ModelMessage[] = [
             ...conversationHistory.map(msg => ({
                 role: msg.role,
                 content: msg.content,
@@ -329,49 +346,50 @@ ${context}`.trimEnd();
             { role: 'user', content: message },
         ];
 
-        // Stream response from Groq
-        const stream = await openai.chat.completions.create({
-            model,
+        const result = streamText({
+            model: groq(model),
+            instructions: systemPrompt,
             messages,
-            stream: true,
+            tools: chatTools,
+            // One step for an optional tool call, one for the short follow-up text.
+            stopWhen: isStepCount(2),
             temperature: 0.7,
-            max_tokens: 500,
+            maxOutputTokens: 500,
         });
 
-        const encoder = new TextEncoder();
-        const readableStream = new ReadableStream({
-            async start(controller) {
-                let fullResponse = '';
+        const stream = toUIMessageStream<typeof chatTools, ChatUIMessage>({
+            stream: result.stream,
+            tools: chatTools,
+            sendReasoning: false,
+            onError: (error) => {
+                console.error('Chat stream error:', error);
+                return 'Failed to generate a response.';
+            },
+            onEnd: async ({ responseMessage, isAborted }) => {
+                // The cache replays text only, so skip answers that rendered tool
+                // UI. An answer generated without retrieved context (e.g. during
+                // a retrieval outage) is a "no details" reply; never cache it.
+                const usedTool = responseMessage.parts.some(part => part.type.startsWith('tool-'));
+                if (isAborted || usedTool || !cacheEligible || memoryResults.length === 0) return;
+
+                const fullResponse = responseMessage.parts
+                    .map(part => (part.type === 'text' ? part.text : ''))
+                    .join('')
+                    .trim();
+                if (!fullResponse) return;
+
                 try {
-                    for await (const chunk of stream) {
-                        const content = chunk.choices[0]?.delta?.content || '';
-                        if (content) {
-                            fullResponse += content;
-                            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
-                        }
-                    }
-                    controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-                    // An answer generated without retrieved context (e.g. during a
-                    // retrieval outage) is a "no details" reply; never cache it.
-                    if (cacheEligible && memoryResults.length > 0) {
-                        try {
-                            await cacheChatAnswer(model, message, fullResponse);
-                        } catch (cacheError) {
-                            console.error('Chat cache write error:', cacheError);
-                        }
-                    }
-                    controller.close();
-                } catch (error) {
-                    controller.error(error);
+                    await cacheChatAnswer(model, message, fullResponse);
+                } catch (cacheError) {
+                    console.error('Chat cache write error:', cacheError);
                 }
             },
         });
 
-        return new NextResponse(readableStream, {
+        return createUIMessageStreamResponse({
+            stream,
             headers: {
-                'Content-Type': 'text/event-stream',
                 'Cache-Control': 'no-store',
-                'Connection': 'keep-alive',
                 'X-Chat-Cache': 'MISS',
                 'X-RateLimit-Remaining': String(rateLimit.remaining),
             },

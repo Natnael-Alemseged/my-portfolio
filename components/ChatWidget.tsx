@@ -4,11 +4,52 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Terminal, X, Cpu } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
+import type { ChatUIMessage } from '@/lib/chat-tools';
+import { ProjectCards, ResumeLinks, ToolStatus } from '@/components/ChatToolResults';
 
-interface Message {
-    role: 'user' | 'assistant';
-    content: string;
+// Flattens a message to plain text for the server's conversation history.
+// Tool results become a short note so the model can resolve follow-ups like
+// "tell me more about the second one".
+function toHistoryText(message: ChatUIMessage) {
+    return message.parts
+        .map((part) => {
+            if (part.type === 'text') return part.text;
+            if (part.type === 'tool-showProjects' && part.state === 'output-available') {
+                const shown = part.output.projects.map((p) => `${p.title} (slug: ${p.slug})`).join(', ');
+                return shown ? `[Showed project cards: ${shown}]` : '';
+            }
+            if (part.type === 'tool-showResume' && part.state === 'output-available') {
+                return '[Showed resume download options]';
+            }
+            return '';
+        })
+        .filter(Boolean)
+        .join('\n');
 }
+
+function hasVisibleContent(message: ChatUIMessage) {
+    return message.parts.some((part) =>
+        (part.type === 'text' && part.text.trim()) || part.type.startsWith('tool-')
+    );
+}
+
+const chatTransport = new DefaultChatTransport<ChatUIMessage>({
+    api: '/api/chat',
+    prepareSendMessagesRequest: ({ messages }) => {
+        const latest = messages[messages.length - 1];
+        return {
+            body: {
+                message: latest ? toHistoryText(latest) : '',
+                conversationHistory: messages
+                    .slice(0, -1)
+                    .map((msg) => ({ role: msg.role, content: toHistoryText(msg) }))
+                    .filter((msg) => msg.content),
+            },
+        };
+    },
+});
 
 const INITIAL_HEADER = `ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL
 INITIALIZING BIOMETRIC SCAN...
@@ -46,11 +87,44 @@ const markdownComponents = {
     )
 };
 
+function renderAssistantPart(part: ChatUIMessage['parts'][number], key: string) {
+    switch (part.type) {
+        case 'text':
+            return (
+                <ReactMarkdown key={key} remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                    {part.text}
+                </ReactMarkdown>
+            );
+        case 'tool-showProjects':
+            if (part.state === 'output-available') {
+                return <ProjectCards key={key} projects={part.output.projects} />;
+            }
+            if (part.state === 'output-error') {
+                return <ToolStatus key={key} label="ERROR: PROJECT LOOKUP FAILED" isError />;
+            }
+            return <ToolStatus key={key} label="QUERYING PROJECT ARCHIVE..." />;
+        case 'tool-showResume':
+            if (part.state === 'output-available') {
+                return <ResumeLinks key={key} {...part.output} />;
+            }
+            if (part.state === 'output-error') {
+                return <ToolStatus key={key} label="ERROR: RESUME LOOKUP FAILED" isError />;
+            }
+            return <ToolStatus key={key} label="RETRIEVING PERSONNEL FILE..." />;
+        default:
+            return null;
+    }
+}
+
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([]);
+    const { messages, setMessages, sendMessage, status, error } = useChat<ChatUIMessage>({
+        transport: chatTransport,
+    });
     const [input, setInput] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const isLoading = status === 'submitted' || status === 'streaming';
+    const lastMessage = messages[messages.length - 1];
+    const isAwaitingContent = isLoading && !(lastMessage?.role === 'assistant' && hasVisibleContent(lastMessage));
     const [hasPlayedIntro, setHasPlayedIntro] = useState(false);
     const [showHeader, setShowHeader] = useState(false);
     const [greetingText, setGreetingText] = useState('');
@@ -100,8 +174,9 @@ export default function ChatWidget() {
                     // Set the complete message
                     setMessages((prev) =>
                         prev.length ? prev : [{
+                            id: 'greeting',
                             role: 'assistant',
-                            content: `${INITIAL_HEADER}\n\n${INITIAL_GREETING}`
+                            parts: [{ type: 'text', text: `${INITIAL_HEADER}\n\n${INITIAL_GREETING}` }],
                         }]
                     );
                 }
@@ -118,96 +193,13 @@ export default function ChatWidget() {
                 greetingIntervalRef.current = null;
             }
         };
-    }, [isOpen, hasPlayedIntro]);
+    }, [isOpen, hasPlayedIntro, setMessages]);
 
-    const handleSend = async () => {
+    const handleSend = () => {
         if (!input.trim() || isLoading || !hasPlayedIntro) return;
 
-        const userMessage: Message = { role: 'user', content: input };
-        setMessages((prev) => [...prev, userMessage]);
+        sendMessage({ text: input.trim() });
         setInput('');
-        setIsLoading(true);
-
-        try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: input,
-                    conversationHistory: messages,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status} ${response.statusText}`);
-            }
-
-            const reader = response.body?.getReader();
-            if (!reader) {
-                throw new Error('Response body is not readable');
-            }
-
-            const decoder = new TextDecoder();
-            let assistantMessage = '';
-            let buffer = '';
-
-            // Add empty assistant message that will be updated
-            setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                // Decode chunk and add to buffer
-                buffer += decoder.decode(value, { stream: true });
-                const lines = buffer.split('\n');
-
-                // Keep the last incomplete line in the buffer
-                buffer = lines.pop() || '';
-
-                for (const line of lines) {
-                    if (line.startsWith('data: ')) {
-                        const data = line.slice(6).trim();
-                        if (data === '[DONE]') {
-                            break;
-                        }
-
-                        try {
-                            const parsed = JSON.parse(data);
-                            if (parsed.content) {
-                                assistantMessage += parsed.content;
-                                // Update the last message with accumulated content
-                                setMessages((prev) => {
-                                    const newMessages = [...prev];
-                                    newMessages[newMessages.length - 1] = {
-                                        role: 'assistant',
-                                        content: assistantMessage
-                                    };
-                                    return newMessages;
-                                });
-                            }
-                        } catch (e) {
-                            console.warn('Failed to parse SSE data:', data, e);
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.error('Chat error:', error);
-            setMessages((prev) => {
-                // Remove the empty assistant message if it exists
-                const filtered = prev.filter(m => m.content !== '');
-                return [
-                    ...filtered,
-                    {
-                        role: 'assistant',
-                        content: "ERROR: CONNECTION LOST\nPlease try again later.",
-                    },
-                ];
-            });
-        } finally {
-            setIsLoading(false);
-        }
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -273,32 +265,38 @@ export default function ChatWidget() {
                             </div>
                         </div>
                     )}
-                    {messages.map((msg, idx) => (
-                        <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    {messages.filter((msg) => msg.role === 'user' || hasVisibleContent(msg)).map((msg) => (
+                        <div key={msg.id} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                             <div className={`uppercase text-[10px] mb-1 text-[#00ff99]/70`}>
                                 {msg.role === 'user' ? '> USER_INPUT' : '> SYSTEM_RESPONSE'}
                             </div>
                             <div className={`max-w-[90%] p-2 ${msg.role === 'user'
                                 ? 'border border-[#00ff99]/50 bg-[#00ff99]/10'
-                                : ''
+                                : 'w-full'
                                 }`}>
                                 {msg.role === 'user' ? (
                                     <span className="whitespace-pre-wrap leading-relaxed text-sm md:text-base font-mono" style={{
                                         textShadow: '0 0 2px #00ff99'
                                     }}>
-                                        {msg.content}
+                                        {toHistoryText(msg)}
                                     </span>
                                 ) : (
                                     <div className="font-mono">
-                                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                                            {msg.content}
-                                        </ReactMarkdown>
+                                        {msg.parts.map((part, idx) => renderAssistantPart(part, `${msg.id}-${idx}`))}
                                     </div>
                                 )}
                             </div>
                         </div>
                     ))}
-                    {isLoading && (
+                    {error && !isLoading && (
+                        <div className="flex flex-col items-start">
+                            <div className="uppercase text-[10px] mb-1 text-[#00ff99]/70">&gt; SYSTEM_RESPONSE</div>
+                            <div className="max-w-[90%] p-2 whitespace-pre-wrap text-sm md:text-base font-mono" style={{ textShadow: '0 0 2px #00ff99' }}>
+                                {'ERROR: CONNECTION LOST\nPlease try again later.'}
+                            </div>
+                        </div>
+                    )}
+                    {isAwaitingContent && (
                         <div className="flex justify-start">
                             <div className="flex items-center gap-2 text-[#00ff99] animate-pulse">
                                 <span className="w-3 h-5 bg-[#00ff99] block"></span>
