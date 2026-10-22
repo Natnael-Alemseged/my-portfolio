@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Send, Calendar, X, Mail, User, MessageSquare, Linkedin } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { SiUpwork } from "react-icons/si";
-import { UPWORK_PROFILE_URL } from "@/lib/brand";
+import { CAL_LINK, UPWORK_PROFILE_URL } from "@/lib/brand";
 
 type ViewType = "quick-message" | "book-call";
 
@@ -474,7 +474,7 @@ export default function Contact() {
                   {/* Calendar Widget */}
                   <div className="rounded-2xl overflow-hidden border border-white/5">
                     <InlineWidget
-                      calLink="natnael-alemseged-astaw-b9o7g9/10-min-discovary"
+                      calLink={CAL_LINK}
                       config={{ theme: "dark" }}
                     />
                   </div>

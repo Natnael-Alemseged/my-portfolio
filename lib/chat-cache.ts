@@ -47,7 +47,7 @@ function hash(value: string) {
 }
 
 function cacheKey(model: string, knowledgeVersion: number, message: string) {
-    return hash(`answer:v2:${model}:${knowledgeVersion}:${normalizeMessage(message)}`);
+    return hash(`answer:v3:${model}:${knowledgeVersion}:${normalizeMessage(message)}`);
 }
 
 export function normalizeMessage(message: string) {

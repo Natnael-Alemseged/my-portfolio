@@ -3,7 +3,16 @@ import { z } from 'zod';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
 import { getOptimizedProjectImageUrl } from '@/lib/project-image';
-import { RESUME_LINKS, type ResumeId } from '@/lib/brand';
+import {
+    BOOK_CALL_URL,
+    CAL_LINK,
+    CONTACT_EMAIL,
+    GITHUB_URL,
+    LINKEDIN_URL,
+    RESUME_LINKS,
+    UPWORK_PROFILE_URL,
+    type ResumeId,
+} from '@/lib/brand';
 
 const MAX_PROJECT_CARDS = 4;
 
@@ -21,6 +30,22 @@ interface ProjectDoc {
     images?: ProjectImage[];
     logo_image?: ProjectImage;
 }
+
+export type ContactChannelId = 'email' | 'linkedin' | 'github' | 'upwork';
+
+export interface ContactChannel {
+    id: ContactChannelId;
+    label: string;
+    value: string;
+    href: string;
+}
+
+const CONTACT_CHANNELS: ContactChannel[] = [
+    { id: 'email', label: 'Email', value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
+    { id: 'linkedin', label: 'LinkedIn', value: 'in/natnael-alemseged', href: LINKEDIN_URL },
+    { id: 'github', label: 'GitHub', value: 'natnael-alemseged', href: GITHUB_URL },
+    { id: 'upwork', label: 'Upwork', value: 'Top Rated freelance profile', href: UPWORK_PROFILE_URL },
+];
 
 export interface ProjectCardData {
     slug: string;
@@ -120,6 +145,22 @@ export const chatTools = {
             const resume = RESUME_LINKS.find((r) => r.id === version) ?? RESUME_LINKS[0];
             return { id: resume.id, label: resume.label, url: resume.url };
         },
+    }),
+    bookCall: tool({
+        description:
+            'Display a button that opens Natnael\'s booking calendar for a 10-minute discovery call. Use when the visitor wants to talk, meet, schedule a call, hire him, or discuss a project or role.',
+        inputSchema: z.object({}),
+        execute: async () => ({
+            title: '10-min discovery call',
+            calLink: CAL_LINK,
+            url: BOOK_CALL_URL,
+        }),
+    }),
+    showContact: tool({
+        description:
+            'Display a card with Natnael\'s contact channels (email, LinkedIn, GitHub, Upwork). Use when the visitor asks how to reach or contact him, or for his email or profiles, instead of writing them in text.',
+        inputSchema: z.object({}),
+        execute: async () => ({ channels: CONTACT_CHANNELS }),
     }),
 };
 

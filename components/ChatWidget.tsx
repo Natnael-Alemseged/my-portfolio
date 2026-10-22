@@ -7,13 +7,15 @@ import remarkGfm from 'remark-gfm';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import type { ChatUIMessage } from '@/lib/chat-tools';
-import { ProjectCards, ResumeLink, ToolStatus } from '@/components/ChatToolResults';
+import { BookCallCard, ContactCard, ProjectCards, ResumeLink, ToolStatus } from '@/components/ChatToolResults';
 
 // The model sometimes imitates the "[Showed ...]" history notes below in its
-// own replies. Strip complete notes anywhere, and a note still streaming in at
-// the start, so they never reach the visitor or get fed back as history.
-const HISTORY_NOTE = /^\[Showed [^\]\n]*\][ \t]*\n?/gm;
-const PARTIAL_HISTORY_NOTE = /^\[Showed[^\]\n]*$/;
+// own replies, also with other wording ("[Booked a call]"). Strip any
+// bracketed note at the start of a line that is not a markdown link, plus one
+// still streaming in at the start, so they never reach the visitor or get fed
+// back as history.
+const HISTORY_NOTE = /^\[[A-Z][^\]\n]*\](?![([])[ \t]*\n?/gm;
+const PARTIAL_HISTORY_NOTE = /^\[[A-Z][^\]\n]*$/;
 
 function stripHistoryNotes(text: string) {
     return text.replace(HISTORY_NOTE, '').replace(PARTIAL_HISTORY_NOTE, '').trimStart();
@@ -32,6 +34,12 @@ function toHistoryText(message: ChatUIMessage) {
             }
             if (part.type === 'tool-showResume' && part.state === 'output-available') {
                 return `[Showed resume: ${part.output.label}]`;
+            }
+            if (part.type === 'tool-bookCall' && part.state === 'output-available') {
+                return `[Showed booking button: ${part.output.title}]`;
+            }
+            if (part.type === 'tool-showContact' && part.state === 'output-available') {
+                return `[Showed contact card: ${part.output.channels.map((c) => c.label).join(', ')}]`;
             }
             return '';
         })
@@ -121,6 +129,22 @@ function renderAssistantPart(part: ChatUIMessage['parts'][number], key: string) 
                 return <ToolStatus key={key} label="ERROR: RESUME LOOKUP FAILED" isError />;
             }
             return <ToolStatus key={key} label="RETRIEVING PERSONNEL FILE..." />;
+        case 'tool-bookCall':
+            if (part.state === 'output-available') {
+                return <BookCallCard key={key} {...part.output} />;
+            }
+            if (part.state === 'output-error') {
+                return <ToolStatus key={key} label="ERROR: SCHEDULER OFFLINE" isError />;
+            }
+            return <ToolStatus key={key} label="OPENING SCHEDULER..." />;
+        case 'tool-showContact':
+            if (part.state === 'output-available') {
+                return <ContactCard key={key} channels={part.output.channels} />;
+            }
+            if (part.state === 'output-error') {
+                return <ToolStatus key={key} label="ERROR: CONTACT LOOKUP FAILED" isError />;
+            }
+            return <ToolStatus key={key} label="RETRIEVING COMMS CHANNELS..." />;
         default:
             return null;
     }
