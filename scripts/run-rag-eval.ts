@@ -1,6 +1,6 @@
 // scripts/run-rag-eval.ts
 // Runs the RAG evaluation set against the live Qdrant index and Groq API.
-// Usage: tsx scripts/run-rag-eval.ts
+// Usage: tsx scripts/run-rag-eval.ts [output-file.json]
 import 'dotenv/config';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -136,7 +136,7 @@ async function runEval() {
 
     results.push(result);
 
-    // Brief pause to avoid HuggingFace embedding API rate limits
+    // Brief pause to avoid embedding API rate limits
     await new Promise(r => setTimeout(r, 2000));
 
     const icon = result.sourceRetrieved ? '✅' : '⚠️';
@@ -165,7 +165,8 @@ async function runEval() {
   console.log(`Total run time:     ${(totalMs / 1000).toFixed(1)}s`);
 
   // Write full results to JSON
-  const outputPath = path.join(__dirname, 'rag-eval-results-baseline.json');
+  const outputFile = process.argv[2] ?? 'rag-eval-results-baseline.json';
+  const outputPath = path.join(__dirname, outputFile);
   const output = {
     runAt: new Date().toISOString(),
     summary: {
@@ -179,7 +180,7 @@ async function runEval() {
     results,
   };
   fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
-  console.log(`\n💾 Full results saved to scripts/rag-eval-results-baseline.json`);
+  console.log(`\n💾 Full results saved to scripts/${outputFile}`);
 }
 
 runEval().catch(err => {

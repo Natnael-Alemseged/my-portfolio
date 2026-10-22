@@ -349,7 +349,9 @@ ${context}`.trimEnd();
                         }
                     }
                     controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-                    if (cacheEligible) {
+                    // An answer generated without retrieved context (e.g. during a
+                    // retrieval outage) is a "no details" reply; never cache it.
+                    if (cacheEligible && memoryResults.length > 0) {
                         try {
                             await cacheChatAnswer(model, message, fullResponse);
                         } catch (cacheError) {

@@ -5,12 +5,11 @@
 import 'dotenv/config';
 import { QdrantClient } from '@qdrant/js-client-rest';
 import mongoose from 'mongoose';
-import { generateEmbedding } from '../lib/qdrant-sync';
+import { COLLECTION_NAME, generateEmbedding, initQdrant } from '../lib/qdrant-sync';
 import { bumpChatKnowledgeVersion } from '../lib/chat-cache';
 
 const QDRANT_URL = process.env.QDRANT_URL!;
 const QDRANT_API_KEY = process.env.QDRANT_API_KEY!;
-const COLLECTION_NAME = 'chat_memories_v2';
 const CONTAINER_TAG = 'natnael-portfolio-chatbot';
 
 function getClient() {
@@ -161,13 +160,14 @@ How to reach Natnael:
 
 async function syncProfile() {
   const client = getClient();
+  await initQdrant();
 
   console.log(`\n🔄 Syncing ${profileChunks.length} profile chunks to Qdrant...\n`);
 
   for (const chunk of profileChunks) {
     process.stdout.write(`  Indexing "${chunk.title}"... `);
     try {
-      const embedding = await generateEmbedding(chunk.content);
+      const embedding = await generateEmbedding(chunk.content, 'RETRIEVAL_DOCUMENT');
       await client.upsert(COLLECTION_NAME, {
         wait: true,
         points: [
