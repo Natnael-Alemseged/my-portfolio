@@ -7,7 +7,7 @@ import { QdrantClient } from '@qdrant/js-client-rest';
 import mongoose from 'mongoose';
 import { COLLECTION_NAME, generateEmbedding, initQdrant } from '../lib/qdrant-sync';
 import { bumpChatKnowledgeVersion } from '../lib/chat-cache';
-import { UPWORK_PROFILE_URL } from '../lib/brand';
+import { RESUME_LINKS_TEXT, UPWORK_PROFILE_URL } from '../lib/brand';
 
 const QDRANT_URL = process.env.QDRANT_URL!;
 const QDRANT_API_KEY = process.env.QDRANT_API_KEY!;
@@ -158,7 +158,10 @@ How to reach Natnael:
 - LinkedIn: https://www.linkedin.com/in/natnael-alemseged
 - GitHub: https://github.com/Natnael-Alemseged
 - Upwork (contract and freelance): ${UPWORK_PROFILE_URL}
-- Contact form on portfolio: https://natnaelalemseged.com`,
+- Contact form on portfolio: https://natnaelalemseged.com
+
+Resume / CV downloads (PDF):
+${RESUME_LINKS_TEXT}`,
   },
 ];
 
