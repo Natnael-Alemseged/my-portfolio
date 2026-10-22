@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { UPWORK_PROFILE_URL } from "@/lib/brand";
 
 type DeliveryOutcome = {
     id: number;
@@ -132,10 +133,16 @@ export default function Testimonials() {
                             
                             <div className="relative z-10 flex h-full flex-col justify-between flex-grow">
                                 <div className="mb-6 flex items-start justify-between gap-6">
-                                    <div className="inline-flex items-center gap-1.5 border border-[#00ff99]/20 bg-[#00ff99]/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-[#00ff99]">
+                                    <a
+                                        href={UPWORK_PROFILE_URL}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 border border-[#00ff99]/20 bg-[#00ff99]/[0.03] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-[#00ff99] transition-colors hover:border-[#00ff99]/50 hover:bg-[#00ff99]/[0.08]"
+                                    >
                                         <Star className="h-3 w-3 fill-[#00ff99] stroke-[#00ff99]" />
                                         Verified Upwork delivery
-                                    </div>
+                                        <ArrowUpRight className="h-3 w-3" aria-hidden />
+                                    </a>
                                     <CheckCircle2 className="h-8 w-8 text-[#00ff99]/20" aria-hidden />
                                 </div>
 

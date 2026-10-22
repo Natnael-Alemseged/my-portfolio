@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db/mongoose';
 import Project from '@/lib/db/project.model';
-import { PROFILE_DESCRIPTION, PROFILE_ROLE } from '@/lib/brand';
+import { PROFILE_DESCRIPTION, PROFILE_ROLE, UPWORK_PROFILE_URL } from '@/lib/brand';
 
 interface ProjectSummary {
     slug: string;
@@ -31,7 +31,8 @@ export async function GET() {
         content += `## Contact & Socials\n\n`;
         content += `- [Website](${siteUrl}): Portfolio website.\n`;
         content += `- [LinkedIn](https://www.linkedin.com/in/natnael-alemseged): Professional profile.\n`;
-        content += `- [GitHub](https://github.com/Natnael-Alemseged): Code repositories.\n\n`;
+        content += `- [GitHub](https://github.com/Natnael-Alemseged): Code repositories.\n`;
+        content += `- [Upwork](${UPWORK_PROFILE_URL}): Top Rated freelance profile with verified client reviews.\n\n`;
 
         content += `## Applied AI Focus\n\n`;
         content += `- Agent systems and tool use: LangGraph, multi-agent workflows, MCP, structured generation, and explicit recovery paths.\n`;

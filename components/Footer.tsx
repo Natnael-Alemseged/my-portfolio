@@ -2,6 +2,8 @@
 
 import { FaDev, FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
+import { SiUpwork } from "react-icons/si";
+import { UPWORK_PROFILE_URL } from "@/lib/brand";
 const socials = [
     {
         label: "LinkedIn",
@@ -12,6 +14,11 @@ const socials = [
         label: "GitHub",
         href: "https://github.com/natnael-alemseged",
         icon: <FaGithub />
+    },
+    {
+        label: "Upwork",
+        href: UPWORK_PROFILE_URL,
+        icon: <SiUpwork />
     },
     {
         label: "X",

@@ -4,6 +4,8 @@ import InlineWidget from "@calcom/embed-react";
 import { useState } from "react";
 import { Send, Calendar, X, Mail, User, MessageSquare, Linkedin } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
+import { SiUpwork } from "react-icons/si";
+import { UPWORK_PROFILE_URL } from "@/lib/brand";
 
 type ViewType = "quick-message" | "book-call";
 
@@ -263,6 +265,11 @@ export default function Contact() {
       label: "LinkedIn",
       href: "https://www.linkedin.com/in/natnael-alemseged",
       icon: <Linkedin size={16} />,
+    },
+    {
+      label: "Upwork",
+      href: UPWORK_PROFILE_URL,
+      icon: <SiUpwork size={16} />,
     },
   ];
 

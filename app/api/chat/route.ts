@@ -7,6 +7,7 @@ import {
     getCachedChatAnswer,
     isCacheEligible,
 } from '@/lib/chat-cache';
+import { UPWORK_PROFILE_URL } from '@/lib/brand';
 
 // Force dynamic evaluation
 export const dynamic = 'force-dynamic';
@@ -307,6 +308,7 @@ export async function POST(req: NextRequest) {
 - Email: Natiaabaydam@gmail.com
 - GitHub: https://github.com/Natnael-Alemseged
 - LinkedIn: https://www.linkedin.com/in/natnael-alemseged
+- Upwork (for contract/freelance work): ${UPWORK_PROFILE_URL}
 
 **When no context is available:**
 - Say you do not have specific details about that topic.

@@ -7,6 +7,7 @@ import { QdrantClient } from '@qdrant/js-client-rest';
 import mongoose from 'mongoose';
 import { COLLECTION_NAME, generateEmbedding, initQdrant } from '../lib/qdrant-sync';
 import { bumpChatKnowledgeVersion } from '../lib/chat-cache';
+import { UPWORK_PROFILE_URL } from '../lib/brand';
 
 const QDRANT_URL = process.env.QDRANT_URL!;
 const QDRANT_API_KEY = process.env.QDRANT_API_KEY!;
@@ -43,6 +44,7 @@ const profileChunks: ProfileChunk[] = [
 Email: Natiaabaydam@gmail.com
 GitHub: https://github.com/Natnael-Alemseged
 LinkedIn: https://www.linkedin.com/in/natnael-alemseged
+Upwork: ${UPWORK_PROFILE_URL}
 Portfolio: https://natnaelalemseged.com
 
 Primary positioning:
@@ -116,6 +118,7 @@ Key metrics:
     content: `Client Testimonials and Verified Delivery Outcomes — Natnael Alemseged
 
 Natnael is Upwork Top Rated with 100% Job Success and verified 5-star client outcomes.
+Upwork profile with the verified reviews: ${UPWORK_PROFILE_URL}
 
 1. Social Music Party Game | January–June 2026
    - Delivered a complete client product engagement from implementation through handoff.
@@ -154,6 +157,7 @@ How to reach Natnael:
 - Email: Natiaabaydam@gmail.com
 - LinkedIn: https://www.linkedin.com/in/natnael-alemseged
 - GitHub: https://github.com/Natnael-Alemseged
+- Upwork (contract and freelance): ${UPWORK_PROFILE_URL}
 - Contact form on portfolio: https://natnaelalemseged.com`,
   },
 ];

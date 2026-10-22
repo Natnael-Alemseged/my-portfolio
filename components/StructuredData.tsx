@@ -1,5 +1,5 @@
 // app/components/StructuredData.tsx
-import { PROFILE_DESCRIPTION, PROFILE_ROLE } from "@/lib/brand";
+import { PROFILE_DESCRIPTION, PROFILE_ROLE, UPWORK_PROFILE_URL } from "@/lib/brand";
 
 export default function StructuredData() {
     const structuredData = {
@@ -17,6 +17,7 @@ export default function StructuredData() {
                 "sameAs": [
                     "https://www.linkedin.com/in/natnael-alemseged",
                     "https://github.com/natnael-alemseged",
+                    UPWORK_PROFILE_URL,
                     // Add Twitter/X profile if applicable, e.g., "https://x.com/yourhandle"
                 ],
             },

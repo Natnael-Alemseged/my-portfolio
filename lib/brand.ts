@@ -6,5 +6,7 @@ export const PROFILE_HEADLINE = `${PROFILE_ROLE} | ${PROFILE_SPECIALTY}`;
 
 export const PROFILE_TITLE = `Natnael Alemseged | ${PROFILE_ROLE}`;
 
+export const UPWORK_PROFILE_URL = "https://www.upwork.com/freelancers/~01284b1ed914761198";
+
 export const PROFILE_DESCRIPTION =
     "Applied AI Engineer building reliable agentic systems, evaluation frameworks, RAG pipelines, and production AI products from discovery through deployment.";
