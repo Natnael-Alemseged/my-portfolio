@@ -60,39 +60,25 @@ export function ProjectCards({ projects }: { projects: ProjectCardData[] }) {
     );
 }
 
-interface ResumeLinksProps {
-    recommended: ResumeId;
-    resumes: { id: ResumeId; label: string; url: string }[];
+interface ResumeLinkProps {
+    id: ResumeId;
+    label: string;
+    url: string;
 }
 
-export function ResumeLinks({ recommended, resumes }: ResumeLinksProps) {
-    // Recommended version first, the rest in their configured order.
-    const ordered = [...resumes].sort((a, b) => Number(b.id === recommended) - Number(a.id === recommended));
-
+export function ResumeLink({ label, url }: ResumeLinkProps) {
     return (
-        <div className="my-2 space-y-2">
-            {ordered.map((resume) => {
-                const isRecommended = resume.id === recommended;
-                return (
-                    <a
-                        key={resume.id}
-                        href={resume.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`flex items-center justify-between gap-3 px-3 py-2 border text-sm font-mono uppercase transition-colors ${isRecommended
-                            ? 'border-[#00ff99] bg-[#00ff99] text-black hover:brightness-110'
-                            : 'border-[#00ff99]/50 hover:border-[#00ff99] hover:bg-[#00ff99]/10'
-                            }`}
-                        style={isRecommended ? undefined : glow}
-                    >
-                        <span className="truncate">
-                            {resume.label}
-                            {isRecommended && <span className="ml-2 text-[10px] font-bold">[RECOMMENDED]</span>}
-                        </span>
-                        <Download size={14} className="shrink-0" />
-                    </a>
-                );
-            })}
-        </div>
+        <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="my-2 flex items-center justify-between gap-3 px-3 py-2 border border-[#00ff99] bg-[#00ff99] text-black text-sm font-mono uppercase hover:brightness-110 transition-[filter]"
+        >
+            <span className="truncate">
+                <span className="text-[10px] font-bold mr-2">[RESUME]</span>
+                {label}
+            </span>
+            <Download size={14} className="shrink-0" />
+        </a>
     );
 }

@@ -16,7 +16,7 @@ import {
     isCacheEligible,
 } from '@/lib/chat-cache';
 import { UPWORK_PROFILE_URL } from '@/lib/brand';
-import { chatTools, type ChatUIMessage } from '@/lib/chat-tools';
+import { chatTools, suggestResumeVersion, type ChatUIMessage } from '@/lib/chat-tools';
 
 // Force dynamic evaluation
 export const dynamic = 'force-dynamic';
@@ -274,6 +274,13 @@ export async function POST(req: NextRequest) {
             ].join('\n');
         }
 
+        // Keyword-based so the default resume is consistent; the model only
+        // overrides it when the visitor explicitly asks for another version.
+        const suggestedResume = suggestResumeVersion([
+            ...conversationHistory.filter(entry => entry.role === 'user').map(entry => entry.content),
+            message,
+        ]);
+
         // 5. Rewrite system prompt
         const systemPrompt = `You are Natnael's Portfolio Assistant — an AI chatbot embedded in Natnael Alemseged's portfolio website. Your role is to help visitors learn about his professional background, projects, skills, and experience.
 
@@ -319,12 +326,10 @@ export async function POST(req: NextRequest) {
 - Upwork (for contract/freelance work): ${UPWORK_PROFILE_URL}
 
 **Visual tools:**
-- When the visitor asks for a resume or CV, call \`showResume\`. Pick \`recommended\` from the whole conversation, not just the latest message: a role they mention wins; otherwise match what they have been asking about:
-  - mobile apps, Flutter, iOS, Android → "mobile"
-  - backend, APIs, REST, Node.js, FastAPI, databases, full-stack or web apps → "full-stack"
-  - AI agents, RAG, LLMs, evaluation, forward deployed or solutions work → "ai-fde"
-  - no earlier questions, or a mix of several areas → "general" Do not write resume links in text.
-- After \`showResume\`, say in one short sentence which version you highlighted and why (e.g. "I've highlighted the mobile resume since you asked about his apps.").
+- When the visitor asks for a resume or CV, call \`showResume\` with \`version\` "${suggestedResume}", which was picked from the topics of their questions. Use a different version only if the visitor explicitly names one, or a role that clearly fits another version. Do not write resume links in text.
+- After \`showResume\`, say in one short sentence which version you shared and why, and that other versions (general, AI/FDE, full-stack, mobile) are available on request (e.g. "Here's his mobile resume since you asked about his apps; just ask if you'd like another version.").
+- If the visitor asks for a different version, call \`showResume\` again with that version.
+- Earlier assistant messages may contain notes like "[Showed project cards: ...]" or "[Showed resume: ...]". They record UI the visitor already saw. Use them for context, but never write such notes yourself; call the tool instead.
 - When the visitor asks to see, list, or compare projects, or what Natnael has built, call \`showProjects\` with up to 4 slugs taken exactly from the retrieved context. Never guess a slug.
 - The visitor already sees each card's title, summary, tech stack, and link. After a tool call, reply with ONE short sentence of framing (e.g. what ties the projects together) and nothing else: no lists, no per-project descriptions, no links.
 - Only use a tool when it directly answers the question; plain questions get plain text.

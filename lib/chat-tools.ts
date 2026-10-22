@@ -30,6 +30,27 @@ export interface ProjectCardData {
     image: { url: string; alt: string } | null;
 }
 
+// Checked in priority order within a message, so "React Native" counts as
+// mobile and "AI backend role" as AI before the generic web keywords.
+const RESUME_TOPICS: [ResumeId, RegExp][] = [
+    ['mobile', /\b(mobile|flutter|ios|android|react native|swift|kotlin|app store|play store)\b/i],
+    ['ai-fde', /\b(ai|llms?|agents?|agentic|rag|evals?|evaluation|machine learning|ml|genai|langchain|langgraph|forward[- ]deployed|fde|solutions engineer)\b/i],
+    ['full-stack', /\b(backend|back[- ]end|apis?|rest|graphql|node(\.js)?|nestjs|fastapi|django|express|databases?|postgres(ql)?|full[- ]?stack|frontend|front[- ]end|web apps?|react|next\.js|microservices?)\b/i],
+];
+
+/**
+ * Picks the resume version from the visitor's own messages, most recent
+ * first, so the choice does not depend on what the assistant's answers
+ * happened to mention. Returns "general" when no message names a topic.
+ */
+export function suggestResumeVersion(userMessages: string[]): ResumeId {
+    for (const text of [...userMessages].reverse()) {
+        const match = RESUME_TOPICS.find(([, pattern]) => pattern.test(text));
+        if (match) return match[0];
+    }
+    return 'general';
+}
+
 function getPrimaryImage(images?: ProjectImage[]) {
     if (!images?.length) return undefined;
     return images.reduce((primary, image) =>
@@ -83,22 +104,22 @@ export const chatTools = {
     }),
     showResume: tool({
         description:
-            'Display download buttons for Natnael\'s resume versions. Use whenever the visitor asks for a resume or CV, instead of writing the links in text.',
+            'Display a download button for the one resume version that fits the visitor. Use whenever the visitor asks for a resume or CV, instead of writing the link in text. Call it again with another version if they ask for one.',
         inputSchema: z.object({
-            recommended: z
+            version: z
                 .enum(RESUME_LINKS.map((r) => r.id) as [ResumeId, ...ResumeId[]])
                 .describe(
-                    'Version that best fits the whole conversation. Use the role the visitor mentioned if any; otherwise '
-                    + 'the topics they asked about earlier. "mobile" for mobile, Flutter, iOS, or Android roles or mobile '
-                    + 'app questions; "full-stack" for backend, full-stack, web, or API roles or questions; "ai-fde" for '
-                    + 'AI engineer, forward deployed, or solutions roles, or questions about agents, RAG, or evaluation; '
-                    + '"general" when the conversation gives no signal or mixes several areas'
+                    'Version that best fits the whole conversation. Use the version or role the visitor mentioned if any; otherwise '
+                    + 'the topic of the visitor\'s own earlier questions (most recent wins). "mobile" for mobile, Flutter, iOS, '
+                    + 'or Android roles or questions; "full-stack" for backend, full-stack, web, or API roles or questions; '
+                    + '"ai-fde" for AI engineer, forward deployed, or solutions roles, or questions about agents, RAG, or '
+                    + 'evaluation; "general" only when the visitor has not asked about any of these'
                 ),
         }),
-        execute: async ({ recommended }) => ({
-            recommended,
-            resumes: RESUME_LINKS.map(({ id, label, url }) => ({ id, label, url })),
-        }),
+        execute: async ({ version }) => {
+            const resume = RESUME_LINKS.find((r) => r.id === version) ?? RESUME_LINKS[0];
+            return { id: resume.id, label: resume.label, url: resume.url };
+        },
     }),
 };
 

@@ -7,7 +7,17 @@ import remarkGfm from 'remark-gfm';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import type { ChatUIMessage } from '@/lib/chat-tools';
-import { ProjectCards, ResumeLinks, ToolStatus } from '@/components/ChatToolResults';
+import { ProjectCards, ResumeLink, ToolStatus } from '@/components/ChatToolResults';
+
+// The model sometimes imitates the "[Showed ...]" history notes below in its
+// own replies. Strip complete notes anywhere, and a note still streaming in at
+// the start, so they never reach the visitor or get fed back as history.
+const HISTORY_NOTE = /^\[Showed [^\]\n]*\][ \t]*\n?/gm;
+const PARTIAL_HISTORY_NOTE = /^\[Showed[^\]\n]*$/;
+
+function stripHistoryNotes(text: string) {
+    return text.replace(HISTORY_NOTE, '').replace(PARTIAL_HISTORY_NOTE, '').trimStart();
+}
 
 // Flattens a message to plain text for the server's conversation history.
 // Tool results become a short note so the model can resolve follow-ups like
@@ -15,13 +25,13 @@ import { ProjectCards, ResumeLinks, ToolStatus } from '@/components/ChatToolResu
 function toHistoryText(message: ChatUIMessage) {
     return message.parts
         .map((part) => {
-            if (part.type === 'text') return part.text;
+            if (part.type === 'text') return stripHistoryNotes(part.text);
             if (part.type === 'tool-showProjects' && part.state === 'output-available') {
                 const shown = part.output.projects.map((p) => `${p.title} (slug: ${p.slug})`).join(', ');
                 return shown ? `[Showed project cards: ${shown}]` : '';
             }
             if (part.type === 'tool-showResume' && part.state === 'output-available') {
-                return '[Showed resume download options]';
+                return `[Showed resume: ${part.output.label}]`;
             }
             return '';
         })
@@ -31,7 +41,7 @@ function toHistoryText(message: ChatUIMessage) {
 
 function hasVisibleContent(message: ChatUIMessage) {
     return message.parts.some((part) =>
-        (part.type === 'text' && part.text.trim()) || part.type.startsWith('tool-')
+        (part.type === 'text' && stripHistoryNotes(part.text).trim()) || part.type.startsWith('tool-')
     );
 }
 
@@ -92,7 +102,7 @@ function renderAssistantPart(part: ChatUIMessage['parts'][number], key: string) 
         case 'text':
             return (
                 <ReactMarkdown key={key} remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                    {part.text}
+                    {stripHistoryNotes(part.text)}
                 </ReactMarkdown>
             );
         case 'tool-showProjects':
@@ -105,7 +115,7 @@ function renderAssistantPart(part: ChatUIMessage['parts'][number], key: string) 
             return <ToolStatus key={key} label="QUERYING PROJECT ARCHIVE..." />;
         case 'tool-showResume':
             if (part.state === 'output-available') {
-                return <ResumeLinks key={key} {...part.output} />;
+                return <ResumeLink key={key} {...part.output} />;
             }
             if (part.state === 'output-error') {
                 return <ToolStatus key={key} label="ERROR: RESUME LOOKUP FAILED" isError />;
@@ -133,13 +143,11 @@ export default function ChatWidget() {
     const greetingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const isIntroAnimating = isOpen && !hasPlayedIntro;
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
     useEffect(() => {
-        scrollToBottom();
-    }, [messages, isOpen, greetingText]);
+        // Smooth scrolling gets interrupted by rapid streaming updates and can
+        // stop short of the newest text, so jump instantly while streaming.
+        messagesEndRef.current?.scrollIntoView({ behavior: status === 'streaming' ? 'auto' : 'smooth' });
+    }, [messages, isOpen, greetingText, status]);
 
     useEffect(() => {
         if (!isOpen || hasPlayedIntro) return;
